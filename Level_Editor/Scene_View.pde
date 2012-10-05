@@ -1,27 +1,24 @@
 // this is the scene view. It handles clipping the scene to the viewport and 
 // scrolling the scene and stuff.
+// contains a viewport which contains a scene
 class SceneView extends UIElement
 {
-  HScrollbar hsb;
+  HScrollbar hsb; // horizontal scrollbar
+  HScrollbar vsb; // vertical scrollbar
 
-  int spacing;
-  PVector localPos;
-  PVector localSize;
-  
+  Viewport view; // the viewport
+
   SceneView(int xp, int yp, int w, int h)
   {
     super();
     // position the window
-    spacing = 10;
     pos.x = xp;
     pos.y = yp;
     s.x = w;
     s.y = h;
-    
-    // set up local coords
-    localPos = new PVector(0,0);
-    localSize = new PVector(0,0);
-    
+
+    view = new Viewport(pos, s);
+
     bgCol = color(255, 255, 255);
     hsb =new HScrollbar(pos.x, pos.y +s.y + 16, (int)s.x, 16, 2);
   }
@@ -33,27 +30,87 @@ class SceneView extends UIElement
 
   void display()
   {
-    spacing = (int)hsb.getPos()/20;
     // draw a white rectangle for the background
     fill(bgCol);
     rect(pos.x, pos.y, s.x, s.y);
-    // draw a grid
     hsb.update();
-    stroke(1);
-    for (int xp = (int)pos.x; xp < (int)(pos.x + s.x); xp += spacing)
-      line(xp, pos.y, xp, pos.y + s.y);
-      
-    for (int yp = (int)pos.y; yp < (int)(pos.y + s.y); yp += spacing)
-      line( pos.x, yp, yp, pos.x + s.x);
+        view.setSpacing((int) hsb.getPos()/20);
+
+    view.display();
+  }
+
+  void handleMouse() {
+    shapeMode(CENTER);
+    PVectRect(view.snapToGrid(new PVector(mouseX, mouseY)), new PVector(50, 50));
   }
 }
-
-// Rectangular
-class viewPort
+void PVectRect(PVector p, PVector s)
 {
-  viewPort()\
+  rect(p.x, p.y, s.x, s.y);
+}
+/////////////////////////////
+// Rectangular object that handles clipping.
+// member functions:
+//     get/setScenePos(): set/get the position of the scene inside the viewport.
+//     getSelectedTiles(): return an array of the tiles that are currently selected. 
+class Viewport
+{
+  // local coords
+  PVector localPos;
+  PVector localSize;
+
+  // global coords
+  PVector pos;
+  PVector s;
+
+  int spacing;
+  Viewport(PVector p, PVector si)
   {
+    // set up local coords
+    localPos = new PVector(0, 0);
+    localSize = new PVector(0, 0);
+    spacing = 50;
+    pos = p;
+    s = si;
   }
+  void action()
+  {
+    // this.display();
+  }
+  void display()
+  {
+    drawGrid();
+  }
+
+  void drawGrid()
+  {
+    
+    // draw a grid
+    stroke(1);
+
+    for (int xp = (int)pos.x; xp < (int)(pos.x + s.x); xp += spacing)
+      line(xp, pos.y, xp, pos.y + s.y); // vertical lines
+
+    for (int yp = (int)pos.y; yp < (int)(pos.y + s.y); yp += spacing)
+      line( pos.x, yp, pos.x + s.x, yp); // horizontal lines
+  }
+
+  PVector localToGlobal(PVector loc)
+  {
+    return new PVector(loc.x - pos.x, loc.y - pos.y); // need to account for scrolling.
+  }
+
+  PVector globalToLocal(PVector loc)
+  {
+    return new PVector(loc.x - pos.x, loc.y - pos.y); // need to account for scrolling.
+  }
+
+  PVector snapToGrid(PVector loc)
+  {
+    println(spacing);
+    return new PVector((spacing * round(loc.x/spacing)), (spacing * round(loc.y/spacing)));
+  }
+  void setSpacing(int s){spacing = s;}
 }
 
 // this holds the grid and has seperate local coords
@@ -143,6 +200,4 @@ class HScrollbar {
     return spos * ratio;
   }
 }
-
-
 

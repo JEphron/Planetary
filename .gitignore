@@ -1,0 +1,6 @@
+.DS_Store
+Game_Engine/code/
+Game_Engine/generated/
+Game_Engine/.project
+
+Game_Engine/.classpath

@@ -94,6 +94,7 @@ class Menu extends IAppStates
  * be picked up by the mainMenu state and then created.
  * OVERLOAD: Takes callback object, calls callbackMethod() onClick;
  */
+ // Note: could extend entity for maximum oop
 class MenuButton
 {
   // TODO: background/rollover/click images.
