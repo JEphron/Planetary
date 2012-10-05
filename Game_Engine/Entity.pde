@@ -15,7 +15,12 @@ class Entity
   Entity()
   {
   }
-  
+
+  // overloaded constructor to init with sprite.
+  Entity(image i)
+  {
+    sprt = i;
+  }
   void action()
   {
   }
@@ -26,10 +31,13 @@ class Entity
   
   // getters and setters
   PVector getPosition(){return pos;}
-  
-  PVector getSize(){return s;}
+  void setPosition(PVector p){pos = p;}
 
+  PVector getSize(){return s;}
+  void setSize(PVector si){s = si;}
+  
   PVector getVelocity(){return vel;}
+  void setVelocity(PVector v){vel = v;}
 
 }
 
