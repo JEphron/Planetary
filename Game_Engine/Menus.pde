@@ -1,7 +1,8 @@
-/* * * *
- * MenuScene holds a number of menuButtons, handles layout and drawing.
- * Different menu screens should be subclasses of this. 
- */
+///////////////////////////////////////////////
+// MenuScene holds a number of menuButtons, handles layout and drawing.
+// Different menu screens should be subclasses of this. 
+///////////////////////////////////////////////
+
 abstract class MenuScene 
 {
   PVector pos;

@@ -5,8 +5,8 @@ Hierarchy:
 Setup - Creates engine
 Engine - Manages states and transitions
 State - Manages scene transitions and actions Ex. MenuState, GameState
-Scene - Draws and manages elements Ex. Scene: level 1, Options Menu, handles higher level logic.
-Element - Does individual logic and animation Ex: Enemy, Player, Pickup
+Scene - Draws and manages Entities Ex. Scene: level 1, Options Menu, handles higher level logic.
+Entity - Does individual logic and animation Ex: Enemy, Player, Pickup
 
 **************/
 
@@ -26,3 +26,6 @@ void draw()
   eng.handle();
 }
 
+// CONVENTIONS: • Comments at the top of files should summerize the contents of the file
+//              • Class names should be capitalized, methods should be camelCase
+//              • Lists should 

@@ -4,7 +4,6 @@ class LoadCore extends IAppStates
   {
     nextAppStates = AppStates.LoadCore;
     println("Loading core resources...");
-
   }
   void action()
   {

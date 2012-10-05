@@ -7,26 +7,32 @@
 
 class Entity
 {
+  // Member variables:
   PVector pos;  // xy position
   PVector s;    // xy size
   PVector vel;  // vectorial velocity of the entity
-  image sprt;   // the sprite that this entity displays
+  PVector orgin;// center of rotation and point by which the entity is positioned
+  PImage sprt;  // the sprite that this entity displays
+  float rot;    // rotation of the entity
   
   Entity()
   {
   }
 
-  // overloaded constructor to init with sprite.
-  Entity(image i)
+  // OVERLOAD: init with sprite.
+  Entity(PImage i)
   {
     sprt = i;
   }
+  
   void action()
   {
+    // Logic goes here
   }
   
   void display()
   {
+    // Draw calls go here
   }
   
   // getters and setters
@@ -38,6 +44,8 @@ class Entity
   
   PVector getVelocity(){return vel;}
   void setVelocity(PVector v){vel = v;}
-
+  
+  void setOrgin(PVector o){orgin = o;}
+  PVector getOrgin(){return orgin;}
 }
 

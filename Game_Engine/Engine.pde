@@ -5,7 +5,8 @@
 //  and switching states. 
 ///////////////////////////////////////////////
 
-// TODO: Stack based state switching. Transitions. 
+// TODO: • Stack based state switching.
+//       • State level transitions. 
 
 // Create with starting state and ending state: equiv to Handler
 class Engine

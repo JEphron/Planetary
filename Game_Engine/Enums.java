@@ -1,4 +1,6 @@
-// TODO: pick better names for these things. Also filename
+///////////////////////////////////////////////
+// This file contains all of the enums used in this app
+///////////////////////////////////////////////
 
 // Defines game states
 enum AppStates

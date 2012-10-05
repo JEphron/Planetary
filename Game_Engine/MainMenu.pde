@@ -34,8 +34,8 @@ class Menu extends IAppStates
     // overview:
     // check if the scene has changed it's nextscene variable.
     // if it has, create the new scene underneath the current.
-    //   Transition the old scene off of the canvas.
-    //   Display the new scene.
+    //  –› Transition the old scene off of the canvas and then delete it.
+    //  –› Display the new scene.
     // if it hasn't, keep looping. 
 
     // update the newScene if it exists
@@ -137,7 +137,7 @@ class MenuButton
     textAlign(CENTER);
     text(label, pos.x + s.x/2, pos.y + s.y/2);
   }
-
+  
   void setPosition(PVector p) {
     pos=p;
   }
@@ -158,9 +158,11 @@ class MenuButton
   {
     c = col;
   }
+  
   color getColor() {
     return c;
   }
+  
   void action()
   {
     if (isCallbackButton)
@@ -179,11 +181,9 @@ class MenuButton
         this.setColor(color(red(this.getColor())+120, green(this.getColor()), blue(this.getColor())));
         this.action();
       }
-    }      
-    else
-    {
-     // if (!mousePressed)
-       // this.setColor(oc);
+    } else {
+      if (!mousePressed)
+        this.setColor(oc);
     }
   }
 }
