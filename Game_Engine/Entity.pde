@@ -5,6 +5,9 @@
 //  Logical code goes in the action() method and graphical code goes in the display() method
 ///////////////////////////////////////////////
 
+// TODO: • Some sort of parent-child system
+//       • Scaling. 
+
 class Entity
 {
   // Member variables:

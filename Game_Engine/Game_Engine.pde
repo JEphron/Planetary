@@ -13,9 +13,9 @@ Entity - Does individual logic and animation Ex: Enemy, Player, Pickup
 Engine eng;
 void setup()
 {
-  size(720, 400);
+  //size(720, 400);
+  size(900, 600);
   //size(360, 480);// 480/360 = 1.3333...
-
   eng = new Engine(AppStates.LoadCore, AppStates.Exit);
 }
 

@@ -7,12 +7,12 @@
 // TODO: • Stuff
 //       • More stuff
 //       • Stop being lazy with comments
+//       • Implement targeting algorithm
 
 class Game extends IAppStates
 {
-  StarField sf = new StarField(100);
-  Planetary planet = new Planetary(50, color(255,0,0), 200, new PVector(width/2, height/2));
-  float x = 0;
+  StarField sf = new StarField(300);
+  Planetary planet = new Planetary(50, color(100,200,170), 150, new PVector(width/2, height/2), 1);
   Game()
   {
     nextAppStates = AppStates.Game;
@@ -23,16 +23,27 @@ class Game extends IAppStates
   {
     // Do game stuff
     // ...
-    fill(32,64,128);
+    
+     fill(32,64,128);
+    //fill(0);
     rect(0 ,0,width,height);
-    planet.action();
+    
     fill(255, 220, 40);
-    ellipse(width/2, height/2, 200, 200);
+    ellipse(width/2, height/2, 200, 200); // Sun. Should be an object
+    
     sf.action();
+    planet.action(); // planet
+    println(frameRate);
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
   }
   //GameScene createNewScene(mmScenes scene)
+}
+
+// The BFG goes on the planet...
+class BFG extends Entity
+{
+  
 }
 
 /* * *
