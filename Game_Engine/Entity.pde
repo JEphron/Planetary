@@ -14,6 +14,7 @@ class Entity
   PVector orgin;// center of rotation and point by which the entity is positioned
   PImage sprt;  // the sprite that this entity displays
   float rot;    // rotation of the entity
+  color col;    // color of the entity.
   
   Entity()
   {

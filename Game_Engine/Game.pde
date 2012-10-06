@@ -11,6 +11,7 @@
 class Game extends IAppStates
 {
   StarField sf = new StarField(100);
+  Planetary planet = new Planetary(50, color(255,0,0), 200, new PVector(width/2, height/2));
   float x = 0;
   Game()
   {
@@ -24,7 +25,7 @@ class Game extends IAppStates
     // ...
     fill(32,64,128);
     rect(0 ,0,width,height);
-
+    planet.action();
     fill(255, 220, 40);
     ellipse(width/2, height/2, 200, 200);
     sf.action();
