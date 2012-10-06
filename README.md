@@ -1,4 +1,4 @@
 Platformer
 ==========
 
-Nothing here, move along please.
+Copyrights and stuff. 
