@@ -30,8 +30,8 @@ class Game extends IAppStates
     // Do game stuff
     // ...
 
-    fill(32, 64, 128);
-    //fill(0);
+    //fill(32, 64, 128);
+    fill(0);
     rect(0, 0, width, height);
 
     fill(255, 220, 40);
@@ -40,7 +40,7 @@ class Game extends IAppStates
     sf.action();
     planet.action(); // planet
     println(frameRate);
-    strokeWeight(5);
+    strokeWeight(2);
     PVector pp = planet.getPosition();
     
     for (int i = mList.size()-1; i > 0; i--) { 
