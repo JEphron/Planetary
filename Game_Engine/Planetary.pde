@@ -43,6 +43,7 @@ class Planetary extends Entity
     fill(col);
     ellipse(pos.x, pos.y, r, r);
   }
+  float getRadius(){return r;}
 }
 
 

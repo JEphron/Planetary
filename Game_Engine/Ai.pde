@@ -5,35 +5,33 @@
 
 class AI extends Entity
 {
-  
 }
 
 // These pirates form fleets, flock around target and shoot
 // Boid logic
 class BoidPirate extends AI
 {
-  
 }
 
 // Fly straight at their target and detonate when they reach it
 // Straight homing missile logic, explode when dist < 1
 class BombShip extends AI
 {
-  
 }
 
 // hang out at a distance and fire long range missiles/lasers
 // Homing missile logic, stop at fixed dist and begin firing
 class LongRangeFrigate extends AI
 {
-  
 }
 
 class HomingMissile extends Entity
 {
-  PVector pos;
+  //PVector pos;
   float angle, turnSpeed, vel; 
- // jTri t;
+  boolean exploding = false;
+  boolean expired = false;
+  // jTri t;
   HomingMissile(PVector p)
   {
     //targetPosition = targetPos;
@@ -64,9 +62,9 @@ class HomingMissile extends Entity
     pos.x += thrust.x;
     pos.y += thrust.y;
     this.display();
-    // t.setRotation(angle);
+    //t.setRotation(angle);
     //t.setPosition(pos);
-    //  println(t.getPosition());
+    //println(t.getPosition());
     //t.action();
   }
 
@@ -77,10 +75,31 @@ class HomingMissile extends Entity
     //rotate(angle*PI/180);
     //translate(-pos.x, -pos.y);
     //triangle(pos.x, pos.y, pos.x + 10, pos.y - 5, pos.x + 20, pos.y);
-    stroke(255);
-    lineFromPointLengthAngle(pos.x,pos.y,10,angle);
+    //if (!exploding) {
+      stroke(255, 128, 64);
+      strokeWeight(2);
+      lineFromPointLengthAngle(pos.x, pos.y, 10, angle);
+      strokeWeight(1);
+      stroke(0);
+    //}
+    //else {
+      if(exploding)
+      expired = true;
+   // }
     //popMatrix();
     //t.display();
+  }
+  void explode()
+  {
+    exploding = true;
+  }
+
+  boolean isExloding() {
+    return exploding;
+  }
+
+  boolean isExpired() {
+    return expired;
   }
   void lineFromPointLengthAngle(float x, float y, float len, float angle)
   {
@@ -188,3 +207,4 @@ class HomingMissile extends Entity
     return v;
   }
 }
+

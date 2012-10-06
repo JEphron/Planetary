@@ -12,7 +12,7 @@
 class Game extends IAppStates
 {
   StarField sf = new StarField(300);
-  Planetary planet = new Planetary(50, color(100, 200, 170), 150, new PVector(width/2, height/2), 1);
+  Planetary planet = new Planetary(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1);
   ArrayList mList = new ArrayList();
 
   Game()
@@ -20,11 +20,12 @@ class Game extends IAppStates
     nextAppStates = AppStates.Game;
     println("Entering main game...");
     sf.generateField();
-    for (int i = 0; i < 10; i++) {
-      HomingMissile h = new HomingMissile(new PVector(random(width), 0));
-      mList.add(h);
-    }
+
   }
+
+    
+
+
   void action()
   {
     // Do game stuff
@@ -40,16 +41,28 @@ class Game extends IAppStates
     sf.action();
     planet.action(); // planet
     println(frameRate);
-    strokeWeight(2);
+   
     PVector pp = planet.getPosition();
     
     for (int i = mList.size()-1; i > 0; i--) { 
       HomingMissile m = (HomingMissile)mList.get(i);
       m.action(new PVector(pp.x, pp.y));
+      println(m.getPosition());
+      if(dist(m.getPosition().x, m.getPosition().y, pp.x,pp.y) < planet.getRadius())
+      {
+         m.explode(); 
+      }
+      if(m.isExpired())
+        mList.remove(i);
     }
     
-    strokeWeight(1);
-    stroke(0);
+    if(mousePressed){
+            for (int i = 0; i < 100; i++) {
+      HomingMissile h = new HomingMissile(new PVector(random(width), 0));
+      mList.add(h);
+    }
+    mousePressed = false;
+  }
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
   }
