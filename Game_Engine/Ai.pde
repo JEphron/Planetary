@@ -37,7 +37,7 @@ class HomingMissile extends Entity
     //targetPosition = targetPos;
     turnSpeed = 20;
     pos = p;
-    vel = 8;
+    vel = 10;
   }
 
   void action(PVector targetPosition)

@@ -47,7 +47,7 @@ class Game extends IAppStates
     for (int i = mList.size()-1; i > 0; i--) { 
       HomingMissile m = (HomingMissile)mList.get(i);
       m.action(new PVector(pp.x, pp.y));
-      println(m.getPosition());
+      
       if(dist(m.getPosition().x, m.getPosition().y, pp.x,pp.y) < planet.getRadius())
       {
          m.explode(); 
