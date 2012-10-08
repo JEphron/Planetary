@@ -20,16 +20,12 @@ class Game extends IAppStates
     nextAppStates = AppStates.Game;
     println("Entering main game...");
     sf.generateField();
-
   }
-
-    
 
 
   void action()
   {
     // Do game stuff
-    // ...
 
     //fill(32, 64, 128);
     fill(0);
@@ -41,74 +37,41 @@ class Game extends IAppStates
     sf.action();
     planet.action(); // planet
     println(frameRate);
-   
+
     PVector pp = planet.getPosition();
-    
+
     for (int i = mList.size()-1; i > 0; i--) { 
       HomingMissile m = (HomingMissile)mList.get(i);
       m.action(new PVector(pp.x, pp.y));
-      
-      if(dist(m.getPosition().x, m.getPosition().y, pp.x,pp.y) < planet.getRadius())
+
+      if (dist(m.getPosition().x, m.getPosition().y, pp.x, pp.y) < planet.getRadius())
       {
-         m.explode(); 
+        m.explode(); 
+        // planet.takeDamage();
       }
-      if(m.isExpired())
+      if (m.isExpired())
         mList.remove(i);
     }
-    
-    if(mousePressed){
-            for (int i = 0; i < 100; i++) {
-      HomingMissile h = new HomingMissile(new PVector(random(width), 0));
-      mList.add(h);
+
+    // Constantly spawn missiles around planet
+    for (int i = 0; i < 5; i++) {
+     HomingMissile h = new HomingMissile(new PVector(planet.getPosition().x +random(-100,100), planet.getPosition().y+random(-100,100)), 10,10);
+     mList.add(h);
+     }
+
+    if (mousePressed) {
+      for (int i = 0; i < 5; i++) {
+        HomingMissile h = new HomingMissile(new PVector(mouseX +random(-100, 100), mouseY+random(-100, 100)), 10, 10);
+        mList.add(h);
+      }
     }
-    mousePressed = false;
-  }
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
   }
-  //GameScene createNewScene(mmScenes scene)
 }
 
 // The BFG goes on the planet...
 class BFG extends Entity
 {
-}
-
-/* * *
- * Yeah, we know what this does.
- */
-class StarField extends Entity
-{
-  ArrayList stars;
-  int nStars;
-  StarField(int numStars)
-  {
-    stars = new ArrayList();
-    nStars = numStars;
-  }
-
-  void generateField()
-  {
-    for (int i = 0; i < nStars; i++) {
-      PVector n = new PVector(random(width), random(height));
-      stars.add(n);
-      println("Bleh");
-    }
-  }
-
-  void action()
-  {
-    this.display();
-  }
-
-  void display()
-  {
-    stroke(255);
-    for (int i = stars.size()-1; i > 0; i--) { 
-      PVector n =(PVector) stars.get(i);
-      point(n.x, n.y);
-    }
-    stroke(0);
-  }
 }
 

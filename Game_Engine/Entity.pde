@@ -7,6 +7,7 @@
 
 // TODO: • Some sort of parent-child system
 //       • Scaling. 
+//       • Investigate problems with the seperation of action() and display(). 
 
 class Entity
 {
@@ -18,7 +19,8 @@ class Entity
   PImage sprt;  // the sprite that this entity displays
   float rot;    // rotation of the entity
   color col;    // color of the entity.
-  
+  ArrayList children; 
+
   Entity()
   {
   }
@@ -28,28 +30,63 @@ class Entity
   {
     sprt = i;
   }
-  
+
   void action()
   {
     // Logic goes here
   }
-  
+
   void display()
   {
     // Draw calls go here
+    
+    // Draw children
+    for (int i = children.size()-1; i > 0; i--) { 
+      Entity m = (Entity)children.get(i);
+      m.action();
+    }
+  }
+
+  // getters and setters
+  PVector getPosition() {
+    return pos;
   }
   
-  // getters and setters
-  PVector getPosition(){return pos;}
-  void setPosition(PVector p){pos = p;}
+  void setPosition(PVector p) {
+    pos = p;
+    // should transform children
+  }
 
-  PVector getSize(){return s;}
-  void setSize(PVector si){s = si;}
+  PVector getSize() {
+    return s;
+  }
   
-  PVector getVelocity(){return vel;}
-  void setVelocity(PVector v){vel = v;}
+  void setSize(PVector si) {
+    s = si;
+  }
+
+  PVector getVelocity() {
+    return vel;
+  }
   
-  void setOrgin(PVector o){orgin = o;}
-  PVector getOrgin(){return orgin;}
+  void setVelocity(PVector v) {
+    vel = v;
+  }
+
+  void setOrgin(PVector o) {
+    orgin = o;
+  }
+  
+  PVector getOrgin() {
+    return orgin;
+  }
+
+  void addChild(Entity e) {
+    children.add(e);
+  }
+  
+  Entity getChild(int id) {
+    return (Entity)children.get(id);
+  }
 }
 

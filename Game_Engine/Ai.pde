@@ -32,12 +32,13 @@ class HomingMissile extends Entity
   boolean exploding = false;
   boolean expired = false;
   // jTri t;
-  HomingMissile(PVector p)
+  HomingMissile(PVector position, float velocity, float tspeed)
   {
     //targetPosition = targetPos;
-    turnSpeed = 20;
-    pos = p;
-    vel = 10;
+    turnSpeed = tspeed;
+    pos = position;
+    vel = velocity;
+    col = color(random(255), random(255), random(255));
   }
 
   void action(PVector targetPosition)
@@ -75,17 +76,17 @@ class HomingMissile extends Entity
     //rotate(angle*PI/180);
     //translate(-pos.x, -pos.y);
     //triangle(pos.x, pos.y, pos.x + 10, pos.y - 5, pos.x + 20, pos.y);
-    //if (!exploding) {
-      stroke(255, 128, 64);
+    if (!exploding) {
+      stroke(col);
       strokeWeight(2);
       lineFromPointLengthAngle(pos.x, pos.y, 10, angle);
       strokeWeight(1);
       stroke(0);
-    //}
-    //else {
-      if(exploding)
+    }
+    else {
+      
       expired = true;
-   // }
+    }
     //popMatrix();
     //t.display();
   }
