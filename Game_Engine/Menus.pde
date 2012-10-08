@@ -76,6 +76,7 @@ abstract class MenuScene
   void drawBackground() {
     fill(bgCol);
     rect(pos.x, pos.y, width, height);
+
   }
   boolean doFadeOut(int speed)
   {
@@ -288,6 +289,7 @@ class mm_Opts extends MenuScene
     class TestCB extends callbackObject {
       void callbackMethod() {
         println("Callback recieved!");
+        // set some system variables or something        
       }
     }
     TestCB c = new TestCB();

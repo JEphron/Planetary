@@ -19,7 +19,7 @@ class Entity
   PImage sprt;  // the sprite that this entity displays
   float rot;    // rotation of the entity
   color col;    // color of the entity.
-  ArrayList children; 
+  ArrayList children = new ArrayList(); 
 
   Entity()
   {
@@ -39,7 +39,6 @@ class Entity
   void display()
   {
     // Draw calls go here
-    
     // Draw children
     for (int i = children.size()-1; i > 0; i--) { 
       Entity m = (Entity)children.get(i);
@@ -51,16 +50,22 @@ class Entity
   PVector getPosition() {
     return pos;
   }
-  
+
   void setPosition(PVector p) {
     pos = p;
-    // should transform children
+    // should transform children if they exist
+    if (this.getChildren().size()>0) {
+      for (int i = this.getChildren().size()-1; i > 0; i--) { 
+        Entity e = (Entity)this.getChildren().get(i);
+       // e.setPosition();
+      }
+    }
   }
 
   PVector getSize() {
     return s;
   }
-  
+
   void setSize(PVector si) {
     s = si;
   }
@@ -68,7 +73,7 @@ class Entity
   PVector getVelocity() {
     return vel;
   }
-  
+
   void setVelocity(PVector v) {
     vel = v;
   }
@@ -76,7 +81,7 @@ class Entity
   void setOrgin(PVector o) {
     orgin = o;
   }
-  
+
   PVector getOrgin() {
     return orgin;
   }
@@ -84,9 +89,14 @@ class Entity
   void addChild(Entity e) {
     children.add(e);
   }
-  
+
   Entity getChild(int id) {
     return (Entity)children.get(id);
+  }
+
+  ArrayList getChildren()
+  {
+    return children;
   }
 }
 

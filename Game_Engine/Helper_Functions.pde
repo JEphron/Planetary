@@ -13,6 +13,16 @@ boolean pointInRect(PVector pt, PVector pos, PVector s)
   return false;
 }
 
+void lineFromPointLengthAngle(float x, float y, float len, float angle)
+{
+  float x2;
+  float y2;
+  float a = angle * PI/180;
+  x2 = x + len * cos(a);
+  y2 = y + len * sin(a);
+  line(x, y, x2, y2);
+}
+
 ///////////////
 // ** Other functions to write **
 // PointInCircle
@@ -20,5 +30,5 @@ boolean pointInRect(PVector pt, PVector pos, PVector s)
 // RectRectCollisionTest
 // RectCircleCollisionTest
 // distBetweenPoints (processing might already have this)
-// LineFromPointAngleLength
 // 
+

@@ -1,3 +1,4 @@
+/*
 //All vectors (except dimensions) have their x value as forward motion, and their y value as upward motion 
 void constants(){
   float gravity=6.673;
@@ -59,3 +60,4 @@ void calcForces(int b){//b is the number of objects there are
 void calcOrbit(int obj1,int obj2){
   //obj1 is orbited by obj2 
 }
+*/

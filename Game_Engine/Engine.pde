@@ -3,6 +3,7 @@
 //  be crearted at the start of the program
 //  It is resposible for managing, updating,
 //  and switching states. 
+//  Also contains IAppState
 ///////////////////////////////////////////////
 
 // TODO: • Stack based state switching.

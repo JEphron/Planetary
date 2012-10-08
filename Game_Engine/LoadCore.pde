@@ -7,7 +7,7 @@ class LoadCore extends IAppStates
   }
   void action()
   {
-    // Load images and sounds or whatever
+    // Load images and sounds or something
     setNextState(AppStates.Menu);
   }
 }

@@ -102,15 +102,6 @@ class HomingMissile extends Entity
   boolean isExpired() {
     return expired;
   }
-  void lineFromPointLengthAngle(float x, float y, float len, float angle)
-  {
-    float x2;
-    float y2;
-    float a = angle * PI/180;
-    x2 = x + len * cos(a);
-    y2 = y + len * sin(a);
-    line(x, y, x2, y2);
-  }
 
   // Satanic wizardry that boggles my mind. 
   float beringAsMagnitudeCubic2d(PVector missile_position, PVector missile_heading, PVector target_position) 
