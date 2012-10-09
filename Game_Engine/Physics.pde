@@ -5,11 +5,18 @@ class newObject extends Entity{
   boolean isSphere;
   float density;  
   float radius;
+  PVector position=new PVector(0,0);
   PVector dimensions=new PVector(0,0);
-  PVector velocity=new PVector(0,0); 
-  PVector acceleration=new PVector(0,0); 
-  PVector force=new PVector(0,0); 
-  PVector gravity=new PVector(0,0);
+  PVector centerofGravity=new PVector(0,0);
+  PVector netVelocity=new PVector(0,0); 
+  PVector exertedVelocity=new PVector(0,0); 
+  PVector netAcceleration=new PVector(0,0);
+  PVector exertedAcceleration=new PVector(0,0);
+  PVector netForce=new PVector(0,0); 
+  PVector exertedForce=new PVector(0,0); 
+  PVector netGravity=new PVector(0,0);
+  PVector exertedGravity=new PVector(0,0);
+  PVector collisionForce=new PVector(0,0);
   
   float getRadius(){
      return radius; 
@@ -24,21 +31,32 @@ class newObject extends Entity{
     return density/(dimensions.x*dimensions.y); 
    }
   }
-  PVector getVelocity(){
-   return velocity;
+  PVector getNetVelocity(){
+    return netVelocity;
   }
-  PVector getAcceleration(){
-   return acceleration;
+  PVector getExertedVelocity(){
+    return exertedVelocity;
   }
-  PVector getForce(){
-   return force;
+  PVector getNetAcceleration(){
+   return netAcceleration;
   }
-  PVector getGravity(){
-   return gravity;
+  PVector getExertedAcceleration(){
+    return exertedAcceleration;
+  }
+  PVector getNetForce(){
+   return netForce;
+  }
+  PVector getExertedForce(){
+   return exertedForce;
+  }
+  PVector getNetGravity(){
+   return netGravity;
+  }
+  PVector getExertedGravity(){
+   return exertedGravity;
   }
   
-  
-  void changeVelocity(PVector a){
+  /*void changeVelocity(PVector a){
     velocity.add(a);
   }
   void changeAcceleration(PVector a){
@@ -49,13 +67,21 @@ class newObject extends Entity{
   }
   void changeGravity(PVector a){
     gravity.add(a);
-  }
-  void calcForces(int b){//b is the number of objects there are
+  }*/
+  void calcGravity(){}
+  void calcForce(int b){//b is the number of objects there are
   for(int a=0;a>b;a++){
+      //gravity+exertedforce+collision+
+    }
+  }
+  void calcAcceleration(){
     
-    }  
   }
-  void calcOrbit(int obj1,int obj2){
-  //obj1 is orbited by obj2 
+  void calcVelocity(){
+    
   }
+  
+  
+  
+  
 }
