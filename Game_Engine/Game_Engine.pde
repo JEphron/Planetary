@@ -7,6 +7,7 @@ Engine - Manages states and transitions
 State - Manages scene transitions and actions Ex. MenuState, GameState
 Scene - Draws and manages Entities Ex. Scene: level 1, Options Menu, handles higher level logic.
 Entity - Does individual logic and animation Ex: Enemy, Player, Pickup
+Physics - Does motion calculations Ex. Gravity, Orbit, Acceleration
 
 **************/
 
@@ -28,4 +29,4 @@ void draw()
 
 // CONVENTIONS: • Comments at the top of files should summerize the contents of the file
 //              • Class names should be capitalized, methods should be camelCase
-//              • meh
+//              • Constants should be in all Caps
