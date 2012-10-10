@@ -9,7 +9,7 @@ abstract class MenuScene
   ArrayList buttons; 
   String title;
   PVector buttonSize; // Change this to adjust button size
-  color bgCol = color(30);
+  color bgCol = color(30); //should probably change, it looks weird
   mmScenes nextScene;
   directions transDir = directions.Down;
 
