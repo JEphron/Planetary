@@ -7,7 +7,6 @@ Engine - Manages states and transitions
 State - Manages scene transitions and actions Ex. MenuState, GameState
 Scene - Draws and manages Entities Ex. Scene: level 1, Options Menu, handles higher level logic.
 Entity - Does individual logic and animation Ex: Enemy, Player, Pickup
-Physics - Does motion calculations Ex. Gravity, Orbit, Acceleration
 
 **************/
 
