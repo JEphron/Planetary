@@ -17,7 +17,7 @@ class StarField extends Entity
     for (int i = 0; i < nStars; i++) {
       PVector n = new PVector(random(width), random(height));
       stars.add(n);
-      println("Bleh");
+    //  println("Bleh");
     }
   }
 
