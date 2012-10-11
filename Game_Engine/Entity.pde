@@ -52,16 +52,18 @@ class Entity
   }
 
   void setPosition(PVector p) {
-    pos = p;
     // should transform children if they exist
     if (this.getChildren().size()>0) {
-      for (int i = this.getChildren().size()-1; i > 0; i--) { 
-        Entity e = (Entity)this.getChildren().get(i);
-       // e.setPosition();
+      for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
+        Entity e=i.next();
+        e.setPosition(new PVector(e.getPosition().x -(pos.x-p.x), e.getPosition().y + (p.y - pos.y)));
+        //println(e.getPosition().x);
+        //e.setPosition(new PVector(random(100), random(100)));
       }
     }
+    pos = p;
   }
-
+  
   PVector getSize() {
     return s;
   }
