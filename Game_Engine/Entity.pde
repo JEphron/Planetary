@@ -46,6 +46,15 @@ class Entity
     }
   }
 
+  void updateChildren()
+  {
+    if (this.getChildren().size()>0) {
+      for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
+        Entity e=i.next();
+        e.action();
+      }
+    }
+  }
   // getters and setters
   PVector getPosition() {
     return pos;
@@ -63,7 +72,7 @@ class Entity
     }
     pos = p;
   }
-  
+
   PVector getSize() {
     return s;
   }

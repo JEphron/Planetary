@@ -29,7 +29,11 @@ class Game extends IAppStates
     currentScene.action();
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
-    currentScene.setPosition(new PVector(currentScene.getPosition().x, currentScene.getPosition().y+1));
+    if(mousePressed)
+        currentScene.setPosition(new PVector(mouseX, mouseY));
+    else
+        currentScene.setPosition(new PVector(currentScene.getPosition().x, currentScene.getPosition().y));
+
     //println(currentScene.getPosition());
   }
 }
@@ -68,28 +72,41 @@ class MainGame extends GameScene
 {
 
   StarField sf = new StarField(300);
-  Planetary planet = new Planetary(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1);
+  
+  Sun sun = new Sun(200,                           // Diameter of body
+                    color(255, 220, 40),           // Color
+                    250,                           // Orbital Diameter
+                    new PVector(width/2, height/2),// Orgin
+                    1,                             // Rotational speed
+                    false);                        // Does it orbit?
+                    
+                    
+
   ArrayList mList = new ArrayList();
 
   MainGame()
   {
+    
     sf.generateField();
-    this.addChild(planet);
+    this.addChild(sf);
+   // sun.setPosition(new PVector(width/2,height/2));
+    sun.addPlanet(new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true));
+    this.addChild(sun);
   }
   void action()
   {
 
     fill(0);
     rect(0, 0, width, height);
-
-    fill(255, 220, 40);
-    ellipse(this.getPosition().x/2+width/2, this.getPosition().y+height/2, 200, 200); // Sun. Should be an object
-    println(this.getChildren().size());
-    sf.action();
-    planet.setOrgin(this.getChild(0).getPosition()); // planet
-    planet.action();
+    updateChildren();
+    //fill(255, 220, 40);
+   // ellipse(this.getPosition().x/2+width/2, this.getPosition().y+height/2, 200, 200); // Sun. Should be an object
+   // println(this.getChildren().size());
+   // sf.action();
+    //planet.setOrgin(this.getChild(0).getPosition()); // planet
+    //planet.action();
     
-    PVector pp = planet.getPosition();
+    //PVector pp = planet.getPosition();
 
 //    // Update Children. I forsee problems with methods, maybe solve by casting
 //    for (int i = this.getChildren().size()-1; i > 0; i--) { 

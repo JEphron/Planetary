@@ -10,8 +10,10 @@ class Planetary extends Entity
   int or; // radius of orbit
   float angle = 0;// angle of object on orbit
   float rotSpeed;
+  boolean isOrbital; // does this body orbit a point?
+
   // construct with the radius of th circle, color of circle, orgin of orbit, and radius of orbit. 
-  Planetary(int bodyRadius, color c, int orbitRadius, PVector org, float speed )
+  Planetary(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean o )
   {
     r = bodyRadius;
     or = orbitRadius;
@@ -19,16 +21,20 @@ class Planetary extends Entity
     col = c;
     rotSpeed = speed;
     pos = new PVector(0, 0);
+    isOrbital = o;
   }
 
   void action()
   {
-    this.rotateAroundOrgin();
+    if (isOrbital)
+      this.rotateAroundOrgin();
+      
     this.display();
   }
 
   void rotateAroundOrgin()
   {
+    //println("meep");
     angle += rotSpeed;
     float xDistance = sin(angle * PI/180)*or;
     float yDistance = cos(angle * PI/180)*or;
@@ -43,7 +49,62 @@ class Planetary extends Entity
     fill(col);
     ellipse(pos.x, pos.y, r, r);
   }
-  float getRadius(){return r;}
+  float getRadius() {
+    return r;
+  }
 }
 
+/* * * *
+ * I hope this doesn't get too bloated
+ * Classes for planet and Sun, sun supports a number of planets
+ */
+class Sun extends Planetary
+{
+  ArrayList planets = new ArrayList();
+  Sun(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
+  {
+    super(bodyRadius, c, orbitRadius, org, speed, orbits);
+  }
+
+  void action()
+  {
+    super.action();
+    this.updateChildren();
+    this.display();
+    this.centerChildren();
+  }
+
+  void centerChildren()
+  {
+    if (this.getChildren().size()>0) {
+      for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
+        Entity e=i.next();
+        e.setOrgin(this.getPosition());
+      }
+    }
+  }
+
+  ArrayList getPlanets()
+  {
+    return planets;
+  }
+
+  void addPlanet(Planet p)
+  {
+    this.addChild(p);
+    println(this.getChildren().size());
+  }
+}
+
+class Planet extends Planetary
+{
+  Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
+  {
+    super(bodyRadius, c, orbitRadius, org, speed, orbits);
+  }
+  void action()
+  {
+    super.action();
+  }
+}
 

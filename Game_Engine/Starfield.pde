@@ -10,14 +10,15 @@ class StarField extends Entity
   {
     stars = new ArrayList();
     nStars = numStars;
+    pos = new PVector(0, 0);
   }
 
   void generateField()
   {
     for (int i = 0; i < nStars; i++) {
-      PVector n = new PVector(random(width), random(height));
+      PVector n = new PVector(random(width*2)-width/2, random(height*2)-height/2);
       stars.add(n);
-    //  println("Bleh");
+      //  println("Bleh");
     }
   }
 
@@ -35,5 +36,13 @@ class StarField extends Entity
     }
     stroke(0);
   }
-}
 
+  void setPosition(PVector p) {
+    {
+      for (int i = stars.size()-1; i > 0; i--) { 
+        PVector n =(PVector) stars.get(i);
+        stars.set(i, new PVector(n.x -(pos.x-p.x)/2, n.y + (p.y - pos.y)/2));
+      }
+    }
+  }
+}
