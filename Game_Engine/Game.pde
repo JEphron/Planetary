@@ -21,7 +21,7 @@ class Game extends IAppStates
     currentScene = new MainGame();
   }
 
-  
+  PVector scenePos = null;
   void action()
   {
     // println(frameRate);
@@ -29,10 +29,28 @@ class Game extends IAppStates
     currentScene.action();
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
-    if(mousePressed)
-        currentScene.setPosition(new PVector(mouseX-width/2, mouseY-height/2));
+
+    
+    if(mousePressed){
+      if(scenePos == null)
+      scenePos = currentScene.getPosition(); // this becomes the original position
+      PVector difference = new PVector( mouseX - mX, mouseY - mY);
+      PVector newPos = new PVector(); 
+      
+      // Three styles of scrolling:
+      
+      //currentScene.setPosition(new PVector(mouseX-width/2, mouseY-height/2)); // absolute positioning based on mouse
+      
+      //currentScene.setPosition(new PVector(currentScene.getPosition().x - difference.x, currentScene.getPosition().y - difference.y)); // Relative positioning with cont. scrolling
+     
+      currentScene.setPosition(new PVector(scenePos.x - difference.x, scenePos.y - difference.y)); // Touchscreen-style controls - more natural
+
+    }
     else
-        currentScene.setPosition(new PVector(currentScene.getPosition().x, currentScene.getPosition().y));
+    {
+      scenePos = null;
+      currentScene.setPosition(new PVector(currentScene.getPosition().x, currentScene.getPosition().y));
+    }
 
     //println(currentScene.getPosition());
   }

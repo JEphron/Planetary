@@ -11,6 +11,8 @@ Entity - Does individual logic and animation Ex: Enemy, Player, Pickup
 **************/
 
 Engine eng;
+float mX;
+float mY;
 void setup()
 {
   //size(720, 400);
@@ -26,5 +28,12 @@ void draw()
   eng.handle();
 }
 
+// get mousePressed positions,
+// set Pos to currentMousePos - mousePressedPos relative to original position
+void mousePressed()
+{
+  mX = mouseX;
+  mY = mouseY;
+}
 // CONVENTIONS: • Comments at the top of files should summerize the contents of the file
 //              • Class names should be capitalized, methods should be camelCase
