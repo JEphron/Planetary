@@ -10,6 +10,7 @@
 //       • Implement targeting algorithm
 //       • Implement particle system
 //       • for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
+//       • minimap
 
 class Game extends IAppStates
 {
@@ -44,7 +45,7 @@ class Game extends IAppStates
       //currentScene.setPosition(new PVector(currentScene.getPosition().x - difference.x, currentScene.getPosition().y - difference.y)); // Relative positioning with cont. scrolling
       currentScene.setPosition(new PVector(scenePos.x + difference.x, scenePos.y + difference.y)); // Touchscreen-style controls - more natural
       //currentScene.setPosition(new PVector(scenePos.x - difference.x, scenePos.y - difference.y)); // Reversed touchscreen-style controls - some people like this for some reason....
-
+      
     }
     else
     {
@@ -117,10 +118,15 @@ class MainGame extends GameScene
     fill(0);
     rect(0, 0, width, height);
     updateChildren();
+    
+     Sun s = (Sun)this.getChild(1);
+     Planet p = (Planet)s.getChild(0);
+     PVector planetPos = p.getPosition().get();
+     println(planetPos);
     //fill(255, 220, 40);
-   // ellipse(this.getPosition().x/2+width/2, this.getPosition().y+height/2, 200, 200); // Sun. Should be an object
-   // println(this.getChildren().size());
-   // sf.action();
+    // ellipse(this.getPosition().x/2+width/2, this.getPosition().y+height/2, 200, 200); // Sun. Should be an object
+    // println(this.getChildren().size());
+    // sf.action();
     //planet.setOrgin(this.getChild(0).getPosition()); // planet
     //planet.action();
     
@@ -149,12 +155,13 @@ class MainGame extends GameScene
 //
 //    if (mousePressed) {
 //      for (int i = 0; i < 5; i++) {
-//        HomingMissile h = new HomingMissile(new PVector(mouseX +random(-100, 100), mouseY+random(-100, 100)), 10, 10);
+//        HomingMissile h = new HomingMissile(new PVector(mouseX +random(-100, 100), mouseY+random(-100, 100)), 10, 10, new PVector( 900, 900));
+//        println(new PVector( this.getPosition().x + 200, this.getPosition().y+200));
 //        //mList.add(h);
 //        this.addChild(h);
 //      }
 //    }
- }
+  }
 }
 // The BFG goes on the planet...
 // Consider inheriting from an abstract gun/turret class.

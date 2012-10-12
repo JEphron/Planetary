@@ -31,17 +31,19 @@ class HomingMissile extends Entity
   float angle, turnSpeed, vel; 
   boolean exploding = false;
   boolean expired = false;
-  // jTri t;
-  HomingMissile(PVector position, float velocity, float tspeed)
+  PVector targetPosition;
+    // jTri t;
+  HomingMissile(PVector position, float velocity, float tspeed, PVector targPos)
   {
-    //targetPosition = targetPos;
+    targetPosition = targPos;
+    //type = EntityType.missile;
     turnSpeed = tspeed;
     this.pos = position;
     vel = velocity;
     col = color(random(255), random(255), random(255));
   }
 
-  void action(PVector targetPosition)
+  void action()
   {
     // So now this works...
     float radians = angle * PI / 180; 

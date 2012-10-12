@@ -20,6 +20,7 @@ class Entity
   protected float rot;    // rotation of the entity
   protected color col;    // color of the entity.
   private ArrayList children = new ArrayList(); 
+  EntityType type;
 
   Entity()
   {
@@ -109,5 +110,7 @@ class Entity
   {
     return children;
   }
+  
+  EntityType getType(){return type;}
 }
 

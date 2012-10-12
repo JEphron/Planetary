@@ -32,3 +32,12 @@ enum directions
   Right
 }
 
+// defines entites.
+enum EntityType
+{
+  Missile, // genericize as AI. All ai should behave in a similar way
+  Sun,
+  Planet,
+  Starfield
+}
+

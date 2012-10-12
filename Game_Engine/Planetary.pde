@@ -60,7 +60,7 @@ class Planetary extends Entity
  */
 class Sun extends Planetary
 {
-  protected ArrayList planets = new ArrayList();
+  ArrayList planets = new ArrayList();
   Sun(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
