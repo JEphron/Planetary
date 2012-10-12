@@ -38,12 +38,12 @@ class Game extends IAppStates
       PVector newPos = new PVector(); 
       
       // Three styles of scrolling:
+      // TODO: Add boundry scrolling. Arrow scrolling.
       
       //currentScene.setPosition(new PVector(mouseX-width/2, mouseY-height/2)); // absolute positioning based on mouse
-      
       //currentScene.setPosition(new PVector(currentScene.getPosition().x - difference.x, currentScene.getPosition().y - difference.y)); // Relative positioning with cont. scrolling
-     
-      currentScene.setPosition(new PVector(scenePos.x - difference.x, scenePos.y - difference.y)); // Touchscreen-style controls - more natural
+      currentScene.setPosition(new PVector(scenePos.x + difference.x, scenePos.y + difference.y)); // Touchscreen-style controls - more natural
+      //currentScene.setPosition(new PVector(scenePos.x - difference.x, scenePos.y - difference.y)); // Reversed touchscreen-style controls - some people like this for some reason....
 
     }
     else
