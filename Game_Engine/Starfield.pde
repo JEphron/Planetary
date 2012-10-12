@@ -4,8 +4,8 @@
 ///////////////////////////////////////////////
 class StarField extends Entity
 {
-  ArrayList stars;
-  int nStars;
+ protected ArrayList stars;
+ protected int nStars;
   StarField(int numStars)
   {
     stars = new ArrayList();

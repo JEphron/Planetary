@@ -36,7 +36,7 @@ class HomingMissile extends Entity
   {
     //targetPosition = targetPos;
     turnSpeed = tspeed;
-    pos = position;
+    this.pos = position;
     vel = velocity;
     col = color(random(255), random(255), random(255));
   }

@@ -12,14 +12,14 @@
 class Entity
 {
   // Member variables:
-  PVector pos;  // xy position
-  PVector s;    // xy size
-  PVector vel;  // vectorial velocity of the entity
-  PVector orgin;// center of rotation and point by which the entity is positioned
-  PImage sprt;  // the sprite that this entity displays
-  float rot;    // rotation of the entity
-  color col;    // color of the entity.
-  ArrayList children = new ArrayList(); 
+  protected PVector pos;  // xy position
+  protected PVector s;    // xy size
+  protected PVector vel;  // vectorial velocity of the entity
+  protected PVector orgin;// center of rotation and point by which the entity is positioned
+  protected PImage sprt;  // the sprite that this entity displays
+  protected float rot;    // rotation of the entity
+  protected color col;    // color of the entity.
+  private ArrayList children = new ArrayList(); 
 
   Entity()
   {

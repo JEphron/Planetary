@@ -6,11 +6,11 @@
 
 class Planetary extends Entity
 {
-  int r; // radius of object
-  int or; // radius of orbit
-  float angle = 0;// angle of object on orbit
-  float rotSpeed;
-  boolean isOrbital; // does this body orbit a point?
+  protected int r; // radius of object
+  protected int or; // radius of orbit
+  protected float angle = 0;// angle of object on orbit
+  protected float rotSpeed;
+  protected boolean isOrbital; // does this body orbit a point?
 
   // construct with the radius of th circle, color of circle, orgin of orbit, and radius of orbit. 
   Planetary(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean o )
@@ -28,7 +28,7 @@ class Planetary extends Entity
   {
     if (isOrbital)
       this.rotateAroundOrgin();
-      
+
     this.display();
   }
 
@@ -60,7 +60,7 @@ class Planetary extends Entity
  */
 class Sun extends Planetary
 {
-  ArrayList planets = new ArrayList();
+  protected ArrayList planets = new ArrayList();
   Sun(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);

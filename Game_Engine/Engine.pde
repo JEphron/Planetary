@@ -8,6 +8,7 @@
 
 // TODO: • Stack based state switching.
 //       • State level transitions. 
+//       • Make member vars private/protected
 
 // Create with starting state and ending state: equiv to Handler
 class Engine

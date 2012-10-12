@@ -21,7 +21,7 @@ class Game extends IAppStates
     currentScene = new MainGame();
   }
 
-
+  
   void action()
   {
     // println(frameRate);
@@ -30,7 +30,7 @@ class Game extends IAppStates
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
     if(mousePressed)
-        currentScene.setPosition(new PVector(mouseX, mouseY));
+        currentScene.setPosition(new PVector(mouseX-width/2, mouseY-height/2));
     else
         currentScene.setPosition(new PVector(currentScene.getPosition().x, currentScene.getPosition().y));
 
@@ -89,7 +89,7 @@ class MainGame extends GameScene
     
     sf.generateField();
     this.addChild(sf);
-   // sun.setPosition(new PVector(width/2,height/2));
+    sun.setPosition(new PVector(width/2,height/2));
     sun.addPlanet(new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true));
     this.addChild(sun);
   }
@@ -123,8 +123,8 @@ class MainGame extends GameScene
 //    }
 //
 //    // Constantly spawn missiles around planet
-//    for (int i = 0; i < 5; i++) {
-//      HomingMissile h = new HomingMissile(new PVector(planet.getPosition().x +random(-100, 100), planet.getPosition().y+random(-100, 100)), 10, 10);
+//    for (int i = 0; i < 2; i++) {
+//      HomingMissile h = new HomingMissile(new PVector(sun.getPosition().x +random(-100, 100), sun.getPosition().y+random(-100, 100)), 10, 10);
 //      //mList.add(h);
 //      this.addChild(h);
 //    }
