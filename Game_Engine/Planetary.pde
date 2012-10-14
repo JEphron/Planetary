@@ -89,7 +89,7 @@ class Sun extends Planetary
     return planets;
   }
 
-  void addPlanet(Planet p)
+  void addPlanet(Planet p) // this does the same thing as addChild(); :\
   {
     this.addChild(p);
     println(this.getChildren().size());

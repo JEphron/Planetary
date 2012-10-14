@@ -36,14 +36,14 @@ class Game extends IAppStates
       if(scenePos == null)
       scenePos = currentScene.getPosition(); // this becomes the original position
       PVector difference = new PVector( mouseX - mX, mouseY - mY);
-      PVector newPos = new PVector(); 
+      //PVector newPos = new PVector(); 
       
       // Three styles of scrolling:
       // TODO: Add boundry scrolling. Arrow scrolling.
       
       //currentScene.setPosition(new PVector(mouseX-width/2, mouseY-height/2)); // absolute positioning based on mouse
       //currentScene.setPosition(new PVector(currentScene.getPosition().x - difference.x, currentScene.getPosition().y - difference.y)); // Relative positioning with cont. scrolling
-      currentScene.setPosition(new PVector(scenePos.x + difference.x, scenePos.y + difference.y)); // Touchscreen-style controls - more natural
+      //currentScene.setPosition(new PVector(scenePos.x + difference.x, scenePos.y + difference.y)); // Touchscreen-style controls - more natural
       //currentScene.setPosition(new PVector(scenePos.x - difference.x, scenePos.y - difference.y)); // Reversed touchscreen-style controls - some people like this for some reason....
       
     }
@@ -83,7 +83,9 @@ abstract class GameScene extends Entity
 
   void setFocus(PVector focusPoint)
   {
-    // Where is the screen centered?
+    // reset to 0 before transform
+    this.setPosition(new PVector(0,0));
+    this.setPosition(new PVector(focusPoint.x + width/2 - this.getPosition().x, focusPoint.y + height/2-this.getPosition().y));
   }
 }
 
@@ -91,7 +93,6 @@ class MainGame extends GameScene
 {
 
   StarField sf = new StarField(300);
-  
   Sun sun = new Sun(200,                           // Diameter of body
                     color(255, 220, 40),           // Color
                     250,                           // Orbital Diameter
@@ -99,34 +100,63 @@ class MainGame extends GameScene
                     1,                             // Rotational speed
                     false);                        // Does it orbit?
                     
-                    
-
-  ArrayList mList = new ArrayList();
-
   MainGame()
   {
-    
     sf.generateField();
     this.addChild(sf);
     sun.setPosition(new PVector(width/2,height/2));
-    sun.addPlanet(new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true));
+    Planet planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true);
+      // planet.setPosition(new PVector(20,20));
+    sun.addPlanet(planet);
     this.addChild(sun);
-  }
+  } 
+  
+  PVector scenePos = null;
+  boolean derp = true;
+  Timer t;
   void action()
   {
 
     fill(0);
     rect(0, 0, width, height);
-    updateChildren();
+    updateChildren();   
     
-     Sun s = (Sun)this.getChild(1);
-     Planet p = (Planet)s.getChild(0);
-     PVector planetPos = p.getPosition().get();
-     println(planetPos);
+    
+      Sun s = (Sun)this.getChild(1);
+      Planet p = (Planet)s.getChild(0);
+      PVector planetPos = p.getPosition().get();
+//
+//    PVector mPos = new PVector(mouseX-width/2, mouseY-height/2); // position of mouse relative to center of screen
+//
+//    PVector diff = new PVector(planetPos.x + this.getPosition().x, planetPos.y +this.getPosition().y);
+//    
+//    // to get the global coords of the planet, subtract from it's position the position of the scene.
+//    PVector globalCoords = new PVector(planetPos.x - this.getPosition().x, planetPos.y - this.getPosition().y);
+//   // PVector mD = new PVector(mouseX - this.getPosition().x - width/2, mouseY -this.getPosition().y - height/2);
+//
+//    // ellipse(diff.x,diff.y,20,20);
+//    println(this.getPosition() + " "+ globalCoords +" " + planetPos);
+//    
+//    // this.setPosition(this.);
+//    this.setPosition(new PVector(diff.x, diff.y));
+
+  // Something is seriously messed up with this code, PLEASE FIX ME:
+  if(derp){
+    t = new Timer(1);
+    t.start();
+    this.setPosition(new PVector((float)(planetPos.x -this.getPosition().x - width/2)*-1, (float)(planetPos.y -this.getPosition().y - height/2)*-1));
+    derp = false;
+   }
+   if(t.isFinished())
+   {
+    derp = true; 
+   }
+   println(this.getPosition());
+
     //fill(255, 220, 40);
-    // ellipse(this.getPosition().x/2+width/2, this.getPosition().y+height/2, 200, 200); // Sun. Should be an object
-    // println(this.getChildren().size());
-    // sf.action();
+    //ellipse(this.getPosition().x/2+width/2, this.getPosition().y+height/2, 200, 200); // Sun. Should be an object
+    //println(this.getChildren().size());
+    //sf.action();
     //planet.setOrgin(this.getChild(0).getPosition()); // planet
     //planet.action();
     
