@@ -64,6 +64,7 @@ class Sun extends Planetary
   Sun(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
+    type = EntityType.Sun;
   }
 
   void action()
@@ -101,6 +102,7 @@ class Planet extends Planetary
   Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
+    type = EntityType.Planet;
   }
   void action()
   {
