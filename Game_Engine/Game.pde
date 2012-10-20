@@ -62,7 +62,7 @@ class Game extends IAppStates
 abstract class GameScene extends Entity
 {
   float zoom;
-  PVector focus = new PVector(0,0);
+  PVector focus = new PVector(0, 0);
 
   GameScene()
   {
@@ -114,7 +114,7 @@ class MainGame extends GameScene
   PVector scenePos = null;
   boolean derp = true;
   Timer t;
-
+  PVector planetPos;
   // GAME LOGIC:
   void action()
   {
@@ -126,12 +126,12 @@ class MainGame extends GameScene
 
     Sun s = (Sun)this.getChild(1);
     Planet p = (Planet)s.getChild(0);
-    PVector planetPos = p.getPosition().get();
+    planetPos = p.getPosition().get();
 
     // Always try to update the position
-    this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2));
+    this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
 
-    // Something is seriously messed up with this code, PLEASE FIX ME:
+    // I fixed it. 
     if (derp) {
       t = new Timer(1);
       t.start();
@@ -142,38 +142,47 @@ class MainGame extends GameScene
     {
       derp = true;
     }
+
+     for(int i = 0; i < 5; i++){
+    HomingMissile h = new HomingMissile(new PVector(planetPos.x +random(-100, 100), planetPos.y+random(-100, 100)), 5, 15);      
+    this.addChild(h);
+    }
   }
-  
+
   // Move the rect towards a point with decreasing speed
-  PVector movePointTowardsPoint(PVector p1, PVector p2) {
-    float moveDist = 0.2;
+  void movePointTowardsPoint(PVector p1, PVector p2, float moveDist) {
     // only call this when we have to move the rect...
     if (p1.x+s.x/2 != p2.x || p1.y+s.y/2 != p2.y) {
 
-      // calulate difference between points
+      // calculate difference between points
       PVector v  = new PVector(p2.x-p1.x, p2.y-p1.y);
 
       // add the distance and the current position and multiply by a scale factor, then subtract to get the point you want
       this.setPosition(new PVector( ((p1.x+v.x*moveDist)-((s.x/2)+focus.x)/(1/moveDist)), ((p1.y+v.y*moveDist)-((s.y/2)+focus.y)/(1/moveDist))) );
-
-      // doesn't need to return, this is stupid
-      return new PVector(p1.x+(v.x)*0.2, p1.y+(v.y)*0.2);
     }
-
-    return p1;
   }
 
   // Overwrite this so we can do some updatin.
   void updateChildren()
   {
     if (this.getChildren().size()>0) {
-      for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
-        Entity e=i.next();
-        e.action();
-      }
-    }
-  }
-}
+      for (int i = this.getChildren().size()-1; i >= 0; i--) {
+        Entity e=(Entity)this.getChildren().get(i);
+        if (e.getType() != null && e.getType() == EntityType.Missile) {
+          HomingMissile m = (HomingMissile)e;
+          m.action(planetPos);
+          if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<50) {
+            m = null;
+            this.getChildren().remove(i);
+          } // So..
+        } else {
+          e.action();
+        } // Many..
+      } // Curly..
+    } // Braces..
+  } // Please..
+} // Stop...
+
 // The BFG goes on the planet...
 // Consider inheriting from an abstract gun/turret class.
 class BFG extends Entity
