@@ -82,7 +82,7 @@ abstract class GameScene extends Entity
 
   PVector convertToLocal(PVector p)
   {
-    return new PVector((p.x -this.getPosition().x - width/2)*-1, (p.y -this.getPosition().y - height/2)*-1);
+    return new PVector((p.x -this.getPosition().x - width/2), (p.y -this.getPosition().y - height/2));
   }
 
   PVector getFocus() {
@@ -133,9 +133,9 @@ class MainGame extends GameScene
 
     // Something is seriously messed up with this code, PLEASE FIX ME:
     if (derp) {
-      t = new Timer(500);
+      t = new Timer(1);
       t.start();
-      this.setFocus(new PVector(random(-200, 200), random(-200, 200)));
+      this.setFocus(convertToLocal(planetPos));
       derp = false;
     }
     if (t.isFinished())
@@ -146,7 +146,7 @@ class MainGame extends GameScene
   
   // Move the rect towards a point with decreasing speed
   PVector movePointTowardsPoint(PVector p1, PVector p2) {
-    float moveDist = 0.3;
+    float moveDist = 0.2;
     // only call this when we have to move the rect...
     if (p1.x+s.x/2 != p2.x || p1.y+s.y/2 != p2.y) {
 
@@ -179,4 +179,3 @@ class MainGame extends GameScene
 class BFG extends Entity
 {
 }
-
