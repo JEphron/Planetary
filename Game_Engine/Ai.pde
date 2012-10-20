@@ -30,25 +30,26 @@ class HomingMissile extends Entity
   //PVector pos;
   float angle, turnSpeed, vel; 
   boolean exploding = false;
-  boolean expired = false;
-  PVector targetPosition;
     // jTri t;
-  HomingMissile(PVector position, float velocity, float tspeed, PVector targPos)
+  HomingMissile(PVector position, float velocity, float tspeed)
   {
-    targetPosition = targPos;
-    //type = EntityType.missile;
+
+    type = EntityType.Missile;
     turnSpeed = tspeed;
     this.pos = position;
     vel = velocity;
     col = color(random(255), random(255), random(255));
   }
 
-  void action()
+  void action(PVector targetPosition)
   {
     // So now this works...
     float radians = angle * PI / 180; 
-    PVector thrust = new PVector(0, 0); // forward direction vector. 
-
+    PVector thrust = new PVector(0, 0); // forward direction vector.
+//    fill(255,0,0); 
+//    stroke(0);
+//    ellipse(targetPosition.x,targetPosition.y,5,5); // Draw the target
+//    fill(255);
     thrust.x = vel * cos(radians) ;
     thrust.y = vel * sin(radians) ;      
 
@@ -65,10 +66,12 @@ class HomingMissile extends Entity
     pos.x += thrust.x;
     pos.y += thrust.y;
     this.display();
-    //t.setRotation(angle);
+    // t.setRotation(angle);
     //t.setPosition(pos);
-    //println(t.getPosition());
+    // println(t.getPosition());
     //t.action();
+    if(pos == targetPosition)
+      expired = true;
   }
 
   void display()
@@ -106,8 +109,9 @@ class HomingMissile extends Entity
   }
 
   // Satanic wizardry that boggles my mind. 
-  float beringAsMagnitudeCubic2d(PVector missile_position, PVector missile_heading, PVector target_position) 
+  float beringAsMagnitudeCubic2d(PVector missile_position, PVector missile_heading, PVector tp) 
   { 
+    PVector target_position = tp.get();
     target_position.sub(missile_position); 
     float forward_theta = missile_heading.x * target_position.x + missile_heading.y * target_position.y; // dot = 1 or -1 when north and postion align 
     float right_theta = -missile_heading.y * target_position.x + missile_heading.x * target_position.y; // simultaneous cross right and dot = 0 when north and position align 

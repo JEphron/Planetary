@@ -20,6 +20,7 @@ class Entity
   protected float rot;    // rotation of the entity
   protected color col;    // color of the entity.
   private ArrayList children = new ArrayList(); 
+  boolean expired = false;// Does this entity need to be deleted?
   EntityType type;
 
   Entity()
@@ -80,6 +81,10 @@ class Entity
 
   void setSize(PVector si) {
     s = si;
+  }
+  
+  boolean isExpired() {
+    return expired;
   }
 
   PVector getVelocity() {
