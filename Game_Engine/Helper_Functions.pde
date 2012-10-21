@@ -55,13 +55,23 @@ class Timer {
   }
 }
 
+float AngleTo(PVector f, PVector p)
+{
+    float xp = f.x - p.x;
+    float yp = f.y - p.y;
+
+    float desiredAngle = atan2(yp, xp); // this is the angle to the target
+    return desiredAngle*= 180/PI;
+}
+
+
+
 ///////////////
 // ** Other functions to write **
 // PointInCircle
 // CircleCircleCollisionTest
 // RectRectCollisionTest
 // RectCircleCollisionTest
-// distBetweenPoints (processing might already have this)
 // 
 
 
