@@ -30,7 +30,8 @@ class HomingMissile extends Entity
   //PVector pos;
   float angle, turnSpeed, vel; 
   boolean exploding = false;
-    // jTri t;
+  int explody = 0;
+  // jTri t;
   HomingMissile(PVector position, float velocity, float tspeed)
   {
 
@@ -46,10 +47,10 @@ class HomingMissile extends Entity
     // So now this works...
     float radians = angle * PI / 180; 
     PVector thrust = new PVector(0, 0); // forward direction vector.
-//    fill(255,0,0); 
-//    stroke(0);
-//    ellipse(targetPosition.x,targetPosition.y,5,5); // Draw the target
-//    fill(255);
+    //    fill(255,0,0); 
+    //    stroke(0);
+    //    ellipse(targetPosition.x,targetPosition.y,5,5); // Draw the target
+    //    fill(255);
     thrust.x = vel * cos(radians) ;
     thrust.y = vel * sin(radians) ;      
 
@@ -62,15 +63,16 @@ class HomingMissile extends Entity
     else if (sign > 0) {
       angle += turnSpeed;
     }
-
-    pos.x += thrust.x;
-    pos.y += thrust.y;
+    if (!exploding) {
+      pos.x += thrust.x;
+      pos.y += thrust.y;
+    }
     this.display();
     // t.setRotation(angle);
     //t.setPosition(pos);
     // println(t.getPosition());
     //t.action();
-    if(pos == targetPosition)
+    if (pos == targetPosition)
       expired = true;
   }
 
@@ -87,10 +89,13 @@ class HomingMissile extends Entity
       lineFromPointLengthAngle(pos.x, pos.y, 10, angle);
       strokeWeight(1);
       stroke(0);
-    }
+    } 
     else {
-      
-      expired = true;
+      // It's exploding, make an explosion;
+      this.explode();
+      if (explody > random(60,80))
+        expired = true;
+      println(explody);
     }
     //popMatrix();
     //t.display();
@@ -98,9 +103,14 @@ class HomingMissile extends Entity
   void explode()
   {
     exploding = true;
+    explody += 15;
+    noStroke();
+    fill(255, random(100)+100, 0, random(100,200));
+    ellipse(pos.x, pos.y, explody, explody);
+    stroke(1);
   }
 
-  boolean isExloding() {
+  boolean isExploding() {
     return exploding;
   }
 

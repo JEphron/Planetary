@@ -123,18 +123,22 @@ class MainGame extends GameScene
   Timer t;
   PVector planetPos;
 
+
   // GAME LOGIC:
   void action()
   {
     fill(0);
     rect(0, 0, width, height);
-    updateChildren();   
+   
 
     ui.action();
 
     Sun s = (Sun)this.getChild(1);
     planet = (Planet)s.getChild(0);
     planetPos = planet.getPosition().get();
+         s.action();
+
+   updateChildren();   
 
     // Always try to update the position
     this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
@@ -186,17 +190,23 @@ class MainGame extends GameScene
             m.action(planetPos);
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
+              if (!m.isExploding())
+                planet.dealDamage(1);
+              m.explode();
+            }
+            if (m.isExpired())
+            {
               m = null;
               this.getChildren().remove(i);
-              planet.dealDamage(1);
             }
           }
-          else if ( e.getType() == EntityType.Planet )
+          else if ( e.getType() == EntityType.Sun )
           {
+            // I guess I don't really need to do anything here
+            // e.action();
           }
           else {
             // Other type checks go right here
-            e.action();
           }
         } 
         else {
