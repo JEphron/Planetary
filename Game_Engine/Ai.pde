@@ -32,14 +32,15 @@ class HomingMissile extends Entity
   boolean exploding = false;
   int explody = 0;
   // jTri t;
-  HomingMissile(PVector position, float velocity, float tspeed)
+  HomingMissile(PVector position, float velocity, float tspeed, PVector targ)
   {
 
     type = EntityType.Missile;
     turnSpeed = tspeed;
-    this.pos = position;
+    pos = position;
     vel = velocity;
     col = color(random(255), random(255), random(255));
+    angle = AngleTo(pos,targ);
   }
 
   void action(PVector targetPosition)
@@ -93,7 +94,7 @@ class HomingMissile extends Entity
     else {
       // It's exploding, make an explosion;
       this.explode();
-      if (explody > random(60,80))
+      if (explody > random(20,30))
         expired = true;
       println(explody);
     }

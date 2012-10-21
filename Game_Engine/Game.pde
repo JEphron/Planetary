@@ -112,8 +112,8 @@ class MainGame extends GameScene
     this.addChild(sf);
     sun.setPosition(new PVector(width/2, height/2));
     s = new PVector(600, 600);
-    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 1000);    //  PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
-    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width, 60), planet)); // Width and height should be relative
+    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 9000);    //  PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
+    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/5, 40), planet)); // Width and height should be relative
     sun.addPlanet(planet);
     this.addChild(sun);
   } 
@@ -157,7 +157,7 @@ class MainGame extends GameScene
 
     if (keyPressed ) {
       for (int i = 0; i < 5; i++) {
-        HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15);      
+        HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planetPos);      
         this.addChild(h);
       }
     }
