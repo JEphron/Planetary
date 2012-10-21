@@ -99,13 +99,16 @@ class Sun extends Planetary
 
 class Planet extends Planetary
 {
-  Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
+  
+  Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
     type = EntityType.Planet;
+    setTotalLife(life);
   }
   void action()
   {
+    //currentLife -= 10;
     super.action();
   }
 }

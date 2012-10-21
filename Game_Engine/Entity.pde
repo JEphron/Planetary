@@ -8,7 +8,10 @@
 // TODO: • Some sort of parent-child system
 //       • Scaling. 
 //       • Investigate problems with the seperation of action() and display(). 
+//       • Subclass Entity for game objects
+//       • Subclass for general things with pos/scale/children 
 
+// This class is getting to big, consider refactoring soon. 
 class Entity
 {
   // Member variables:
@@ -20,25 +23,27 @@ class Entity
   protected float rot;    // rotation of the entity
   protected color col;    // color of the entity.
   private ArrayList children = new ArrayList(); 
-  boolean expired = false;// Does this entity need to be deleted?
-  EntityType type;
+  protected boolean expired = false;// Does this entity need to be deleted?
+  protected EntityType type;
+  protected int maxLife;
+  protected int currentLife;
 
-  Entity()
+  Entity() 
   {
   }
 
   // OVERLOAD: init with sprite.
-  Entity(PImage i)
+  Entity(PImage i) 
   {
     sprt = i;
   }
 
-  void action()
+  void action() 
   {
     // Logic goes here
   }
 
-  void display()
+  void display() 
   {
     // Draw calls go here
     // Draw children
@@ -62,7 +67,8 @@ class Entity
     return pos;
   }
 
-  void setPosition(PVector p) {
+  void setPosition(PVector p) 
+  {
     // should transform children if they exist
     if (this.getChildren().size()>0) {
       for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
@@ -82,7 +88,7 @@ class Entity
   void setSize(PVector si) {
     s = si;
   }
-  
+
   boolean isExpired() {
     return expired;
   }
@@ -111,11 +117,45 @@ class Entity
     return (Entity)children.get(id);
   }
 
-  ArrayList getChildren()
+  ArrayList getChildrenByType(EntityType t)
   {
+    ArrayList temp = new ArrayList();
+    for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
+      Entity e=i.next();
+      if (e.getType() == t)
+        temp.add(e);
+    }
+    if (temp.size() > 0)
+      return temp;
+    else return null;
+  }
+
+  ArrayList getChildren() {
     return children;
   }
-  
-  EntityType getType(){return type;}
+
+  EntityType getType() {
+    return type;
+  }
+
+  // This should be seperated into a new class. 
+
+  // This will set the current life to the max, and set the max to the param
+  void setTotalLife(int ml) {
+    maxLife = currentLife = ml;
+  }
+  void setLife(int l) {
+    currentLife = l;
+  }
+  int getMaxLife() {
+    return maxLife;
+  }
+  int getLife() {
+    return currentLife;
+  }
+  // Convience method to deal some dmg
+  void dealDamage(int d) {
+    currentLife -= d;
+  }
 }
 

@@ -4,13 +4,18 @@
 // 
 ///////////////////////////////////////////////
 
-// TODO: • Stuff
-//       • More stuff
-//       • Stop being lazy with comments
+// TODO: 
 //       • Implement targeting algorithm
 //       • Implement particle system
 //       • for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
-//       • minimap
+//       • Minimap
+//       • UI Layer ***
+//       • click to track
+//       • Missle damage
+//       • Platforms and placement
+//       • Weapons
+//       • Real enemies
+//       • Zooming. Oh hell no. 
 
 class Game extends IAppStates
 {
@@ -99,14 +104,16 @@ class MainGame extends GameScene
 
   StarField sf = new StarField(300);
   Sun sun = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);                     
-  Planet planet;            
+  Planet planet;     
+  UILayer ui = new UILayer();  
   MainGame()
   {
     sf.generateField();
     this.addChild(sf);
     sun.setPosition(new PVector(width/2, height/2));
     s = new PVector(600, 600);
-    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true);
+    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 1000);    //  PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
+    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width, 60), planet)); // Width and height should be relative
     sun.addPlanet(planet);
     this.addChild(sun);
   } 
@@ -115,18 +122,19 @@ class MainGame extends GameScene
   boolean derp = true;
   Timer t;
   PVector planetPos;
+
   // GAME LOGIC:
   void action()
   {
-
     fill(0);
     rect(0, 0, width, height);
     updateChildren();   
 
+    ui.action();
 
     Sun s = (Sun)this.getChild(1);
-    Planet p = (Planet)s.getChild(0);
-    planetPos = p.getPosition().get();
+    planet = (Planet)s.getChild(0);
+    planetPos = planet.getPosition().get();
 
     // Always try to update the position
     this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
@@ -135,7 +143,7 @@ class MainGame extends GameScene
     if (derp) {
       t = new Timer(1);
       t.start();
-      this.setFocus(convertToLocal(planetPos));
+      this.setFocus(convertToLocal(planetPos)); // focus on the planet. 
       derp = false;
     }
     if (t.isFinished())
@@ -143,9 +151,11 @@ class MainGame extends GameScene
       derp = true;
     }
 
-     for(int i = 0; i < 5; i++){
-    HomingMissile h = new HomingMissile(new PVector(planetPos.x +random(-100, 100), planetPos.y+random(-100, 100)), 5, 15);      
-    this.addChild(h);
+    if (keyPressed ) {
+      for (int i = 0; i < 5; i++) {
+        HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15);      
+        this.addChild(h);
+      }
     }
   }
 
@@ -157,7 +167,7 @@ class MainGame extends GameScene
       // calculate difference between points
       PVector v  = new PVector(p2.x-p1.x, p2.y-p1.y);
 
-      // add the distance and the current position and multiply by a scale factor, then subtract to get the point you want
+      // add the delta and the current position and multiply by a scale factor, then subtract the focus divided by 1 over the distance. Makes sense. 
       this.setPosition(new PVector( ((p1.x+v.x*moveDist)-((s.x/2)+focus.x)/(1/moveDist)), ((p1.y+v.y*moveDist)-((s.y/2)+focus.y)/(1/moveDist))) );
     }
   }
@@ -165,17 +175,32 @@ class MainGame extends GameScene
   // Overwrite this so we can do some updatin.
   void updateChildren()
   {
+    // This method is kind of ugly, but I think it's standard practice. Also it works, so that's good. 
     if (this.getChildren().size()>0) {
       for (int i = this.getChildren().size()-1; i >= 0; i--) {
         Entity e=(Entity)this.getChildren().get(i);
-        if (e.getType() != null && e.getType() == EntityType.Missile) {
-          HomingMissile m = (HomingMissile)e;
-          m.action(planetPos);
-          if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<50) {
-            m = null;
-            this.getChildren().remove(i);
-          } // So..
-        } else {
+        if (e.getType() != null) {
+          if ( e.getType() == EntityType.Missile) {
+            // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
+            HomingMissile m = (HomingMissile)e;
+            m.action(planetPos);
+            // If it's touching the planet (or platforms), destroy it, deal dmg to planet
+            if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
+              m = null;
+              this.getChildren().remove(i);
+              planet.dealDamage(1);
+            }
+          }
+          else if ( e.getType() == EntityType.Planet )
+          {
+          }
+          else {
+            // Other type checks go right here
+            e.action();
+          }
+        } 
+        else {
+          // Standard action call if no specific type defined
           e.action();
         } // Many..
       } // Curly..
@@ -188,3 +213,4 @@ class MainGame extends GameScene
 class BFG extends Entity
 {
 }
+
