@@ -22,8 +22,8 @@ class Platform extends Entity
 
 class StandardPlatform extends Entity
 {
-  int damage = 2;
-  float range = 200;
+  int damage = 5;
+  float range = 500;
   int rof = 5; // rof in ms
   Timer t = new Timer(10);
   Entity target;
@@ -47,7 +47,7 @@ class StandardPlatform extends Entity
   void aquireTarget(ArrayList a) {
     float closestDistance = range; 
     Entity temp;
-    for (int i = a.size()-1; i > 0; i--) { 
+    for (int i = 0; i < a.size(); i++) { 
       Entity h = (Entity)a.get(i);
       float d = dist(pos.x, pos.y, h.getPosition().x, h.getPosition().y);
       if (d < closestDistance) {
@@ -68,7 +68,7 @@ class StandardPlatform extends Entity
 
   boolean targetInRange()
   {
-    if ( dist(pos.x, pos.y, target.getPosition().x, target.getPosition().y) < 200)
+    if ( dist(pos.x, pos.y, target.getPosition().x, target.getPosition().y) < range)
       return true;
     else return false;
   }

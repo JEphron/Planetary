@@ -131,6 +131,7 @@ class MainGame extends GameScene
   void action()
   {
     fill(0);
+    stroke(0);
     rect(0, 0, width, height);
 
     ui.action();
