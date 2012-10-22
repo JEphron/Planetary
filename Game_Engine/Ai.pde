@@ -34,7 +34,7 @@ class HomingMissile extends Entity
   // jTri t;
   HomingMissile(PVector position, float velocity, float tspeed, PVector targ)
   {
-
+    setTotalLife(10);
     type = EntityType.Missile;
     turnSpeed = tspeed;
     pos = position;
@@ -73,8 +73,9 @@ class HomingMissile extends Entity
     //t.setPosition(pos);
     // println(t.getPosition());
     //t.action();
-    if (pos == targetPosition)
-      expired = true;
+    
+    if (currentLife <= 0)
+      explode();
   }
 
   void display()
@@ -96,7 +97,7 @@ class HomingMissile extends Entity
       this.explode();
       if (explody > random(20,30))
         expired = true;
-      println(explody);
+      
     }
     //popMatrix();
     //t.display();

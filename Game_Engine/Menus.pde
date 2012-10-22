@@ -240,7 +240,7 @@ class mm_Help extends MenuScene
     bgCol = color(32,128,64);
     buttonSize = new PVector(200, 50);
     this.addButton("Return", mmScenes.Main, buttonSize, this);
-    this.addButton("6", mmScenes.Derp, buttonSize, this);
+    this.addButton("derp", mmScenes.Derp, buttonSize, this);
  
     this.layoutButtons();
     

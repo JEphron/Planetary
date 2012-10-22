@@ -11,7 +11,7 @@ class Planetary extends Entity
   protected float angle = 0;// angle of object on orbit
   protected float rotSpeed;
   protected boolean isOrbital; // does this body orbit a point?
-
+  boolean selected = false;
   // construct with the radius of th circle, color of circle, orgin of orbit, and radius of orbit. 
   Planetary(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean o )
   {
@@ -28,7 +28,6 @@ class Planetary extends Entity
   {
     if (isOrbital)
       this.rotateAroundOrgin();
-
     this.display();
   }
 
@@ -51,6 +50,16 @@ class Planetary extends Entity
   }
   float getRadius() {
     return r;
+  }
+
+  boolean isClicked()
+  {
+    if (mousePressed) {
+      if (dist(mouseX, mouseY, pos.x, pos.y)<r) {
+        selected = true;
+      }
+    }
+    return false;
   }
 }
 
@@ -99,7 +108,7 @@ class Sun extends Planetary
 
 class Planet extends Planetary
 {
-  
+
   Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);

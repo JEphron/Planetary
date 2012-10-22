@@ -45,7 +45,7 @@ class HealthBar extends UIItem
   {
     // Draw a bar with a length proportiional to the percentage of life remaining
     // Color shift could use work though...
-    fill(255/(currLife/150), 255 - 255/(currLife/10), 0);
+    fill(255/(currLife/500), 255 - 255/(currLife/50), 0);
     rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
     
   }
@@ -71,7 +71,7 @@ class UILayer
 
   void action()
   {
-
+    // Draw some instructions:
     for (int i = items.size()-1; i >= 0; i--) {
       UIItem e = (UIItem)items.get(i);
       e.action();

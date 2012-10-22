@@ -99,6 +99,7 @@ abstract class GameScene extends Entity
   }
 }
 
+// The main game scene, this is where the fun happens
 class MainGame extends GameScene
 {
 
@@ -106,16 +107,18 @@ class MainGame extends GameScene
   Sun sun = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);                     
   Planet planet;     
   UILayer ui = new UILayer();  
+  PVector trackPoint;
   MainGame()
   {
     sf.generateField();
     this.addChild(sf);
     sun.setPosition(new PVector(width/2, height/2));
     s = new PVector(600, 600);
-    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 9000);    //  PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
-    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/5, 40), planet)); // Width and height should be relative
+    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 1000);  // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
+    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
     sun.addPlanet(planet);
     this.addChild(sun);
+    trackPoint = new PVector(0, 0);
   } 
 
   PVector scenePos = null;
@@ -129,25 +132,24 @@ class MainGame extends GameScene
   {
     fill(0);
     rect(0, 0, width, height);
-   
 
     ui.action();
 
     Sun s = (Sun)this.getChild(1);
     planet = (Planet)s.getChild(0);
     planetPos = planet.getPosition().get();
-         s.action();
-
-   updateChildren();   
-
+    // s.action();
+    updateChildren();   
+    fill(255);
+    text(frameRate, 20, 10);
     // Always try to update the position
-    this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
+   // this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
 
     // I fixed it. 
     if (derp) {
       t = new Timer(1);
       t.start();
-      this.setFocus(convertToLocal(planetPos)); // focus on the planet. 
+     // this.setFocus(convertToLocal(planetPos)); // focus on the planet. 
       derp = false;
     }
     if (t.isFinished())
@@ -155,12 +157,7 @@ class MainGame extends GameScene
       derp = true;
     }
 
-    if (keyPressed ) {
-      for (int i = 0; i < 5; i++) {
-        HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planetPos);      
-        this.addChild(h);
-      }
-    }
+    handleKeyPresses();
   }
 
   // Move the rect towards a point with decreasing speed
@@ -181,7 +178,7 @@ class MainGame extends GameScene
   {
     // This method is kind of ugly, but I think it's standard practice. Also it works, so that's good. 
     if (this.getChildren().size()>0) {
-      for (int i = this.getChildren().size()-1; i >= 0; i--) {
+      for (int i = 0; i <= this.getChildren().size()-1; i++) {
         Entity e=(Entity)this.getChildren().get(i);
         if (e.getType() != null) {
           if ( e.getType() == EntityType.Missile) {
@@ -203,20 +200,61 @@ class MainGame extends GameScene
           else if ( e.getType() == EntityType.Sun )
           {
             // I guess I don't really need to do anything here
-            // e.action();
-          }
+            Planetary pl = (Planetary)e;
+            pl.action();
+            if (pl.isClicked())
+            {
+              trackPoint = pl.getPosition();
+            }
+          }           
+          else if ( e.getType() == EntityType.Platform )
+          {
+            StandardPlatform t = (StandardPlatform)e;
+            if (t.targIsDead())
+            {
+              ArrayList temp = this.getChildrenByType(EntityType.Missile);
+              if (temp != null)
+                t.aquireTarget(temp);
+            }
+            t.action();
+            t.fire();
+          } 
+
+
           else {
             // Other type checks go right here
+            e.action();
           }
         } 
         else {
           // Standard action call if no specific type defined
           e.action();
-        } // Many..
-      } // Curly..
-    } // Braces..
-  } // Please..
-} // Stop...
+        }
+      }
+    }
+  }
+
+  void handleKeyPresses()
+  {
+
+    if (keyPressed) {
+      if (key == 'a') {    // 'a' key spawns missiles
+        for (int i = 0; i < 3; i++) {
+          HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planetPos);      
+          this.addChild(h);
+        }
+      }
+      else if (key == 's') // 's' to reset the planet's health
+      {
+        planet.setTotalLife(1000); // should be a variable.
+      }      
+      else if (key == 'd') // 'd' to place a platform/turret thingy
+      {
+        this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+      }
+    }
+  }
+}
 
 // The BFG goes on the planet...
 // Consider inheriting from an abstract gun/turret class.
