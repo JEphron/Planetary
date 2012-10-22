@@ -144,13 +144,13 @@ class MainGame extends GameScene
     fill(255);
     text(frameRate, 20, 10);
     // Always try to update the position
-   // this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
+    // this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
 
     // I fixed it. 
     if (derp) {
       t = new Timer(1);
       t.start();
-     // this.setFocus(convertToLocal(planetPos)); // focus on the planet. 
+      // this.setFocus(convertToLocal(planetPos)); // focus on the planet. 
       derp = false;
     }
     if (t.isFinished())
@@ -252,6 +252,17 @@ class MainGame extends GameScene
       else if (key == 'd') // 'd' to place a platform/turret thingy
       {
         this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+      }       
+      else if (key == 'f') // 'f' to clear platforms
+      {
+        for (int i = 0; i <= this.getChildren().size()-1; i++) {
+          Entity e=(Entity)this.getChildren().get(i);
+          if (e.getType() == EntityType.Platform) {
+            e = null;
+            this.getChildren().remove(i);
+          }
+        }
+        
       }
     }
   }
