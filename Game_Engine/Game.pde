@@ -87,7 +87,7 @@ abstract class GameScene extends Entity
 
   PVector convertToLocal(PVector p)
   {
-    return new PVector((p.x -this.getPosition().x - width/2), (p.y -this.getPosition().y - height/2));
+    return new PVector((p.x - pos.x - s.x/2), (p.y - pos.y - s.y/2));
   }
 
   PVector getFocus() {
@@ -107,15 +107,19 @@ class MainGame extends GameScene
   Sun sun = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);                     
   Planet planet;     
   UILayer ui = new UILayer();  
+  boolean tracking = false;
   PVector trackPoint;
+
+
   MainGame()
   {
     sf.generateField();
     this.addChild(sf);
     sun.setPosition(new PVector(width/2, height/2));
-    s = new PVector(600, 600);
+    s = new PVector(width, height);
     planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 1000);  // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
     ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
+    ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     sun.addPlanet(planet);
     this.addChild(sun);
     trackPoint = new PVector(0, 0);
@@ -130,27 +134,30 @@ class MainGame extends GameScene
   // GAME LOGIC:
   void action()
   {
+    s.x = width;
+    s.y = height;
     fill(0);
     stroke(0);
     rect(0, 0, width, height);
 
-    ui.action();
 
-    Sun s = (Sun)this.getChild(1);
-    planet = (Planet)s.getChild(0);
+    Sun su = (Sun)this.getChild(1);
+    planet = (Planet)su.getChild(0);
     planetPos = planet.getPosition().get();
     // s.action();
+    this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.05);
+
     updateChildren();   
     fill(255);
     text(frameRate, 20, 10);
-    // Always try to update the position
-    // this.movePointTowardsPoint(this.getPosition(), new PVector(width/2, height/2), 0.05);
 
-    // I fixed it. 
+    PVector focusPoint = new PVector(planet.getPosition().x-width/2 +s.x/2, planet.getPosition().y-height/2 +s.y/2);    
+    setFocus(convertToLocal(focusPoint));
+
     if (derp) {
       t = new Timer(1);
       t.start();
-      // this.setFocus(convertToLocal(planetPos)); // focus on the planet. 
+      //    this.setFocus( new PVector(planet.getPosition().x-width/2, planet.getPosition().y-height/2) ); // focus on the planet. 
       derp = false;
     }
     if (t.isFinished())
@@ -159,6 +166,7 @@ class MainGame extends GameScene
     }
 
     handleKeyPresses();
+    ui.action();
   }
 
   // Move the rect towards a point with decreasing speed
@@ -239,6 +247,7 @@ class MainGame extends GameScene
   {
 
     if (keyPressed) {
+
       if (key == 'a') {    // 'a' key spawns missiles
         for (int i = 0; i < 3; i++) {
           HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planetPos);      
@@ -263,7 +272,9 @@ class MainGame extends GameScene
             this.getChildren().remove(i);
           }
         }
-        
+      }
+      else if (keyCode == DOWN)
+      {
       }
     }
   }

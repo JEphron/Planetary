@@ -16,7 +16,7 @@ float mY;
 void setup()
 {
   //size(720, 400);
-  size(900, 600);
+  size(900, 1000);
     frame.setResizable(true);
 
   // frameRate(5);
