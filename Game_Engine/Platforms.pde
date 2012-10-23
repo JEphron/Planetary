@@ -1,3 +1,8 @@
+///////////////////////////////////////////////
+//  This file contains the various types of defense platform
+//  used in the game. They all inherit from the Platform class.
+///////////////////////////////////////////////
+
 class Platform extends Entity
 {
   int damage;
@@ -18,11 +23,12 @@ class Platform extends Entity
   }
 }
 
+// Rename to Point Defense platform
 class StandardPlatform extends Entity
 {
   int damage = 5;
   float range = 2000;
-  int rof = 100; // rof in ms
+  int rof = 1; // rof in ms
   Timer t = new Timer(rof);
   Entity target;
 
@@ -38,8 +44,10 @@ class StandardPlatform extends Entity
   }
   void display() {
     fill(255, 255, 0);
-    stroke(255);
+    stroke(0);
     rect(pos.x, pos.y, s.x, s.y);
+    line(pos.x+s.x/2,pos.y,pos.x+s.x/2,pos.y+s.y);
+    line(pos.x,pos.y+s.y/2,pos.x+s.x,pos.y+s.y/2);
   }
   // will go through all objects in arrayList and select the closest one to target
   void aquireTarget(ArrayList a) {
@@ -72,6 +80,7 @@ class StandardPlatform extends Entity
       return true;
     else return false;
   }
+  
   boolean b = false;
   void fire() {
     if (b) {                    // Try to optimize if spare time == have
@@ -80,12 +89,12 @@ class StandardPlatform extends Entity
           stroke(200, 0, 255);
           strokeWeight(1);
           line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
-          //          strokeWeight(4);
-          //          stroke(0,100,255);
-          //          line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
-          //          strokeWeight(1);
-          //          stroke(255,255,255);
-          //          line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
+//                   strokeWeight(4);
+//                   stroke(0,100,255);
+//                    line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
+//                    strokeWeight(1);
+//                    stroke(255,255,255);
+//                   line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
           target.dealDamage(damage); // Deal dmg to target
           t = new Timer(rof);  // reset timer
           t.start();
@@ -96,8 +105,6 @@ class StandardPlatform extends Entity
     if (t.isFinished()) {       // Reset if finished
       b = true;
     }
-
-    // println("dd");
   }
 }  
 
