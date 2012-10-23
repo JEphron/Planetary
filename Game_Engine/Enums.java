@@ -42,3 +42,12 @@ enum EntityType
   Starfield
 }
 
+enum Resource
+{
+  Missile, // genericize as AI. All ai should behave in a similar way
+  Sun,
+  Platform,
+  Planet,
+  Starfield
+}
+
