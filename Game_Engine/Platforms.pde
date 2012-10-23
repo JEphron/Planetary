@@ -4,28 +4,26 @@ class Platform extends Entity
   Platform(PVector pos)
   {
   }
-  
+
   void action()
   {
   }
-  
+
   void display()
   {
-    
   }
-  
+
   void fireAtTarget()
   {
   }
-  
 }
 
 class StandardPlatform extends Entity
 {
   int damage = 5;
-  float range = 500;
-  int rof = 5; // rof in ms
-  Timer t = new Timer(10);
+  float range = 2000;
+  int rof = 100; // rof in ms
+  Timer t = new Timer(rof);
   Entity target;
 
   StandardPlatform(PVector p, PVector si)
@@ -53,6 +51,8 @@ class StandardPlatform extends Entity
       if (d < closestDistance) {
         closestDistance = d;
         target = h;
+        if ((int)random(6)>3) // This adds some randomness to the selection process. 
+          break;// I think it makes the results look nicer and the ai look smarter
       }
     }
   }
@@ -72,21 +72,32 @@ class StandardPlatform extends Entity
       return true;
     else return false;
   }
-
+  boolean b = false;
   void fire() {
-    if (t.isFinished()) { // Only fire when the timer has finished
-      if (!targIsDead()) {    // Don't fire on a dead target
-        if (targetInRange()) {// Only fire if in range, do this once per shot, not every frame
-          stroke(255, 0, 0);
+    if (b) {                    // Try to optimize if spare time == have
+      if (!targIsDead()) {      // Don't fire on a dead target
+        if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
+          stroke(200, 0, 255);
+          strokeWeight(1);
           line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
+          //          strokeWeight(4);
+          //          stroke(0,100,255);
+          //          line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
+          //          strokeWeight(1);
+          //          stroke(255,255,255);
+          //          line(pos.x+s.x/2, pos.y+s.y/2, target.getPosition().x, target.getPosition().y);
           target.dealDamage(damage); // Deal dmg to target
           t = new Timer(rof);  // reset timer
           t.start();
         }
       }
+      b = false;
     }
+    if (t.isFinished()) {       // Reset if finished
+      b = true;
+    }
+
     // println("dd");
   }
 }  
-
 

@@ -10,6 +10,8 @@
 
 // Generic UI Item
 class UIItem extends Entity {
+  
+  
 }
 
 // Healthbar class is a bar that decreases in length when the object it is attached to takes damage
@@ -78,4 +80,5 @@ class UILayer
     }
   }
 }
+
 

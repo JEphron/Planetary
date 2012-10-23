@@ -252,6 +252,7 @@ class MainGame extends GameScene
       else if (key == 'd') // 'd' to place a platform/turret thingy
       {
         this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+        key = 0;
       }       
       else if (key == 'f') // 'f' to clear platforms
       {
