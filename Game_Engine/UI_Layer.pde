@@ -10,8 +10,6 @@
 
 // Generic UI Item
 class UIItem extends Entity {
-  
-  
 }
 
 // Healthbar class is a bar that decreases in length when the object it is attached to takes damage
@@ -49,7 +47,6 @@ class HealthBar extends UIItem
     // Color shift could use work though...
     fill(255/(currLife/500), 255 - 255/(currLife/50), 0);
     rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
-    
   }
 }
 
@@ -81,4 +78,88 @@ class UILayer
   }
 }
 
+// Contains a number of panels, these are clickable and do things
+class UITray extends UIItem
+{
+  ArrayList boxes = new ArrayList();
+  PVector boxSize = new PVector();
+  UITray(PVector po, PVector si)
+  {
+    pos = po;
+    s = si;
+  }
+
+  void action()
+  {
+    this.display();
+  }
+
+  void display()
+  {
+    fill(100, 100, 100, 100);
+    stroke(0);
+    rect(0, height-150, width,150);
+    for (int i = 0; i < boxes.size(); i++)
+    {
+      UIBox b = (UIBox)boxes.get(i);
+      b.action();
+    }
+  }
+
+  void addItem(UIBox u) 
+  {
+    boxes.add(u);
+    layoutItems();
+  }
+
+  void layoutItems()
+  {
+    int boxHeight = (int)boxSize.y;
+    int place = 0;
+    int bufferDistance = int(s.y - (boxes.size() * boxHeight))/(boxes.size()+1);
+    for (int i = boxes.size()-1; i >= 0; i--) {
+      MenuButton b = (MenuButton)boxes.get(i);
+      place += bufferDistance;
+      b.setPosition(new PVector(width/2 - boxSize.x/2, place));
+      place += boxHeight;
+    }
+  }
+}
+
+// It's a little boxy thing that you click on and stuff
+class UIBox extends UIItem
+{
+  PImage img;
+  Platform pl;
+  UIBox(PVector po, PVector si, Platform p)
+  {
+    pos = po; 
+    s = si;
+    pl = p;
+  }
+
+  void action()
+  {
+    if (mousePressed) {
+      checkClick();
+    }
+    this.display();
+  }
+
+  void display()
+  {
+    fill(200);
+    rect(pos.x, pos.y, s.x, s.y);
+  }
+
+  boolean checkClick()
+  {
+    if (pointInRect(new PVector(mouseX, mouseY), pos, s))
+    {
+      println("Meeppppppp");
+      return true;
+    }
+    else return false;
+  }
+}
 
