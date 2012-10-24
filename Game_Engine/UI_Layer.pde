@@ -126,7 +126,7 @@ class UITray extends UIItem
     for (int i = 0; i < boxes.size(); i++)
     {
       UIBox b = (UIBox)boxes.get(i);
-      b.action();
+     // b.action();
       if (mousePressed) {
         b.checkClick();
       }
