@@ -294,8 +294,6 @@ class BFG extends Entity
 {
 }
 
-int h = 0; // this is disgusting
-int v = 0;
 
 // Simple player class
 class Player extends Entity
@@ -343,6 +341,10 @@ class Player extends Entity
     }
   }
 }
+
+int h = 0; // this is disgusting
+int v = 0;
+
 void keyReleased()
 {
   // EWWWWWWWWWWWWWW
