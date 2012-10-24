@@ -8,6 +8,10 @@
 // there is a gold bar with light yellow stripes
 // All these things are contained within the UI layer, a stationary layer that holds UI elements and recieves mouseClicks
 
+// TODO:
+//       Implement a drag and drop method.
+//       Get placement working. 
+
 // Generic UI Item
 class UIItem extends Entity {
 }
@@ -82,28 +86,58 @@ class UILayer
 class UITray extends UIItem
 {
   ArrayList boxes = new ArrayList();
-  PVector boxSize = new PVector();
+  PVector boxSize = new PVector(width/10, height/10);
   UITray(PVector po, PVector si)
   {
     pos = po;
     s = si;
+    
+    class cbo extends callbackObject
+    {
+      PlatformType t;
+     // cbo(PlatformType p)
+     // {
+     //   t = p;
+     // }
+      void callbackMethod()
+      {
+        
+      }
+    }
+    // when clicked, set placement type. on click, place that type and then reset. 
+    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
   }
 
   void action()
   {
     this.display();
   }
-
+  int w = width; 
+  int h = height;
   void display()
   {
+
     fill(100, 100, 100, 100);
     stroke(0);
-    rect(0, height-150, width,150);
+    rect(0, height-150, width, 150);
     for (int i = 0; i < boxes.size(); i++)
     {
       UIBox b = (UIBox)boxes.get(i);
       b.action();
+      if (mousePressed) {
+        b.checkClick();
+      }
     }
+
+    if (w != width || h!= height) {
+      boxSize = new PVector(width/10, width/10);
+      layoutItems();
+    }
+    w = width; 
+    h = height;
   }
 
   void addItem(UIBox u) 
@@ -114,13 +148,16 @@ class UITray extends UIItem
 
   void layoutItems()
   {
-    int boxHeight = (int)boxSize.y;
+    int boxHeight = (int)boxSize.x;
+    println(boxHeight);
+
     int place = 0;
-    int bufferDistance = int(s.y - (boxes.size() * boxHeight))/(boxes.size()+1);
+    int bufferDistance = int(width - (boxes.size() * boxHeight))/(boxes.size()+1);
     for (int i = boxes.size()-1; i >= 0; i--) {
-      MenuButton b = (MenuButton)boxes.get(i);
+      UIItem b = (UIItem)boxes.get(i);
       place += bufferDistance;
-      b.setPosition(new PVector(width/2 - boxSize.x/2, place));
+      b.setPosition(new PVector(place, height - 100));
+      b.setSize(boxSize);
       place += boxHeight;
     }
   }
@@ -131,18 +168,16 @@ class UIBox extends UIItem
 {
   PImage img;
   Platform pl;
-  UIBox(PVector po, PVector si, Platform p)
+  callbackObject cbo;
+  UIBox( PVector si, callbackObject callback, Platform p)
   {
-    pos = po; 
+    cbo = callback;
     s = si;
     pl = p;
   }
 
   void action()
   {
-    if (mousePressed) {
-      checkClick();
-    }
     this.display();
   }
 
@@ -150,13 +185,16 @@ class UIBox extends UIItem
   {
     fill(200);
     rect(pos.x, pos.y, s.x, s.y);
+    pl.setPosition(new PVector(pos.x+s.x/2, pos.y+s.y/2));
+    pl.display();
   }
 
   boolean checkClick()
   {
     if (pointInRect(new PVector(mouseX, mouseY), pos, s))
     {
-      println("Meeppppppp");
+      println(pos.x);
+      cbo.callbackMethod();
       return true;
     }
     else return false;

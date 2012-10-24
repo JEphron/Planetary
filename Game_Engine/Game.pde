@@ -130,7 +130,6 @@ class MainGame extends GameScene
   Timer t;
   PVector planetPos;
 
-
   // GAME LOGIC:
   void action()
   {
@@ -140,29 +139,18 @@ class MainGame extends GameScene
     stroke(0);
     rect(0, 0, width, height);
 
-
     Sun su = (Sun)this.getChild(1);
     planet = (Planet)su.getChild(0);
     planetPos = planet.getPosition().get();
-    // s.action();
-    this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.05);
 
     updateChildren();   
     fill(255);
     text(frameRate, 20, 10);
 
-    PVector focusPoint = new PVector(planet.getPosition().x-width/2 +s.x/2, planet.getPosition().y-height/2 +s.y/2);    
-    setFocus(convertToLocal(focusPoint));
-
-    if (derp) {
-      t = new Timer(1);
-      t.start();
-      //    this.setFocus( new PVector(planet.getPosition().x-width/2, planet.getPosition().y-height/2) ); // focus on the planet. 
-      derp = false;
-    }
-    if (t.isFinished())
-    {
-      derp = true;
+    if (tracking) {
+      PVector focusPoint = new PVector(planet.getPosition().x-width/2 +s.x/2, planet.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
+      setFocus(convertToLocal(focusPoint));
+      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.05);
     }
 
     handleKeyPresses();
@@ -193,7 +181,7 @@ class MainGame extends GameScene
           if ( e.getType() == EntityType.Missile) {
             // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
             HomingMissile m = (HomingMissile)e;
-            m.action(planetPos);
+            m.action();
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
               if (!m.isExploding())
@@ -218,7 +206,7 @@ class MainGame extends GameScene
           }           
           else if ( e.getType() == EntityType.Platform )
           {
-            StandardPlatform t = (StandardPlatform)e;
+            Platform t = (Platform)e;
             if (t.targIsDead())
             {
               ArrayList temp = this.getChildrenByType(EntityType.Missile);
@@ -250,7 +238,7 @@ class MainGame extends GameScene
 
       if (key == 'a') {    // 'a' key spawns missiles
         for (int i = 0; i < 3; i++) {
-          HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planetPos);      
+          HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planet);      
           this.addChild(h);
         }
       }
@@ -260,10 +248,20 @@ class MainGame extends GameScene
       }      
       else if (key == 'd') // 'd' to place a platform/turret thingy
       {
+        //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+        this.addChild(new MissilePlatform(new PVector(mouseX, mouseY), new PVector(20, 20), this));
+
+        key = 0;
+      }             
+      else if (key == 'f') // 'f' to place a platform/turret thingy
+      {
+        //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
         this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+
         key = 0;
       }       
-      else if (key == 'f') // 'f' to clear platforms
+
+      else if (key == 'g') // 'g' to clear platforms
       {
         for (int i = 0; i <= this.getChildren().size()-1; i++) {
           Entity e=(Entity)this.getChildren().get(i);
@@ -273,8 +271,10 @@ class MainGame extends GameScene
           }
         }
       }
-      else if (keyCode == DOWN)
+      else  if (key  == ' ')
       {
+        tracking  = !tracking;
+        key = 0;
       }
     }
   }

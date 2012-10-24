@@ -31,8 +31,9 @@ class HomingMissile extends Entity
   float angle, turnSpeed, vel; 
   boolean exploding = false;
   int explody = 0;
+  Entity targ;
   // jTri t;
-  HomingMissile(PVector position, float velocity, float tspeed, PVector targ)
+  HomingMissile(PVector position, float velocity, float tspeed, Entity target)
   {
     setTotalLife(10);
     type = EntityType.Missile;
@@ -40,11 +41,14 @@ class HomingMissile extends Entity
     pos = position;
     vel = velocity;
     col = color(random(255), random(255), random(255));
-    angle = AngleTo(pos,targ);
+    if(target!=null)
+    angle = AngleTo(pos,target.getPosition());
+    targ = target;
   }
 
-  void action(PVector targetPosition)
+  void action()
   {
+    PVector targetPosition = targ.getPosition();
     // So now this works...
     float radians = angle * PI / 180; 
     PVector thrust = new PVector(0, 0); // forward direction vector.
@@ -73,6 +77,11 @@ class HomingMissile extends Entity
     //t.setPosition(pos);
     // println(t.getPosition());
     //t.action();
+    
+    if(dist(pos.x,pos.y,targetPosition.x,targetPosition.y)<10)
+    {
+      targ.dealDamage(10);
+    }
     
     if (currentLife <= 0)
       explode();
