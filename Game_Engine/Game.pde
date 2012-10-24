@@ -104,25 +104,32 @@ class MainGame extends GameScene
 {
 
   StarField sf = new StarField(300);
-  Sun sun = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);                     
+  Sun sun;
   Planet planet;     
   UILayer ui = new UILayer();  
   boolean tracking = false;
   PVector trackPoint;
-
+  Player playerzor = new Player();
 
   MainGame()
   {
+    s = new PVector(width, height);
+
     sf.generateField();
     this.addChild(sf);
+
+    sun  = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);
     sun.setPosition(new PVector(width/2, height/2));
-    s = new PVector(width, height);
     planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 1000);  // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
-    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
-    ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     sun.addPlanet(planet);
     this.addChild(sun);
-    trackPoint = new PVector(0, 0);
+
+    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
+    ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
+
+    trackPoint = new PVector(0, 0); // move out of constructor
+
+    this.addChild(playerzor);
   } 
 
   PVector scenePos = null;
@@ -144,11 +151,12 @@ class MainGame extends GameScene
     planetPos = planet.getPosition().get();
 
     updateChildren();   
+
     fill(255);
     text(frameRate, 20, 10);
 
     if (tracking) {
-      PVector focusPoint = new PVector(planet.getPosition().x-width/2 +s.x/2, planet.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
+      PVector focusPoint = new PVector(playerzor.getPosition().x-width/2 +s.x/2, playerzor.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
       setFocus(convertToLocal(focusPoint));
       this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.05);
     }
@@ -284,5 +292,79 @@ class MainGame extends GameScene
 // Consider inheriting from an abstract gun/turret class.
 class BFG extends Entity
 {
+}
+
+int h = 0; // this is disgusting
+int v = 0;
+
+// Simple player class
+class Player extends Entity
+{
+  int speed = 10;
+
+  Player()
+  {
+    s = new PVector(20, 20);
+    pos = new PVector(width/2, height/2);
+  }
+
+  void action()
+  {
+    pos.x+= h*speed;
+    pos.y+= v*speed;
+    checkKeys();
+    display();
+  }
+
+
+  void display()
+  {
+    fill(255, 0, 255);
+    ellipse(pos.x, pos.y, s.x, s.y);
+  }
+
+  void checkKeys()
+  {
+    if (keyPressed) {
+      if (key == CODED) {
+        if (keyCode == UP) {
+          v = -1;
+        }
+        if (keyCode == DOWN) {
+          v = 1;
+        }
+        if (keyCode == LEFT) {
+          h = -1;
+        }
+        if (keyCode == RIGHT) {
+          h = 1;
+        }
+      }
+    }
+  }
+}
+void keyReleased()
+{
+  // EWWWWWWWWWWWWWW
+  if (keyCode == LEFT) {
+    println("dd"); 
+    h += 1;
+  }
+  if (keyCode == RIGHT)
+    h -=1;
+  if (keyCode == UP)
+    v +=1;
+  if (keyCode == DOWN)
+    v -=1;
+
+  if ( v < -1 )
+    v = -1;
+  if ( v > 1)
+    v  = 1;
+
+  if (h < -1)
+    h = -1;
+  if (h > 1)
+    h = 1;
 }
 

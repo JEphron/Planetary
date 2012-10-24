@@ -117,6 +117,7 @@ class Planet extends Planetary
   }
   void action()
   {
+
     //currentLife -= 10;
     super.action();
   }
