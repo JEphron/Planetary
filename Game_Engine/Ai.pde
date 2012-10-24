@@ -78,10 +78,10 @@ class HomingMissile extends Entity
     // println(t.getPosition());
     //t.action();
     
-    if(dist(pos.x,pos.y,targetPosition.x,targetPosition.y)<10)
-    {
-      targ.dealDamage(10);
-    }
+    //if(dist(pos.x,pos.y,targetPosition.x,targetPosition.y)<10)
+    //{
+    //  targ.dealDamage(10);
+    // }
     
     if (currentLife <= 0)
       explode();
