@@ -17,7 +17,7 @@ void setup()
 {
   //size(720, 400);
   size(900, 900);
-    frame.setResizable(true);
+  frame.setResizable(true);
 
   // frameRate(5);
   //size(360, 480);// 480/360 = 1.3333...
@@ -37,6 +37,32 @@ void mousePressed()
 {
   mX = mouseX;
   mY = mouseY;
+}
+
+// handle key presses
+void keyPressed()
+{
+  if (keyCode == LEFT)
+    Input.Left = true;
+  if (keyCode == RIGHT)
+    Input.Right = true;
+  if (keyCode == UP)
+    Input.Up = true;
+  if (keyCode == DOWN)
+    Input.Down = true;
+}
+
+// handle key releases
+void keyReleased()
+{
+  if (keyCode == LEFT)
+    Input.Left = false;
+  if (keyCode == RIGHT)
+    Input.Right = false;
+  if (keyCode == UP)
+    Input.Up = false;
+  if (keyCode == DOWN)
+    Input.Down = false;
 }
 // CONVENTIONS: • Comments at the top of files should summerize the contents of the file
 //              • Class names should be capitalized, methods should be camelCase

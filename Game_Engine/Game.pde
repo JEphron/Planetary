@@ -158,7 +158,7 @@ class MainGame extends GameScene
     if (tracking) {
       PVector focusPoint = new PVector(playerzor.getPosition().x-width/2 +s.x/2, playerzor.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
       setFocus(convertToLocal(focusPoint));
-      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.05);
+      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.5);
     }
 
     handleKeyPresses();
@@ -241,16 +241,17 @@ class MainGame extends GameScene
 
   void handleKeyPresses()
   {
+    if (Input.Fire) {    // 'a' key spawns missiles
+      for (int i = 0; i < 3; i++) {
+        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), playerzor.getPosition().y+random(-10, 10)), 20, 15, planet);    
+        h.setAngle(playerzor.getAngle());  
+        this.addChild(h);
+      }
+    }
 
     if (keyPressed) {
 
-      if (key == 'a') {    // 'a' key spawns missiles
-        for (int i = 0; i < 3; i++) {
-          HomingMissile h = new HomingMissile(new PVector( mouseX +random(-100, 100), mouseY+random(-100, 100)), 20, 15, planet);      
-          this.addChild(h);
-        }
-      }
-      else if (key == 's') // 's' to reset the planet's health
+      if (key == 's') // 's' to reset the planet's health
       {
         planet.setTotalLife(1000); // should be a variable.
       }      
@@ -298,75 +299,56 @@ class BFG extends Entity
 // Simple player class
 class Player extends Entity
 {
-  int speed = 10;
-
+  float speed = 2;
+  float turnSpeed = 10;
+  PImage sprt;
+  float angle;
+  float accel = 1;
+  float maxSpeed = 30;
   Player()
   {
     s = new PVector(20, 20);
     pos = new PVector(width/2, height/2);
+    sprt = loadImage("SpaceShip14.png");
   }
 
   void action()
   {
-    pos.x+= h*speed;
-    pos.y+= v*speed;
+    pos.x += cos(radians(angle))*speed;
+    pos.y += sin(radians(angle))*speed;
     checkKeys();
     display();
   }
-
+  float getAngle() {
+    return angle;
+  }
 
   void display()
   {
-    fill(255, 0, 255);
-    ellipse(pos.x, pos.y, s.x, s.y);
+    pushMatrix();
+    translate(pos.x, pos.y);
+    rotate(radians(angle));
+    imageMode(CENTER);
+    image(sprt, 0, 0);
+    popMatrix();
+    println(speed);
   }
 
   void checkKeys()
   {
-    if (keyPressed) {
-      if (key == CODED) {
-        if (keyCode == UP) {
-          v = -1;
-        }
-        if (keyCode == DOWN) {
-          v = 1;
-        }
-        if (keyCode == LEFT) {
-          h = -1;
-        }
-        if (keyCode == RIGHT) {
-          h = 1;
-        }
+    if (Input.Left)
+      angle -= turnSpeed;
+    if (Input.Right)
+      angle += turnSpeed;
+    if (Input.Up)
+    {
+      speed += accel;
+      if (speed > maxSpeed) {
+        speed = maxSpeed;
       }
     }
+    if (Input.Down && speed > 0)
+      speed -= accel;
   }
-}
-
-int h = 0; // this is disgusting
-int v = 0;
-
-void keyReleased()
-{
-  // EWWWWWWWWWWWWWW
-  if (keyCode == LEFT) {
-    println("dd"); 
-    h += 1;
-  }
-  if (keyCode == RIGHT)
-    h -=1;
-  if (keyCode == UP)
-    v +=1;
-  if (keyCode == DOWN)
-    v -=1;
-
-  if ( v < -1 )
-    v = -1;
-  if ( v > 1)
-    v  = 1;
-
-  if (h < -1)
-    h = -1;
-  if (h > 1)
-    h = 1;
 }
 

@@ -42,10 +42,10 @@ class HomingMissile extends Entity
     vel = velocity;
     col = color(random(255), random(255), random(255));
     if(target!=null)
-    angle = AngleTo(pos,target.getPosition());
+      angle = AngleTo(pos,target.getPosition());
     targ = target;
   }
-
+  void setAngle(float a){angle = a;}
   void action()
   {
     PVector targetPosition = targ.getPosition();
