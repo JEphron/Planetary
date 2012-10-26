@@ -331,7 +331,6 @@ class Player extends Entity
     imageMode(CENTER);
     image(sprt, 0, 0);
     popMatrix();
-    println(speed);
   }
 
   void checkKeys()

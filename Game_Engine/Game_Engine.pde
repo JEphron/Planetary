@@ -50,6 +50,8 @@ void keyPressed()
     Input.Up = true;
   if (keyCode == DOWN)
     Input.Down = true;
+  if (key == 'a')
+    Input.Fire = true;
 }
 
 // handle key releases
@@ -63,6 +65,8 @@ void keyReleased()
     Input.Up = false;
   if (keyCode == DOWN)
     Input.Down = false;
+  if (key == 'a')
+    Input.Fire = false;
 }
 // CONVENTIONS: • Comments at the top of files should summerize the contents of the file
 //              • Class names should be capitalized, methods should be camelCase
