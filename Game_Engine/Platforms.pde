@@ -42,7 +42,7 @@ class Platform extends Entity
 class StandardPlatform extends Platform
 {
   int damage = 5;
-  float range = 500;
+  float range = 1200;
   int rof = 1; // rof in ms
   Timer t = new Timer(rof);
   Entity target;
@@ -106,15 +106,15 @@ class StandardPlatform extends Platform
     if (b) {                    // Try to optimize if spare time == have
       if (!targIsDead()) {      // Don't fire on a dead target
         if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
-          stroke(200, 0, 255);
+          stroke(random(55)+200, random(100)+100, random(200));
           strokeWeight(1);
           line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
-          //          strokeWeight(4);
-          //          stroke(0, 100, 255);
-          //          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
-          //          strokeWeight(1);
-          //          stroke(255, 255, 255);
-          //          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
+//          strokeWeight(4);
+//          stroke(0, 100, 255);
+//          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
+//          strokeWeight(1);
+//          stroke(255, 255, 255);
+//          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
           target.dealDamage(damage); // Deal dmg to target
           t = new Timer(rof);  // reset timer
           t.start();
@@ -132,7 +132,7 @@ class MissilePlatform extends Platform
 {
   Entity parent;
   int damage = 50;
-  float range = 150;
+  float range = 200;
   int rof = 1; // rof in ms
   Timer t = new Timer(rof);
   Entity target;
@@ -151,7 +151,7 @@ class MissilePlatform extends Platform
   }
 
   void display() {
-    fill(200,255,0);
+    fill(200, 255, 0);
     stroke(0);
     ellipse(pos.x, pos.y, s.x, s.y);
   }
@@ -184,7 +184,7 @@ class MissilePlatform extends Platform
         closestDistance = d;
         target = h;
         if ((int)random(6)>3) // This adds some randomness to the selection process. 
-         break;// I think it makes the results look nicer and the ai look smarter
+          break;// I think it makes the results look nicer and the ai look smarter
       }
     }
   }
@@ -193,7 +193,7 @@ class MissilePlatform extends Platform
     if (!targIsDead()) {      // Don't fire on a dead target
       if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
         noFill();
-        stroke(255,255,0);
+        stroke(random(55)+200, random(55)+200, 0);
         strokeWeight(1);
         bezier(pos.x, pos.y, random(pos.x-width/5, pos.x+width/5), random(pos.y-width/5, pos.y+width/5), random(pos.x-width/5, pos.x+width/5), random(pos.y-width/5, pos.y+width/5), target.getPosition().x, target.getPosition().y);
         target.dealDamage(damage);

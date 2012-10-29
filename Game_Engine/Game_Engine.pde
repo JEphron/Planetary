@@ -43,30 +43,38 @@ void mousePressed()
 void keyPressed()
 {
   if (keyCode == LEFT)
-    Input.Left = true;
+    Left = true;
   if (keyCode == RIGHT)
-    Input.Right = true;
+    Right = true;
   if (keyCode == UP)
-    Input.Up = true;
+    Up = true;
   if (keyCode == DOWN)
-    Input.Down = true;
+    Down = true;
   if (key == 'a')
-    Input.Fire = true;
+    Fire = true;
+  if (key == 'd')
+    d = true;
+  if (key == 'f')
+    f = true;
 }
 
 // handle key releases
 void keyReleased()
 {
   if (keyCode == LEFT)
-    Input.Left = false;
+    Left = false;
   if (keyCode == RIGHT)
-    Input.Right = false;
+    Right = false;
   if (keyCode == UP)
-    Input.Up = false;
+    Up = false;
   if (keyCode == DOWN)
-    Input.Down = false;
+    Down = false;
   if (key == 'a')
-    Input.Fire = false;
+    Fire = false;
+  if (key == 'd')
+    d = false;
+  if (key == 'f')
+    f = false;
 }
 // CONVENTIONS: • Comments at the top of files should summerize the contents of the file
 //              • Class names should be capitalized, methods should be camelCase

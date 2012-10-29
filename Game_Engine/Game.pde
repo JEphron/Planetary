@@ -107,7 +107,7 @@ class MainGame extends GameScene
   Sun sun;
   Planet planet;     
   UILayer ui = new UILayer();  
-  boolean tracking = false;
+  boolean tracking = true;
   PVector trackPoint;
   Player playerzor = new Player();
 
@@ -158,7 +158,7 @@ class MainGame extends GameScene
     if (tracking) {
       PVector focusPoint = new PVector(playerzor.getPosition().x-width/2 +s.x/2, playerzor.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
       setFocus(convertToLocal(focusPoint));
-      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.5);
+      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.2);
     }
 
     handleKeyPresses();
@@ -241,13 +241,27 @@ class MainGame extends GameScene
 
   void handleKeyPresses()
   {
-    if (Input.Fire) {    // 'a' key spawns missiles
+    if ( Fire) {    // 'a' key spawns missiles
       for (int i = 0; i < 3; i++) {
-        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), playerzor.getPosition().y+random(-10, 10)), 20, 15, planet);    
+        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), playerzor.getPosition().y+random(-10, 10)), 30, 10, planet);    
         h.setAngle(playerzor.getAngle());  
         this.addChild(h);
       }
     }
+     if (d) // 'd' to place a platform/turret thingy
+    {
+      //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+      this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
+
+      //key = 0;
+    }             
+     if (f) // 'f' to place a platform/turret thingy
+    {
+      //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
+      this.addChild(new StandardPlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20)));
+
+      //key = 0;
+    }       
 
     if (keyPressed) {
 
@@ -255,20 +269,6 @@ class MainGame extends GameScene
       {
         planet.setTotalLife(1000); // should be a variable.
       }      
-      else if (key == 'd') // 'd' to place a platform/turret thingy
-      {
-        //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
-        this.addChild(new MissilePlatform(new PVector(mouseX, mouseY), new PVector(20, 20), this));
-
-        key = 0;
-      }             
-      else if (key == 'f') // 'f' to place a platform/turret thingy
-      {
-        //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
-        this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
-
-        key = 0;
-      }       
 
       else if (key == 'g') // 'g' to clear platforms
       {
@@ -335,18 +335,18 @@ class Player extends Entity
 
   void checkKeys()
   {
-    if (Input.Left)
+    if ( Left)
       angle -= turnSpeed;
-    if (Input.Right)
+    if ( Right)
       angle += turnSpeed;
-    if (Input.Up)
+    if ( Up)
     {
       speed += accel;
       if (speed > maxSpeed) {
         speed = maxSpeed;
       }
     }
-    if (Input.Down && speed > 0)
+    if ( Down && speed > 0)
       speed -= accel;
   }
 }

@@ -12,6 +12,9 @@ class Planetary extends Entity
   protected float rotSpeed;
   protected boolean isOrbital; // does this body orbit a point?
   boolean selected = false;
+  int t = 500; // time between life boosts in ms
+  Timer lifeTimer; // every t ms, life will go up some.
+  boolean b = false;
   // construct with the radius of th circle, color of circle, orgin of orbit, and radius of orbit. 
   Planetary(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean o )
   {
@@ -92,7 +95,7 @@ class Sun extends Planetary
         e.setOrgin(this.getPosition());
       }
     }
-  }
+  }   
 
   ArrayList getPlanets()
   {
@@ -108,16 +111,24 @@ class Sun extends Planetary
 
 class Planet extends Planetary
 {
-
   Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
     type = EntityType.Planet;
     setTotalLife(life);
+    lifeTimer = new Timer(t);
   }
   void action()
   {
-
+    if (b)
+    {
+      if(this.getLife() < this.getMaxLife()-1)
+      this.setLife(this.getLife()+1);
+      b=false;
+      lifeTimer = new Timer(t);
+    }
+    if (lifeTimer.isFinished())
+      b = true;
     //currentLife -= 10;
     super.action();
   }
