@@ -120,6 +120,7 @@ class Planet extends Planetary
   }
   void action()
   {
+    // Regen health slowly
     if (b)
     {
       if(this.getLife() < this.getMaxLife()-1)

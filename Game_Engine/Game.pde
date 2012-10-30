@@ -109,7 +109,9 @@ class MainGame extends GameScene
   UILayer ui = new UILayer();  
   boolean tracking = true;
   PVector trackPoint;
-  Player playerzor = new Player();
+  float trackSpeed = 1;
+
+    Player playerzor = new Player();
 
   MainGame()
   {
@@ -136,7 +138,6 @@ class MainGame extends GameScene
   boolean derp = true;
   Timer t;
   PVector planetPos;
-
   // GAME LOGIC:
   void action()
   {
@@ -149,6 +150,7 @@ class MainGame extends GameScene
     Sun su = (Sun)this.getChild(1);
     planet = (Planet)su.getChild(0);
     planetPos = planet.getPosition().get();
+    planet.addChild(new StandardPlatform(new PVector(planet.getPosition().x, planet.getPosition().y), new PVector(200, 20)));
 
     updateChildren();   
 
@@ -158,7 +160,7 @@ class MainGame extends GameScene
     if (tracking) {
       PVector focusPoint = new PVector(playerzor.getPosition().x-width/2 +s.x/2, playerzor.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
       setFocus(convertToLocal(focusPoint));
-      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), 0.2);
+      this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), trackSpeed);
     }
 
     handleKeyPresses();
@@ -248,14 +250,14 @@ class MainGame extends GameScene
         this.addChild(h);
       }
     }
-     if (d) // 'd' to place a platform/turret thingy
+    if (d) // 'd' to place a platform/turret thingy
     {
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
 
       //key = 0;
     }             
-     if (f) // 'f' to place a platform/turret thingy
+    if (f) // 'f' to place a platform/turret thingy
     {
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new StandardPlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20)));
@@ -300,11 +302,11 @@ class BFG extends Entity
 class Player extends Entity
 {
   float speed = 2;
-  float turnSpeed = 10;
+  float turnSpeed = 15;
   PImage sprt;
   float angle;
   float accel = 1;
-  float maxSpeed = 30;
+  float maxSpeed = 50;
   Player()
   {
     s = new PVector(20, 20);
@@ -350,4 +352,5 @@ class Player extends Entity
       speed -= accel;
   }
 }
+//http://207.237.90.207:5253/
 
