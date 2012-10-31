@@ -109,7 +109,7 @@ class MainGame extends GameScene
   UILayer ui = new UILayer();  
   boolean tracking = true;
   PVector trackPoint;
-  float trackSpeed = 1;
+  float trackSpeed = 0.2;
 
   Player playerzor = new Player();
 
@@ -198,7 +198,7 @@ class MainGame extends GameScene
             // Handle this differently please. 
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
               if (!m.isExploding())
-                planet.dealDamage(1);
+                planet.dealDamage(m.getDamage());
               m.explode();
             }
             if (m.isExpired()) {
@@ -242,13 +242,13 @@ class MainGame extends GameScene
   {
     if ( Fire) {    // 'a' key spawns missiles
       for (int i = 0; i < 20; i++) {
-        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), 1000, playerzor.getPosition().y+random(-10, 10)), 30, 10, planet);    
+        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10),  playerzor.getPosition().y+random(-10, 10)), 1000, 30, 10, planet);    
         h.setAngle(playerzor.getAngle());  
         this.addChild(h);
       }
 //        // Let's get a bit of spread up in here. 
-//        for (int i = -10; i < 10; i+= 5) {
-//          this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/200, /*Speed:*/10, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i*random(0.5, 1.5)));
+//        for (int i = 0; i < 360; i+= 10) {
+//          this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/800, /*Speed:*/10, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
 //        }
     }
     if (d) { // 'd' to place a platform/turret thingy
