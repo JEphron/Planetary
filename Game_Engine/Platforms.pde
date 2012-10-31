@@ -76,11 +76,13 @@ class StandardPlatform extends Platform
     for (int i = 0; i < a.size(); i++) { 
       Entity h = (Entity)a.get(i);
       float d = dist(pos.x, pos.y, h.getPosition().x, h.getPosition().y);
-      if (d < closestDistance) {
-        closestDistance = d;
-        target = h;
-        if ((int)random(10)>5) // This adds some randomness to the selection process. 
-          break;// I think it makes the results look nicer and the ai look smarter
+      if (!h.isTargeted()) {
+        if (d < closestDistance) {
+          closestDistance = d;
+          target = h;
+          if ((int)random(10)>5) // This adds some randomness to the selection process. 
+            break;// I think it makes the results look nicer and the ai look smarter
+        }
       }
     }
   }
@@ -106,15 +108,16 @@ class StandardPlatform extends Platform
     if (b) {                    // Try to optimize if spare time == have
       if (!targIsDead()) {      // Don't fire on a dead target
         if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
+          target.setTargeted(true);
           stroke(random(55)+200, random(100)+100, random(200));
           strokeWeight(1);
           line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
-//          strokeWeight(4);
-//          stroke(0, 100, 255);
-//          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
-//          strokeWeight(1);
-//          stroke(255, 255, 255);
-//          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
+          //          strokeWeight(4);
+          //          stroke(0, 100, 255);
+          //          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
+          //          strokeWeight(1);
+          //          stroke(255, 255, 255);
+          //          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
           target.dealDamage(damage); // Deal dmg to target
           t = new Timer(rof);  // reset timer
           t.start();

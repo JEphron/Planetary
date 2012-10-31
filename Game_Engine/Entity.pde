@@ -29,6 +29,7 @@ class Entity
   protected String type;
   protected int maxLife;
   protected int currentLife;
+  boolean targeted = false;
 
   Entity() 
   {
@@ -44,6 +45,16 @@ class Entity
   {
     // Logic goes here
   }
+  boolean isTargeted()
+  {
+    return targeted;
+  }
+
+  void setTargeted(boolean t)
+  {
+    targeted = t;
+  }
+
 
   void display() 
   {
