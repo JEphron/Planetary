@@ -80,7 +80,7 @@ class StandardPlatform extends Platform
         if (d < closestDistance) {
           closestDistance = d;
           target = h;
-          if ((int)random(10)>5) // This adds some randomness to the selection process. 
+          if ((int)random(10)>8) // This adds some randomness to the selection process. 
             break;// I think it makes the results look nicer and the ai look smarter
         }
       }

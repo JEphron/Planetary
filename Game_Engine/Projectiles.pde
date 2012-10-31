@@ -57,10 +57,12 @@ class Projectile extends Entity
 
 class Bullet extends Projectile
 {
+  int explody = 0;
+
   Bullet(PVector p, int rng, int spd, int dmg, float ang)
   {
     super(p, rng, spd, dmg, ang, null);
-    setTotalLife(10);
+    setTotalLife(1);
   }
 
   void action()
@@ -73,13 +75,27 @@ class Bullet extends Projectile
 
   void display()
   {
-    fill(255, 0, 0);
-    ellipse(pos.x, pos.y, 10, 10);
+    if (!exploding) {
+      stroke(0);
+      fill(255, 0, 0);
+      ellipse(pos.x, pos.y, 10, 10);
+    }
+    else {
+      // It's exploding, make an explosion;
+      this.explode();
+      if (explody > random(20, 30))
+        expired = true;
+    }
   }
 
   void explode()
   {
-    expired = true;
+    exploding = true;
+    explody += 15;
+    noStroke();
+    fill(0, random(100,200), random(200, 255), random(100, 150));
+    ellipse(pos.x, pos.y, explody, explody);
+    stroke(1);
   }
 }
 
