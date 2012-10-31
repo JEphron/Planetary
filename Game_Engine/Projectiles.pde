@@ -5,13 +5,14 @@ class Projectile extends Entity
   int vel; // how fast does the projectile move
   float angle; // yah
   PImage sprt; // what image to use when drawing
-  int savedTime; // when was the projectile created
+  float savedTime; // when was the projectile created
   boolean exploding = false;
-
+  float distTraveled;
   //PImage splosionSprt; // the explosion graphic
 
   Projectile(PVector p, int rng, int spd, int dmg, float ang, PImage graphic)
   {
+    setTotalLife(1); // default to 10;
     type = "Projectile";
     pos = p;
     savedTime = millis(); // init dat
@@ -29,8 +30,13 @@ class Projectile extends Entity
 
   void action()
   {
-    if (this.getTotalDistanceTraveled() > range)
-      expired = true;
+    if (currentLife <= 0)
+      explode();
+
+    distTraveled += vel;
+
+    if (distTraveled > range)
+      expired = true; // explode() if you want.
   }
 
   int getDamage() {
@@ -41,7 +47,7 @@ class Projectile extends Entity
   }
   float getTotalDistanceTraveled()
   {
-    return vel * (millis()- savedTime);
+    return distTraveled;
   }
   boolean isExploding()
   {
@@ -54,18 +60,26 @@ class Bullet extends Projectile
   Bullet(PVector p, int rng, int spd, int dmg, float ang)
   {
     super(p, rng, spd, dmg, ang, null);
+    setTotalLife(10);
   }
 
   void action()
   {
+    super.action();
+    pos.x += vel * cos(radians(angle));
+    pos.y += vel * sin(radians(angle));     
+    this.display();
   }
 
   void display()
   {
+    fill(255, 0, 0);
+    ellipse(pos.x, pos.y, 10, 10);
   }
 
   void explode()
   {
+    expired = true;
   }
 }
 
@@ -76,9 +90,9 @@ class HomingMissile extends Projectile
   int explody = 0;
   Entity targ;
   // jTri t;
-  HomingMissile(PVector p, int velocity, float tspeed, Entity target)
+  HomingMissile(PVector p, int rng, int velocity, float tspeed, Entity target)
   {
-    super(p, 1000, velocity, 1, AngleTo(p, target.getPosition()), null);
+    super(p, rng, velocity, 1, AngleTo(p, target.getPosition()), null);
     setTotalLife(1);
     turnSpeed = tspeed;
     col = color(random(255), random(255), random(255));
@@ -91,16 +105,17 @@ class HomingMissile extends Projectile
   }
   void action()
   {
+    super.action();
     PVector targetPosition = targ.getPosition();
     // So now this works...
-    float radians = angle * PI / 180; 
+    //float radians = angle * PI / 180; 
     PVector thrust = new PVector(0, 0); // forward direction vector.
     //    fill(255,0,0); 
     //    stroke(0);
     //    ellipse(targetPosition.x,targetPosition.y,5,5); // Draw the target
     //    fill(255);
-    thrust.x = vel * cos(radians) ;
-    thrust.y = vel * sin(radians) ;      
+    thrust.x = vel * cos(radians(angle)) ;
+    thrust.y = vel * sin(radians(angle)) ;      
 
     float sign = beringAsMagnitudeCubic2d(pos, thrust, targetPosition);
 
@@ -125,9 +140,6 @@ class HomingMissile extends Projectile
     //{
     //  targ.dealDamage(10);
     // }
-
-    if (currentLife <= 0)
-      explode();
   }
 
   void display()

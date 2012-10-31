@@ -162,6 +162,7 @@ class MainGame extends GameScene
       setFocus(convertToLocal(focusPoint));
       this.movePointTowardsPoint(pos, new PVector(width/2+1, height/2), trackSpeed);
     }
+    //println(convertToLocal(playerzor.getPosition()).x);
 
     handleKeyPresses();
     ui.action();
@@ -192,6 +193,7 @@ class MainGame extends GameScene
             // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
             Projectile m = (Projectile)e;
             m.action();
+
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
             // Handle this differently please. 
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
@@ -240,10 +242,14 @@ class MainGame extends GameScene
   {
     if ( Fire) {    // 'a' key spawns missiles
       for (int i = 0; i < 20; i++) {
-        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), playerzor.getPosition().y+random(-10, 10)), 30, 10, planet);    
+        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), 1000, playerzor.getPosition().y+random(-10, 10)), 30, 10, planet);    
         h.setAngle(playerzor.getAngle());  
         this.addChild(h);
       }
+//        // Let's get a bit of spread up in here. 
+//        for (int i = -10; i < 10; i+= 5) {
+//          this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/200, /*Speed:*/10, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i*random(0.5, 1.5)));
+//        }
     }
     if (d) { // 'd' to place a platform/turret thingy
 
@@ -301,7 +307,7 @@ class Player extends Entity
   PImage sprt;
   float angle;
   float accel = 1;
-  float maxSpeed = 500;
+  float maxSpeed = 30;
   Player()
   {
     s = new PVector(20, 20);
@@ -319,6 +325,9 @@ class Player extends Entity
   float getAngle() {
     return angle;
   }
+  int getSpeed() {
+    return (int)speed;
+  } // merge with getVelocity in Entity
 
   void display()
   {
@@ -343,9 +352,9 @@ class Player extends Entity
         speed = maxSpeed;
       }
     }
-    if ( Down && speed > 0){
+    if ( Down && speed > 0) {
       speed -= accel;
-      if( speed < 0)
+      if ( speed < 0)
         speed = 0;
     }
   }

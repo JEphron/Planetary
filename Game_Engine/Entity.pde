@@ -10,6 +10,8 @@
 //       • Investigate problems with the seperation of action() and display(). 
 //       • Subclass Entity for game objects
 //       • Subclass for general things with pos/scale/children 
+//       • Find a better way to handle types. Enums won't work b/c java and strings just suck 
+//       • Implement a subType
 
 // This class is getting to big, consider refactoring soon. 
 class Entity
