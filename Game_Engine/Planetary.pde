@@ -12,9 +12,7 @@ class Planetary extends Entity
   protected float rotSpeed;
   protected boolean isOrbital; // does this body orbit a point?
   boolean selected = false;
-  int t = 500; // time between life boosts in ms
-  Timer lifeTimer; // every t ms, life will go up some.
-  boolean b = false;
+
   // construct with the radius of th circle, color of circle, orgin of orbit, and radius of orbit. 
   Planetary(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean o )
   {
@@ -76,7 +74,7 @@ class Sun extends Planetary
   Sun(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
-    type = EntityType.Sun;
+    type = "Sun";
   }
 
   void action()
@@ -111,25 +109,32 @@ class Sun extends Planetary
 
 class Planet extends Planetary
 {
+  int t = 500; // time between life boosts in ms
+  int l = 10; // how much does the life go up each tick
+  Timer lifeTimer;
+  boolean b = false;
+
   Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
-    type = EntityType.Planet;
+    type = "Planet";
     setTotalLife(life);
-    lifeTimer = new Timer(t);
+    lifeTimer = new Timer(t); // every t ms, life will go up some.
   }
   void action()
   {
     // Regen health slowly
-    if (b)
-    {
-      if(this.getLife() < this.getMaxLife()-1)
-      this.setLife(this.getLife()+1);
-      b=false;
+    if (b) {
+      if (this.getLife() < this.getMaxLife()-1)
+        this.setLife(this.getLife()+l);
       lifeTimer = new Timer(t);
+      lifeTimer.start();
+      b=false;
     }
-    if (lifeTimer.isFinished())
+    if (lifeTimer.isFinished()) {       // Reset if finished
       b = true;
+    }
+
     //currentLife -= 10;
     super.action();
   }

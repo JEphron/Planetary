@@ -111,7 +111,7 @@ class MainGame extends GameScene
   PVector trackPoint;
   float trackSpeed = 1;
 
-    Player playerzor = new Player();
+  Player playerzor = new Player();
 
   MainGame()
   {
@@ -188,24 +188,23 @@ class MainGame extends GameScene
       for (int i = 0; i <= this.getChildren().size()-1; i++) {
         Entity e=(Entity)this.getChildren().get(i);
         if (e.getType() != null) {
-          if ( e.getType() == EntityType.Missile) {
+          if ( e.getType() == "Projectile") {
             // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
-            HomingMissile m = (HomingMissile)e;
+            Projectile m = (Projectile)e;
             m.action();
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
+            // Handle this differently please. 
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
               if (!m.isExploding())
                 planet.dealDamage(1);
               m.explode();
             }
-            if (m.isExpired())
-            {
+            if (m.isExpired()) {
               m = null;
               this.getChildren().remove(i);
             }
           }
-          else if ( e.getType() == EntityType.Sun )
-          {
+          else if ( e.getType() == "Sun" ) {
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
             pl.action();
@@ -214,20 +213,16 @@ class MainGame extends GameScene
               trackPoint = pl.getPosition();
             }
           }           
-          else if ( e.getType() == EntityType.Platform )
-          {
+          else if ( e.getType() == "Platform" ) {
             Platform t = (Platform)e;
-            if (t.targIsDead())
-            {
-              ArrayList temp = this.getChildrenByType(EntityType.Missile);
+            if (t.targIsDead()) {
+              ArrayList temp = this.getChildrenByType("Projectile");
               if (temp != null)
                 t.aquireTarget(temp);
             }
             t.action();
             t.fire();
           } 
-
-
           else {
             // Other type checks go right here
             e.action();
@@ -244,21 +239,21 @@ class MainGame extends GameScene
   void handleKeyPresses()
   {
     if ( Fire) {    // 'a' key spawns missiles
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < 20; i++) {
         HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), playerzor.getPosition().y+random(-10, 10)), 30, 10, planet);    
         h.setAngle(playerzor.getAngle());  
         this.addChild(h);
       }
     }
-    if (d) // 'd' to place a platform/turret thingy
-    {
+    if (d) { // 'd' to place a platform/turret thingy
+
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
 
       //key = 0;
     }             
-    if (f) // 'f' to place a platform/turret thingy
-    {
+    if (f) { // 'f' to place a platform/turret thingy
+
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new StandardPlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20)));
 
@@ -267,16 +262,16 @@ class MainGame extends GameScene
 
     if (keyPressed) {
 
-      if (key == 's') // 's' to reset the planet's health
-      {
+      if (key == 's') { // 's' to reset the planet's health
+
         planet.setTotalLife(1000); // should be a variable.
       }      
 
-      else if (key == 'g') // 'g' to clear platforms
-      {
+      else if (key == 'g') {// 'g' to clear platforms
+
         for (int i = 0; i <= this.getChildren().size()-1; i++) {
           Entity e=(Entity)this.getChildren().get(i);
-          if (e.getType() == EntityType.Platform) {
+          if (e.getType() == "Platform") {
             e = null;
             this.getChildren().remove(i);
           }
@@ -302,11 +297,11 @@ class BFG extends Entity
 class Player extends Entity
 {
   float speed = 2;
-  float turnSpeed = 15;
+  float turnSpeed = 10;
   PImage sprt;
   float angle;
   float accel = 1;
-  float maxSpeed = 50;
+  float maxSpeed = 500;
   Player()
   {
     s = new PVector(20, 20);
@@ -348,8 +343,11 @@ class Player extends Entity
         speed = maxSpeed;
       }
     }
-    if ( Down && speed > 0)
+    if ( Down && speed > 0){
       speed -= accel;
+      if( speed < 0)
+        speed = 0;
+    }
   }
 }
 //http://207.237.90.207:5253/

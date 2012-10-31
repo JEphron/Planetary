@@ -24,7 +24,7 @@ class Entity
   protected color col;    // color of the entity.
   private ArrayList children = new ArrayList(); 
   protected boolean expired = false;// Does this entity need to be deleted?
-  protected EntityType type;
+  protected String type;
   protected int maxLife;
   protected int currentLife;
 
@@ -117,7 +117,7 @@ class Entity
     return (Entity)children.get(id);
   }
 
-  ArrayList getChildrenByType(EntityType t)
+  ArrayList getChildrenByType(String t)
   {
     ArrayList temp = new ArrayList();
     for (Iterator<Entity> i=this.getChildren().iterator(); i.hasNext();) {
@@ -134,7 +134,7 @@ class Entity
     return children;
   }
 
-  EntityType getType() {
+  String getType() {
     return type;
   }
 

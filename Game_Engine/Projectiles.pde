@@ -2,13 +2,23 @@ class Projectile extends Entity
 {
   int range; // how many units this projectile will travel before epxloding
   int damage; // how much damage will it deal upon impact
+  int vel; // how fast does the projectile move
+  float angle; // yah
   PImage sprt; // what image to use when drawing
-  //PImage splosionSprt;
-  
-  Projectile(int rng, int dmg, PImage graphic)
+  int savedTime; // when was the projectile created
+  boolean exploding = false;
+
+  //PImage splosionSprt; // the explosion graphic
+
+  Projectile(PVector p, int rng, int spd, int dmg, float ang, PImage graphic)
   {
+    type = "Projectile";
+    pos = p;
+    savedTime = millis(); // init dat
     range = rng;
     damage = dmg;
+    vel = spd;
+    angle = ang;
     if (graphic != null)
       sprt = graphic;
   }
@@ -17,30 +27,60 @@ class Projectile extends Entity
   {
   }
 
+  void action()
+  {
+    if (this.getTotalDistanceTraveled() > range)
+      expired = true;
+  }
+
   int getDamage() {
     return damage;
   }
   int getRange() {
     return range;
   }
+  float getTotalDistanceTraveled()
+  {
+    return vel * (millis()- savedTime);
+  }
+  boolean isExploding()
+  {
+    return exploding;
+  }
 }
 
+class Bullet extends Projectile
+{
+  Bullet(PVector p, int rng, int spd, int dmg, float ang)
+  {
+    super(p, rng, spd, dmg, ang, null);
+  }
+
+  void action()
+  {
+  }
+
+  void display()
+  {
+  }
+
+  void explode()
+  {
+  }
+}
 
 class HomingMissile extends Projectile
 {
   //PVector pos;
-  float angle, turnSpeed, vel; 
-  boolean exploding = false;
+  float turnSpeed; 
   int explody = 0;
   Entity targ;
   // jTri t;
-  HomingMissile(PVector position, float velocity, float tspeed, Entity target)
+  HomingMissile(PVector p, int velocity, float tspeed, Entity target)
   {
-    setTotalLife(10);
-    type = EntityType.Missile;
+    super(p, 1000, velocity, 1, AngleTo(p, target.getPosition()), null);
+    setTotalLife(1);
     turnSpeed = tspeed;
-    pos = position;
-    vel = velocity;
     col = color(random(255), random(255), random(255));
     if (target!=null)
       angle = AngleTo(pos, target.getPosition());

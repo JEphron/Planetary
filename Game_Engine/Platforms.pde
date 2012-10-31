@@ -50,7 +50,7 @@ class StandardPlatform extends Platform
   StandardPlatform(PVector p, PVector si)
   {
     super();
-    type = EntityType.Platform;
+    type = "Platform";
     pos = p;
     s = si;
   }
@@ -140,7 +140,7 @@ class MissilePlatform extends Platform
   MissilePlatform(PVector p, PVector si, Entity par)
   {
     super();
-    type = EntityType.Platform;
+    type = "Platform";
     pos = p;
     s = si;
     parent = par;

@@ -35,7 +35,8 @@ enum directions
 // defines entites.
 enum EntityType
 {
-  Missile, // genericize as AI. All ai should behave in a similar way
+  // genericize AI. All ai should behave in a similar way
+  Projectile, 
   Sun,
   Platform,
   Planet,
@@ -52,7 +53,8 @@ enum PlatformType
 
 enum Resource
 {
-  Missile, // genericize as AI. All ai should behave in a similar way
+  Missile, 
+  AI,
   Sun,
   Platform,
   Planet,
