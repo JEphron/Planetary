@@ -13,7 +13,7 @@
 //       • Find a better way to handle types. Enums won't work b/c java and strings just suck 
 //       • Implement a subType
 
-// This class is getting to big, consider refactoring soon. 
+// This class is getting too big, consider refactoring soon. 
 class Entity
 {
   // Member variables:
@@ -30,7 +30,6 @@ class Entity
   protected int maxLife;
   protected int currentLife;
   boolean targeted = false;
-
   Entity() 
   {
   }

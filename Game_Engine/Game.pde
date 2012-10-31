@@ -111,7 +111,7 @@ class MainGame extends GameScene
   PVector trackPoint;
   float trackSpeed = 0.2;
 
-  Player playerzor = new Player();
+  Player playerzor = new Player(new PVector(width/2, height/2), 10, 1, 30, loadImage("SpaceShip14.png"));
 
   MainGame()
   {
@@ -240,19 +240,14 @@ class MainGame extends GameScene
 
   void handleKeyPresses()
   {
-    if ( Fire) {    // 'a' key spawns missiles
-//      for (int i = 0; i < 20; i++) {
-//        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10),  playerzor.getPosition().y+random(-10, 10)), 1000, 30, 10, planet);    
-//        h.setAngle(playerzor.getAngle());  
-//        this.addChild(h);
-//      }
-        // Let's get a bit of spread up in here. 
-        for (int i = 0; i < 360; i+= 10) {
-          this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
-        }
+       //      }
+      // Let's get a bit of spread up in here. 
+      for (int i = 0; i < 360; i+= 10) {
+        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
+      }
     }
     if (d) { // 'd' to place a platform/turret thingy
-  
+
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
 
@@ -299,65 +294,4 @@ class BFG extends Entity
 }
 
 
-// Simple player class
-class Player extends Entity
-{
-  float speed = 2;
-  float turnSpeed = 10;
-  PImage sprt;
-  float angle;
-  float accel = 1;
-  float maxSpeed = 30;
-  Player()
-  {
-    s = new PVector(20, 20);
-    pos = new PVector(width/2, height/2);
-    sprt = loadImage("SpaceShip14.png");
-  }
-
-  void action()
-  {
-    pos.x += cos(radians(angle))*speed;
-    pos.y += sin(radians(angle))*speed;
-    checkKeys();
-    display();
-  }
-  float getAngle() {
-    return angle;
-  }
-  int getSpeed() {
-    return (int)speed;
-  } // merge with getVelocity in Entity
-
-  void display()
-  {
-    pushMatrix();
-    translate(pos.x, pos.y);
-    rotate(radians(angle));
-    imageMode(CENTER);
-    image(sprt, 0, 0);
-    popMatrix();
-  }
-
-  void checkKeys()
-  {
-    if ( Left)
-      angle -= turnSpeed;
-    if ( Right)
-      angle += turnSpeed;
-    if ( Up)
-    {
-      speed += accel;
-      if (speed > maxSpeed) {
-        speed = maxSpeed;
-      }
-    }
-    if ( Down && speed > 0) {
-      speed -= accel;
-      if ( speed < 0)
-        speed = 0;
-    }
-  }
-}
-//http://207.237.90.207:5253/
 
