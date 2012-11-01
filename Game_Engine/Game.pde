@@ -24,7 +24,7 @@ class Game extends IAppStates
   {
     nextAppStates = AppStates.Game;
     println("Entering main game...");
-    currentScene = new MainGame();
+    currentScene = new MainGame(this);
   }
 
   PVector scenePos = null;
@@ -66,12 +66,12 @@ class Game extends IAppStates
 // Is it weird to have this inherit from Entity? 
 abstract class GameScene extends Entity
 {
+  Game parent;
   float zoom;
   PVector focus = new PVector(0, 0);
 
   GameScene()
-  {
-    // init
+  { // init
     pos = new PVector(0, 0);
   }
 
@@ -102,7 +102,6 @@ abstract class GameScene extends Entity
 // The main game scene, this is where the fun happens
 class MainGame extends GameScene
 {
-
   StarField sf = new StarField(300);
   Sun sun;
   Planet planet;     
@@ -113,12 +112,12 @@ class MainGame extends GameScene
 
   Player playerzor = new Player(new PVector(width/2, height/2), 10, 1, 30, loadImage("SpaceShip14.png"));
 
-  MainGame()
+  MainGame(Game p)
   {
     s = new PVector(width, height);
-
     sf.generateField();
     this.addChild(sf);
+    parent = p;
 
     sun  = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);
     sun.setPosition(new PVector(width/2, height/2));
@@ -210,10 +209,8 @@ class MainGame extends GameScene
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
             pl.action();
-            if (pl.isClicked())
-            {
-              trackPoint = pl.getPosition();
-            }
+            if (pl.getChild(0).getLife()<=0)
+              println("Game should end now");
           }           
           else if ( e.getType() == "Platform" ) {
             Platform t = (Platform)e;
@@ -240,19 +237,30 @@ class MainGame extends GameScene
 
   void handleKeyPresses()
   {
-       //      }
-      // Let's get a bit of spread up in here. 
-      for (int i = 0; i < 360; i+= 10) {
-        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
-      }
+    if ( Fire) {    // 'a' key spawns missiles
+      // Spawn Homing Missiles
+      //      for (int i = 0; i < 5; i++) {
+      //        HomingMissile h = new HomingMissile(new PVector( playerzor.getPosition().x +random(-10, 10), playerzor.getPosition().y+random(-10, 10)), 5000, 30, 10, planet);    
+      //        h.setAngle(playerzor.getAngle());  
+      //        this.addChild(h);
+      //      }
+      // Spawn fixed-path bullets
+      this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/playerzor.getAngle()+random(-5, 5)));
+
+      //      // Spawn fixed-path bullets
+      //      for (int i = 0; i < 360; i+= 10) {
+      //        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
+      //      }
     }
+
     if (d) { // 'd' to place a platform/turret thingy
 
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
 
       //key = 0;
-    }             
+    }   
+
     if (f) { // 'f' to place a platform/turret thingy
 
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
@@ -269,7 +277,6 @@ class MainGame extends GameScene
       }      
 
       else if (key == 'g') {// 'g' to clear platforms
-
         for (int i = 0; i <= this.getChildren().size()-1; i++) {
           Entity e=(Entity)this.getChildren().get(i);
           if (e.getType() == "Platform") {
@@ -292,6 +299,4 @@ class MainGame extends GameScene
 class BFG extends Entity
 {
 }
-
-
 
