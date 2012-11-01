@@ -158,6 +158,8 @@ class Entity
   }
   void setLife(int l) {
     currentLife = l;
+    if (currentLife < 0)
+      currentLife = 0;
   }
   int getMaxLife() {
     return maxLife;
@@ -167,7 +169,10 @@ class Entity
   }
   // Convience method to deal some dmg
   void dealDamage(int d) {
-    currentLife -= d;
+    if (currentLife > 0)
+      currentLife -= d;
+    else
+      currentLife = 0;
   }
 }
 
