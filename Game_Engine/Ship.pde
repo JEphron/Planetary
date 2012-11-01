@@ -33,6 +33,13 @@ class Ship extends Entity
   {
     return maxSpeed;
   }
+  
+  void fire(String wep,  Entity parent)
+  {
+//    switch (wep){
+//      case "HomingMissile":
+//    parent.addChild(
+  }
 }
 
 // Simple player class
@@ -46,8 +53,6 @@ class Player extends Ship
 
   void action()
   {
-    println(maxSpeed);
-
     pos.x += cos(radians(angle))*speed;
     pos.y += sin(radians(angle))*speed;
     checkKeys();
@@ -88,12 +93,13 @@ class Player extends Ship
 }
 
 // AI Classes:
-
 class AI extends Ship
 {
-  AI(PVector p, PImage sprite, int spd, String weaponType )
+  Entity target;
+  
+  AI(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
   {
-    super();
+    super(p, turnSpd, accelSpd, maxSpd, sprite);
   }
 }
 
@@ -101,8 +107,9 @@ class AI extends Ship
 // Boid logic
 class BoidPirate extends AI
 {
-  BoidPirate()
+  BoidPirate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
   {
+    super(p, turnSpd, accelSpd, maxSpd, sprite);
   }
 }
 
@@ -110,8 +117,9 @@ class BoidPirate extends AI
 // Straight homing missile logic, explode when dist < 1
 class BombShip extends AI
 {
-  BombShip()
+  BombShip(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
   {
+    super(p, turnSpd, accelSpd, maxSpd, sprite);
   }
 }
 
@@ -119,8 +127,9 @@ class BombShip extends AI
 // Homing missile logic, stop at fixed dist and begin firing
 class LongRangeFrigate extends AI
 {
-  LongRangeFrigate()
+  LongRangeFrigate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
   {
+    super(p, turnSpd, accelSpd, maxSpd, sprite);
   }
 }
 
