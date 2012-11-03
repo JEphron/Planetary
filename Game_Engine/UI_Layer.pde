@@ -14,6 +14,10 @@
 
 // Generic UI Item
 class UIItem extends Entity {
+  boolean checkClick()
+  {
+    return false;
+  }
 }
 
 // Healthbar class is a bar that decreases in length when the object it is attached to takes damage
@@ -80,58 +84,56 @@ class UILayer
       e.action();
     }
   }
+
+  void setPlayerWep(int w)
+  {
+  }
 }
 
 // Contains a number of panels, these are clickable and do things
 class UITray extends UIItem
 {
-  ArrayList boxes = new ArrayList();
+  ArrayList items = new ArrayList();
   PVector boxSize = new PVector(width/10, height/10);
   UITray(PVector po, PVector si)
   {
     pos = po;
     s = si;
-    
+    type = "UITray";
+      // when clicked, set placement type. on click, place that type and then reset.
     class cbo extends callbackObject
     {
-      PlatformType t;
-     // cbo(PlatformType p)
-     // {
-     //   t = p;
-     // }
+      String t;
+      cbo(String s) {
+        t=s;
+      }
       void callbackMethod()
       {
-        
+        println(t);
       }
     }
-    // when clicked, set placement type. on click, place that type and then reset. 
-    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
-    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
-    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
-    this.addItem(new UIBox(boxSize, new cbo(), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+    this.addItem(new UIString("The cow is fat"));
+    this.addItem(new UIString("So is the cat"));
+    this.addItem(new UIString("This doesn't rhyme"));
+    //this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+    //    this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+    //    this.addItem(new UIBox(boxSize, new cbo("Four"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
   }
 
   void action()
   {
     this.display();
   }
+
   int w = width; 
   int h = height;
+
   void display()
   {
+    drawUIBg();
+    drawUIItems();
 
-    fill(100, 100, 100, 100);
-    stroke(0);
-    rect(0, height-150, width, 150);
-    for (int i = 0; i < boxes.size(); i++)
-    {
-      UIBox b = (UIBox)boxes.get(i);
-       b.action();
-      if (mousePressed) {
-        b.checkClick();
-      }
-    }
-
+    // If the width has changed resize the boxes and lay them out
     if (w != width || h!= height) {
       boxSize = new PVector(width/10, width/10);
       layoutItems();
@@ -140,9 +142,28 @@ class UITray extends UIItem
     h = height;
   }
 
-  void addItem(UIBox u) 
+  void drawUIBg()
   {
-    boxes.add(u);
+    fill(100, 100, 100, 100);
+    stroke(0);
+    rect(0, height-height/10, width, 150);
+  }
+
+  void drawUIItems()
+  {
+    for (int i = 0; i < items.size(); i++)
+    {
+      UIItem b = (UIItem)items.get(i);
+      b.action();
+      if (mousePressed) {
+        b.checkClick();
+      }
+    }
+  }
+
+  void addItem(UIItem u) 
+  {
+    items.add(u);
     layoutItems();
   }
 
@@ -152,14 +173,35 @@ class UITray extends UIItem
     println(boxHeight);
 
     int place = 0;
-    int bufferDistance = int(width - (boxes.size() * boxHeight))/(boxes.size()+1);
-    for (int i = boxes.size()-1; i >= 0; i--) {
-      UIItem b = (UIItem)boxes.get(i);
+    int bufferDistance = int(width - (items.size() * boxHeight))/(items.size()+1);
+    for (int i = 0; i < items.size(); i++) {
+      UIItem b = (UIItem)items.get(i);
       place += bufferDistance;
-      b.setPosition(new PVector(place, height - 100));
+      b.setPosition(new PVector(place, height - height/10));
       b.setSize(boxSize);
       place += boxHeight;
     }
+  }
+}
+
+class UIString extends UIItem
+{
+  String txt;
+  UIString(String s)
+  {
+    txt=s;
+    pos = new PVector (0, 0);
+  }
+  void action()
+  {
+    fill(255);
+    this.display();
+  }
+
+  void display()
+  {
+    textAlign(CENTER);
+    text(txt, pos.x, pos.y+textDescent()+textAscent());
   }
 }
 
@@ -185,19 +227,33 @@ class UIBox extends UIItem
   {
     fill(200);
     rect(pos.x, pos.y, s.x, s.y);
-    pl.setPosition(new PVector(pos.x+s.x/2, pos.y+s.y/2));
-    pl.display();
+    //pl.setPosition(new PVector(pos.x+s.x/2, pos.y+s.y/2));
+    //pl.display();
   }
 
   boolean checkClick()
   {
     if (pointInRect(new PVector(mouseX, mouseY), pos, s))
     {
-      println(pos.x);
       cbo.callbackMethod();
       return true;
     }
     else return false;
+  }
+}
+
+
+class UIWepBox extends UIItem {  
+  UIWepBox() {
+  }
+
+  void action() {
+    this.display();
+  }
+  void display() {
+  }
+
+  void setWeapon() {
   }
 }
 
