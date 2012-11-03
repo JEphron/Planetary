@@ -108,16 +108,17 @@ class StandardPlatform extends Platform
     if (b) {                    // Try to optimize if spare time == have
       if (!targIsDead()) {      // Don't fire on a dead target
         if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
-          target.setTargeted(true);
+          target.setTargeted(true); // mark the target as targeted so other platforms won't waste time firing on it.
           stroke(random(55)+200, random(100)+100, random(200));
           strokeWeight(1);
           line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
-          //          strokeWeight(4);
-          //          stroke(0, 100, 255);
-          //          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
-          //          strokeWeight(1);
-          //          stroke(255, 255, 255);
-          //          line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
+          // // Optional fancy graphics
+          // strokeWeight(4);
+          // stroke(0, 100, 255);
+          // line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
+          // strokeWeight(1);
+          // stroke(255, 255, 255);
+          // line(pos.x, pos.y, target.getPosition().x, target.getPosition().y);
           target.dealDamage(damage); // Deal dmg to target
           t = new Timer(rof);  // reset timer
           t.start();
