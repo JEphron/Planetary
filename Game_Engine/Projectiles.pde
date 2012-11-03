@@ -36,7 +36,7 @@ class Projectile extends Entity
     distTraveled += vel;
 
     if (distTraveled > range)
-      expired = true; // explode() if you want.
+      expired = true; // explode();// if you want.
   }
 
   int getDamage() {
@@ -58,11 +58,13 @@ class Projectile extends Entity
 class Bullet extends Projectile
 {
   int explody = 0;
-
-  Bullet(PVector p, int rng, int spd, int dmg, float ang)
+  color col;
+  Bullet(PVector p, int rng, int spd, int dmg, float ang, color c)
   {
     super(p, rng, spd, dmg, ang, null);
+    col = c;
     setTotalLife(1);
+   // sprt = loadImage("Plasma2.png");
   }
 
   void action()
@@ -77,8 +79,18 @@ class Bullet extends Projectile
   {
     if (!exploding) {
       stroke(0);
-      fill(255, 0, 0);
+    fill(col);
       ellipse(pos.x, pos.y, 10, 10);
+//    pushMatrix();
+//    translate(pos.x, pos.y);
+//    rotate(radians(angle));
+//    imageMode(CENTER);
+//        tint(random(255),255,120);
+//
+//    image(sprt, 0, 0);
+//    tint(255);
+//    popMatrix();
+
     }
     else {
       // It's exploding, make an explosion;
@@ -93,7 +105,7 @@ class Bullet extends Projectile
     exploding = true;
     explody += 15;
     noStroke();
-    fill(0, random(100,200), random(200, 255), random(100, 150));
+    fill(0, random(100, 200), random(200, 255), random(100, 150));
     ellipse(pos.x, pos.y, explody, explody);
     stroke(1);
   }
@@ -121,41 +133,46 @@ class HomingMissile extends Projectile
   }
   void action()
   {
-    super.action();
-    PVector targetPosition = targ.getPosition();
-    // So now this works...
-    //float radians = angle * PI / 180; 
-    PVector thrust = new PVector(0, 0); // forward direction vector.
-    //    fill(255,0,0); 
-    //    stroke(0);
-    //    ellipse(targetPosition.x,targetPosition.y,5,5); // Draw the target
-    //    fill(255);
-    thrust.x = vel * cos(radians(angle)) ;
-    thrust.y = vel * sin(radians(angle)) ;      
+    if (targ != null) { // don't try and track a nonexistant target
+      super.action();
+      PVector targetPosition = targ.getPosition();
+      // So now this works...
+      //float radians = angle * PI / 180; 
+      PVector thrust = new PVector(0, 0); // forward direction vector.
+      //    fill(255,0,0); 
+      //    stroke(0);
+      //    ellipse(targetPosition.x,targetPosition.y,5,5); // Draw the target
+      //    fill(255);
+      thrust.x = vel * cos(radians(angle)) ;
+      thrust.y = vel * sin(radians(angle)) ;      
 
-    float sign = beringAsMagnitudeCubic2d(pos, thrust, targetPosition);
+      float sign = beringAsMagnitudeCubic2d(pos, thrust, targetPosition);
 
-    if ( sign < 0) {
-      angle -= turnSpeed;
+      if ( sign < 0) {
+        angle -= turnSpeed;
+      }
+
+      else if (sign > 0) {
+        angle += turnSpeed;
+      }
+      if (!exploding) {
+        pos.x += thrust.x;
+        pos.y += thrust.y;
+      }
+      this.display();
+      // t.setRotation(angle);
+      //t.setPosition(pos);
+      // println(t.getPosition());
+      //t.action();
+
+      //if(dist(pos.x,pos.y,targetPosition.x,targetPosition.y)<10)
+      //{
+      //  targ.dealDamage(10);
+      // }
     }
-
-    else if (sign > 0) {
-      angle += turnSpeed;
+    else { // If the target is gone, explode. 
+      this.explode();
     }
-    if (!exploding) {
-      pos.x += thrust.x;
-      pos.y += thrust.y;
-    }
-    this.display();
-    // t.setRotation(angle);
-    //t.setPosition(pos);
-    // println(t.getPosition());
-    //t.action();
-
-    //if(dist(pos.x,pos.y,targetPosition.x,targetPosition.y)<10)
-    //{
-    //  targ.dealDamage(10);
-    // }
   }
 
   void display()
