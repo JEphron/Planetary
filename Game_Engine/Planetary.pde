@@ -71,10 +71,13 @@ class Planetary extends Entity
 class Sun extends Planetary
 {
   ArrayList planets = new ArrayList();
+  PImage glow;
   Sun(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits)
   {
     super(bodyRadius, c, orbitRadius, org, speed, orbits);
     type = "Sun";
+    sprt = loadImage("SunResized.png");
+    glow = loadImage("Glow.png");
   }
 
   void action()
@@ -99,6 +102,16 @@ class Sun extends Planetary
   {
     return planets;
   }
+  void display()
+  {
+    pushMatrix();
+    translate(pos.x, pos.y);
+    scale(1, 1);
+    imageMode(CENTER);
+    image(sprt, 0, 0);
+    popMatrix();
+    
+  }
 
   void addPlanet(Planet p) // this does the same thing as addChild(); :\
   {
@@ -120,6 +133,7 @@ class Planet extends Planetary
     type = "Planet";
     setTotalLife(life);
     lifeTimer = new Timer(t); // every t ms, life will go up some.
+    sprt = loadImage("PlanetResized.png");
   }
   void action()
   {
@@ -138,5 +152,15 @@ class Planet extends Planetary
     //currentLife -= 10;
     super.action();
   }
+
+//  void display()
+//  {
+//    pushMatrix();
+//    translate(pos.x, pos.y);
+//    scale(0.1, 0.1);
+//    imageMode(CENTER);
+//    image(sprt, 0, 0);
+//    popMatrix();
+//  }
 }
 
