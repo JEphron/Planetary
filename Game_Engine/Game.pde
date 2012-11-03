@@ -25,6 +25,7 @@ class Game extends IAppStates
     nextAppStates = AppStates.Game;
     println("Entering main game...");
     currentScene = new MainGame(this);
+    mousePressed = true;  // This fixes a bug that was casuing the view to require a mouse click to lock on. 
   }
 
   PVector scenePos = null;
@@ -35,7 +36,6 @@ class Game extends IAppStates
     currentScene.action();
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
-
 
     if (mousePressed) {
       if (scenePos == null)
@@ -109,8 +109,13 @@ class MainGame extends GameScene
   boolean tracking = true;
   PVector trackPoint;
   float trackSpeed = 0.2;
+  String[] weapons = {
+    "Homing Missiles", 
+    "Plasma Shotgun", 
+    "Circle of Awesomeness"
+  };
 
-  Player playerzor = new Player(new PVector(width/2, height/2), 10, 1, 30, loadImage("SpaceShip14.png"));
+  Player playerzor = new Player(new PVector(width/2, height/2), 8, 1, 30, loadImage("SpaceShip14.png"));
 
   MainGame(Game p)
   {
@@ -121,7 +126,7 @@ class MainGame extends GameScene
 
     sun  = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);
     sun.setPosition(new PVector(width/2, height/2));
-    planet = new Planet(50, color(100, 200, 170), 250, new PVector(width/2, height/2), 1, true, 1000);  // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
+    planet = new Planet(50, color(100, 200, 170), 350, new PVector(width/2, height/2), 1, true, 1000);  // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
     sun.addPlanet(planet);
     this.addChild(sun);
 
@@ -164,6 +169,7 @@ class MainGame extends GameScene
     //println(convertToLocal(playerzor.getPosition()).x);
 
     handleKeyPresses();
+   // ui.setPlayerWeapon(playerzor.getWep());
     ui.action();
   }
 
@@ -171,10 +177,8 @@ class MainGame extends GameScene
   void movePointTowardsPoint(PVector p1, PVector p2, float moveDist) {
     // only call this when we have to move the rect...
     if (p1.x+s.x/2 != p2.x || p1.y+s.y/2 != p2.y) {
-
       // calculate difference between points
       PVector v  = new PVector(p2.x-p1.x, p2.y-p1.y);
-
       // add the delta and the current position and multiply by a scale factor, then subtract the focus divided by 1 over the distance. Makes sense. 
       this.setPosition(new PVector( ((p1.x+v.x*moveDist)-((s.x/2)+focus.x)/(1/moveDist)), ((p1.y+v.y*moveDist)-((s.y/2)+focus.y)/(1/moveDist))) );
     }
@@ -192,7 +196,6 @@ class MainGame extends GameScene
             // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
             Projectile m = (Projectile)e;
             m.action();
-
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
             // Handle this differently please. 
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
@@ -245,19 +248,23 @@ class MainGame extends GameScene
       //        this.addChild(h);
       //      }
       // Spawn fixed-path bullets
-      this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/playerzor.getAngle()+random(-5, 5)));
-
+      //      for (int i = 0; i < 5; i++)
+      //        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/300, /*Speed:*/45, /*Damage:*/10, /*Angle:*/playerzor.getAngle()+random(-5, 5)));
+      //
       //      // Spawn fixed-path bullets
       //      for (int i = 0; i < 360; i+= 10) {
       //        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
       //      }
+      playerzor.setTarget(planet);
+      playerzor.fire(this);
     }
 
     if (d) { // 'd' to place a platform/turret thingy
 
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
-      this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
-
+      //this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
+      playerzor.cycleWeps();
+      d = false;
       //key = 0;
     }   
 
