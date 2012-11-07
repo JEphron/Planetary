@@ -109,12 +109,7 @@ class MainGame extends GameScene
   boolean tracking = true;
   PVector trackPoint;
   float trackSpeed = 0.2;
-  String[] weapons = {
-    "Homing Missiles", 
-    "Plasma Shotgun", 
-    "Circle of Awesomeness"
-  };
-
+  
   Player playerzor = new Player(new PVector(width/2, height/2), 8, 1, 30, loadImage("SpaceShip14.png"));
 
   MainGame(Game p)
@@ -131,6 +126,8 @@ class MainGame extends GameScene
     this.addChild(sun);
 
     ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
+    ui.addUIItem(new HealthBar(new PVector(0, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
+
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
 
     trackPoint = new PVector(0, 0); // move out of constructor
@@ -212,8 +209,9 @@ class MainGame extends GameScene
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
             pl.action();
-            if (pl.getChild(0).getLife()<=0)
-              println("Game should end now");
+            if (pl.getChild(0).getLife()<=0){
+              println("Game should end now"); // find out which life bar was totaled. 
+            }
           }           
           else if ( e.getType() == "Platform" ) {
             Platform t = (Platform)e;
