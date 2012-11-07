@@ -53,9 +53,10 @@ class HealthBar extends UIItem
   {
     // Draw a bar with a length proportiional to the percentage of life remaining
     // Color shift could use work though...
-    fill(255/(currLife/500), 255 - 255/(currLife/50), 0);
+    fill(map(currLife, 0, maxLife, 255, 0), map(currLife, 0, maxLife/5, 0, 255), 0);
     rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
   }
+  Entity getParent(){return parent;}
 }
 
 // Add: Money display, drawer for platforms, info box, sound controls, pauseButton. UI overlay with fancy imgs or whatever
