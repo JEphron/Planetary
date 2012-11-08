@@ -131,7 +131,7 @@ class MainGame extends GameScene
     this.addChild(sun);
     //----------------------------------------------------------------------------------------------------------------
     // Player
-    playerzor = new Player(new PVector(width/2, height/2), 8, 1, 30, loadImage("SpaceShip14.png"));
+    playerzor = new Player(new PVector(width/2, height/2), 8, 1, 30, loadImage("SpaceShip14.png"), this);
     this.addChild(playerzor);
 
     //----------------------------------------------------------------------------------------------------------------
@@ -262,7 +262,7 @@ class MainGame extends GameScene
       //        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
       //      }
       playerzor.setTarget(planet);
-      playerzor.fire(this);
+      playerzor.fire();
     }
 
     if (d) { // 'd' to place a platform/turret thingy

@@ -1,3 +1,39 @@
+//class Weapon extends Entity
+//{
+//  int w;
+//  Entity parent;
+//  Weapon(int wepType, Entity p)
+//  {
+//    w = wepType; 
+//    parent = p;
+//  }
+//
+//  void fire()
+//  {
+//    switch (w)
+//    {
+//    case 0:
+//      for (int i = 0; i < 5; i++) {
+//        HomingMissile h = new HomingMissile(new PVector( pos.x +random(-10, 10), pos.y+random(-10, 10)), 5000, 30, 10, targ); // Incorperate setAngle into constructor
+//        h.setAngle(angle);  
+//        parent.addChild(h);
+//      }
+//      break;
+//    case 1:
+//      for (int i = 0; i < 5; i++)
+//        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/angle+random(-5, 5), color(255, 0, 255)));
+//      break;
+//    case 2:       // do a circular explosion thingy
+//      for (int i = 0; i < 360; i+= 30) {
+//        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55)));
+//      }
+//      break;
+//
+//    default:
+//      break;
+//    }
+//  }
+//}
 
 class Projectile extends Entity
 {
@@ -65,7 +101,7 @@ class Bullet extends Projectile
     super(p, rng, spd, dmg, ang, null);
     col = c;
     setTotalLife(1);
-   // sprt = loadImage("Plasma2.png");
+    // sprt = loadImage("Plasma2.png");
   }
 
   void action()
@@ -80,18 +116,17 @@ class Bullet extends Projectile
   {
     if (!exploding) {
       stroke(0);
-    fill(col);
+      fill(col);
       ellipse(pos.x, pos.y, 10, 10);
-//    pushMatrix();
-//    translate(pos.x, pos.y);
-//    rotate(radians(angle));
-//    imageMode(CENTER);
-//        tint(random(255),255,120);
-//
-//    image(sprt, 0, 0);
-//    tint(255);
-//    popMatrix();
-
+      //    pushMatrix();
+      //    translate(pos.x, pos.y);
+      //    rotate(radians(angle));
+      //    imageMode(CENTER);
+      //        tint(random(255),255,120);
+      //
+      //    image(sprt, 0, 0);
+      //    tint(255);
+      //    popMatrix();
     }
     else {
       // It's exploding, make an explosion;
@@ -165,7 +200,7 @@ class HomingMissile extends Projectile
       //t.setPosition(pos);
       // println(t.getPosition());
       //t.action();
-      
+
       //if(dist(pos.x,pos.y,targetPosition.x,targetPosition.y)<10)
       //{
       //  targ.dealDamage(10);
@@ -216,7 +251,5 @@ class HomingMissile extends Projectile
   boolean isExpired() {
     return expired;
   }
-
- 
 }
 

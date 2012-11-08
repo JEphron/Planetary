@@ -12,10 +12,12 @@ class Ship extends Entity
   float angle = 0;      // The current angle
   float accel=1;      // Speed of acceleration
   float maxSpeed=30;   // Speed cap
+  int rof = 500;
   //String wep;       // Which weapon does it use.
   Entity targ;    // Ai will seek target and fire upon it, Player's target will be selectable
+  Entity parent;
 
-  Ship(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  Ship(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     speed = 0;
     turnSpeed = turnSpd;
@@ -23,6 +25,7 @@ class Ship extends Entity
     maxSpeed = maxSpd;
     pos = p;
     sprt = sprite;
+    parent = pa;
   }
   float getAngle() {
     return angle;
@@ -48,7 +51,7 @@ class Ship extends Entity
   {
     targ = t;
   }
-  void fire(Entity parent)
+  void fire()
   {
     switch (wep) {
     case 0:      // fire a homing missile that tracks the target
@@ -60,18 +63,15 @@ class Ship extends Entity
         }
       }
       break;
-
     case 1:      // fire the standard gun
       for (int i = 0; i < 5; i++)
         parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/angle+random(-5, 5), color(255, 0, 255)));
       break;
-
     case 2:       // do a circular explosion thingy
       for (int i = 0; i < 360; i+= 30) {
         parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55)));
       }
       break;
-
     default:
       break;
     }
@@ -81,9 +81,9 @@ class Ship extends Entity
 // Simple player class
 class Player extends Ship
 {
-  Player(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  Player(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
-    super(p, turnSpd, accelSpd, maxSpd, sprite);
+    super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
     s = new PVector(20, 20);
     setTotalLife(300);
     type = "Player";
@@ -132,7 +132,7 @@ class Player extends Ship
 
 class AISpawner extends Entity // hell, everything extends this... not good oop
 {
-  int aiPerWave = 10; // increase over time
+  int aiPerWave =1; // increase over time
   int timeBetweenWaves = 2; // In seconds, decrease over time
   PVector spawnPoint; // generate at a random point on a circle that surrounds the play area. 
   int aiType; // this should be random, and eventually become a mixture. 
@@ -175,13 +175,12 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
 
   void spawnWave(int num, int type)
   {
-
     targets.addAll(parent.getChildrenByType("Platform")); // get all the stuff from the parent
     targets.add(((Entity)parent.getChildrenByType("Sun").get(0)).getChild(0)); // this is hacky
     targets.addAll(parent.getChildrenByType("Player"));
     for (int i = 0; i < aiPerWave; i++)
     {
-      AI a = new StandardEnemy(new PVector(pos.x + random(-5,5), pos.y + random(-5,5)), 10, 1, 20, null);   // create a new ai
+      AI a = new StandardEnemy(new PVector(pos.x + random(-5, 5), pos.y + random(-5, 5)), 10, 1, 20, null, parent);   // create a new ai
       a.aquireTarget(targets);      // give targets to the ai
       parent.addChild(a);            // add it to the parent.
     }
@@ -198,9 +197,9 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
 // AI Classes:
 class AI extends Ship
 {
-  AI(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  AI(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
-    super(p, turnSpd, accelSpd, maxSpd, sprite);
+    super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
   }
 
   boolean hasNoTarget()
@@ -236,30 +235,31 @@ class AI extends Ship
     else if (sel < 90) {
       s = "Platform";
     }
-    
-   targ = (Entity)a.get((int)random(0,a.size()));
-//    for (int i = 0; i < a.size(); i++) { 
-//      Entity h = (Entity)a.get(i);
-//      if (h.getType() == s)
-//      {
-//        if ( s == "Platform" ) {
-//          if ((int)random(10) < 7) {
-//            targ = h; // if it's a platform then choose a random one.
-//            break;
-//          }
-//        }
-//        else { // generally guarenteed to be only one player/planet
-//          if (targ != null)
-//            targ = h;
-//          break;
-//        }
-//        println(targ);
-//      }
-//    }
+
+    targ = (Entity)a.get((int)random(0, a.size()));
+    //    for (int i = 0; i < a.size(); i++) { 
+    //      Entity h = (Entity)a.get(i);
+    //      if (h.getType() == s)
+    //      {
+    //        if ( s == "Platform" ) {
+    //          if ((int)random(10) < 7) {
+    //            targ = h; // if it's a platform then choose a random one.
+    //            break;
+    //          }
+    //        }
+    //        else { // generally guarenteed to be only one player/planet
+    //          if (targ != null)
+    //            targ = h;
+    //          break;
+    //        }
+    //        println(targ);
+    //      }
+    //    }
   }
 
   void fire()
   {
+    super.fire();
   }
 }
 
@@ -268,9 +268,9 @@ class AI extends Ship
 // Boid logic
 class BoidPirate extends AI
 {
-  BoidPirate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  BoidPirate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
-    super(p, turnSpd, accelSpd, maxSpd, sprite);
+    super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
   }
 }
 
@@ -278,27 +278,53 @@ class BoidPirate extends AI
 // Logic similar to homing missile
 class StandardEnemy extends AI
 {
-  StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  Timer t = new Timer(500);
+  StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
-    super(p, turnSpd, accelSpd, maxSpd, sprite);
+    super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
   }
+
+  boolean b = false;
   void action()
   {
     seekTarget();
     display();
+
+    if (b) {                    // Try to optimize if spare time == have
+      if (!targIsDead()) {      // Don't fire on a dead target
+        if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
+          fire();
+          targ.dealDamage(1); // Deal dmg to target
+          t = new Timer(rof);  // reset timer
+          t.start();
+        }
+      }
+      b = false;
+    }
+    if (t.isFinished()) {       // Reset if finished
+      b = true;
+    }
   }
+
+
   void display()
   {
+    pushMatrix();
+    translate(pos.x, pos.y);
+    rotate(radians(angle));
+    rectMode(CENTER);
     fill(100);
-    rect(pos.x, pos.y, 10, 10);
+    rect(0, 0, 10, 10);
+    rectMode(CORNER);
+    popMatrix();
   }
   void seekTarget() // can be extracted, used by both homing missile and ai
   { 
     if (targ != null) {
       PVector targetPosition = targ.getPosition();
       PVector thrust = new PVector(0, 0); // forward direction vector.
-      thrust.x = 1 * cos(radians(angle)) ;
-      thrust.y = 1 * sin(radians(angle)) ;      
+      thrust.x = 1 * cos(radians(angle));
+      thrust.y = 1 * sin(radians(angle));      
       float sign = beringAsMagnitudeCubic2d(pos, thrust, targetPosition);
       if ( sign < 0) {
         angle -= turnSpeed;
@@ -311,14 +337,13 @@ class StandardEnemy extends AI
     }
   }
 }
-
 // Fly straight at their target and detonate when they reach it
 // Straight homing missile logic, explode when dist < 1
 class BombShip extends AI
 {
-  BombShip(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  BombShip(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
-    super(p, turnSpd, accelSpd, maxSpd, sprite);
+    super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
   }
 }
 
@@ -326,9 +351,9 @@ class BombShip extends AI
 // Homing missile logic, stop at fixed dist and begin firing
 class LongRangeFrigate extends AI
 {
-  LongRangeFrigate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  LongRangeFrigate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
-    super(p, turnSpd, accelSpd, maxSpd, sprite);
+    super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
   }
 }
 

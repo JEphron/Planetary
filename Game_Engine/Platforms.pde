@@ -10,7 +10,7 @@ class Platform extends Entity
   int rof;
   Timer t = new Timer(rof);
   Entity target;
-
+  
   Platform()
   {
   }
