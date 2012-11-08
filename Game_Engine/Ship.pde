@@ -5,7 +5,7 @@
 
 class Ship extends Entity
 {
-  int wep = 0;         
+  int wep = 0;         // this should be an object. 
   float speed = 1;      // Speed of the ship
   float turnSpeed = 10;  // How fast can it turn
   PImage sprt;      // What sprite should it use
@@ -85,6 +85,8 @@ class Player extends Ship
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite);
     s = new PVector(20, 20);
+    setTotalLife(300);
+    type = "Player";
   }
 
   void action()
@@ -128,6 +130,71 @@ class Player extends Ship
   }
 }
 
+class AISpawner extends Entity // hell, everything extends this... not good oop
+{
+  int aiPerWave = 10; // increase over time
+  int timeBetweenWaves = 2; // In seconds, decrease over time
+  PVector spawnPoint; // generate at a random point on a circle that surrounds the play area. 
+  int aiType; // this should be random, and eventually become a mixture. 
+  float timeOfLastSpawn; // keep track of when to spawn
+  float timeSinceLastSpawn;
+  ArrayList targets = new ArrayList();
+  Entity parent;
+
+  AISpawner(Entity parent_entity, PVector p)
+  {
+    parent = parent_entity;
+    timeOfLastSpawn = 0; 
+    pos = p; // temporary solution
+  }
+
+  void action()
+  {
+    timeSinceLastSpawn = millis() - timeOfLastSpawn;
+    updateAI();
+    display();
+    if (timeSinceLastSpawn > timeBetweenWaves*1000)
+      spawnWave(aiPerWave, (int)random(3));
+  }
+
+  void display()
+  {
+    stroke(200);
+    strokeWeight(5);
+    noFill();
+    ellipse(pos.x, pos.y, 50, 50); // draw a spawnPoint marker
+    fill(255);
+    strokeWeight(1);
+    stroke(0);
+  }
+
+  void updateAI()
+  {
+    // parent should do this.
+  }
+
+  void spawnWave(int num, int type)
+  {
+
+    targets.addAll(parent.getChildrenByType("Platform")); // get all the stuff from the parent
+    targets.add(((Entity)parent.getChildrenByType("Sun").get(0)).getChild(0)); // this is hacky
+    targets.addAll(parent.getChildrenByType("Player"));
+    for (int i = 0; i < aiPerWave; i++)
+    {
+      AI a = new StandardEnemy(new PVector(pos.x + random(-5,5), pos.y + random(-5,5)), 10, 1, 20, null);   // create a new ai
+      a.aquireTarget(targets);      // give targets to the ai
+      parent.addChild(a);            // add it to the parent.
+    }
+    println("Spawning a wave...");
+    aiPerWave += 2; // increase by x each wave
+    if (timeBetweenWaves>2) // don't spawn too fast...
+      timeBetweenWaves -= 1; // decrease time by 1 second
+    timeSinceLastSpawn = 0;
+    timeOfLastSpawn = millis();
+    targets.clear();
+  }
+}
+
 // AI Classes:
 class AI extends Ship
 {
@@ -135,7 +202,67 @@ class AI extends Ship
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite);
   }
+
+  boolean hasNoTarget()
+  {
+    return (targ == null);
+  }
+
+  boolean targIsDead() {
+    if (targ != null)
+      return targ.isExpired();
+    else return true;
+  } 
+
+  boolean targetInRange()
+  {
+    if ( dist(pos.x, pos.y, targ.getPosition().x, targ.getPosition().y) < /*wep.getrange()*/500)
+      return true;
+    else return false;
+  }
+
+  void aquireTarget(ArrayList a)
+  {
+    String s = "";
+    int sel = (int)random(90);
+    // choose either player, turret, or planet. Planet should have higher priority. 
+
+    if (sel <30) { 
+      s = "Planet";
+    } 
+    else if (sel < 60) {
+      s = "Player";
+    } 
+    else if (sel < 90) {
+      s = "Platform";
+    }
+    
+   targ = (Entity)a.get((int)random(0,a.size()));
+//    for (int i = 0; i < a.size(); i++) { 
+//      Entity h = (Entity)a.get(i);
+//      if (h.getType() == s)
+//      {
+//        if ( s == "Platform" ) {
+//          if ((int)random(10) < 7) {
+//            targ = h; // if it's a platform then choose a random one.
+//            break;
+//          }
+//        }
+//        else { // generally guarenteed to be only one player/planet
+//          if (targ != null)
+//            targ = h;
+//          break;
+//        }
+//        println(targ);
+//      }
+//    }
+  }
+
+  void fire()
+  {
+  }
 }
+
 
 // These pirates form fleets, flock around target and shoot
 // Boid logic
@@ -144,6 +271,44 @@ class BoidPirate extends AI
   BoidPirate(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite);
+  }
+}
+
+// The standard enemy ai simply flys towards its target, firing when in range. 
+// Logic similar to homing missile
+class StandardEnemy extends AI
+{
+  StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite)
+  {
+    super(p, turnSpd, accelSpd, maxSpd, sprite);
+  }
+  void action()
+  {
+    seekTarget();
+    display();
+  }
+  void display()
+  {
+    fill(100);
+    rect(pos.x, pos.y, 10, 10);
+  }
+  void seekTarget() // can be extracted, used by both homing missile and ai
+  { 
+    if (targ != null) {
+      PVector targetPosition = targ.getPosition();
+      PVector thrust = new PVector(0, 0); // forward direction vector.
+      thrust.x = 1 * cos(radians(angle)) ;
+      thrust.y = 1 * sin(radians(angle)) ;      
+      float sign = beringAsMagnitudeCubic2d(pos, thrust, targetPosition);
+      if ( sign < 0) {
+        angle -= turnSpeed;
+      }
+      else if (sign > 0) {
+        angle += turnSpeed;
+      }
+      pos.x += thrust.x;
+      pos.y += thrust.y;
+    }
   }
 }
 
