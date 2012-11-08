@@ -141,7 +141,7 @@ class MainGame extends GameScene
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     //----------------------------------------------------------------------------------------------------------------
     // Ai
-     this.addChild(new AISpawner(this, new PVector(50,50)));
+    this.addChild(new AISpawner(this, new PVector(50, 50)));
   } 
 
   PVector scenePos = null;
@@ -208,11 +208,12 @@ class MainGame extends GameScene
                 planet.dealDamage(m.getDamage());
               m.explode();
             }
-            if(dist(m.getPosition().x,m.getPosition().y,playerzor.getPosition().x,playerzor.getPosition().y)<50){
-              if (!m.isExploding())
-                playerzor.dealDamage(2);
-              m.explode();
-
+            if (m.getOwner() != "Player") {
+              if (dist(m.getPosition().x, m.getPosition().y, playerzor.getPosition().x, playerzor.getPosition().y)<50) {
+                if (!m.isExploding())
+                  playerzor.dealDamage(2);
+                m.explode();
+              }
             }
             if (m.isExpired()) {
               m = null;
@@ -291,7 +292,6 @@ class MainGame extends GameScene
     if (keyPressed) {
 
       if (key == 's') { // 's' to reset the planet's health
-
         planet.setTotalLife(1000); // should be a variable.
       }      
 
