@@ -137,9 +137,9 @@ class Entity
       if (e.getType() == t)
         temp.add(e);
     }
-    if (temp.size() > 0)
+   // if (temp.size() > 0)
       return temp;
-    else return null;
+   // else return null;
   }
 
   ArrayList getChildren() {
