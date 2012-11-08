@@ -11,7 +11,7 @@
 // TODO:
 //       Implement a drag and drop method.
 //       Get placement working. 
-
+//       Major overhaul. It's coming. eventually...
 // Generic UI Item
 class UIItem extends Entity {
   boolean checkClick()
@@ -54,7 +54,10 @@ class HealthBar extends UIItem
     // Draw a bar with a length proportiional to the percentage of life remaining
     // Color shift could use work though...
     fill(map(currLife, 0, maxLife, 255, 0), map(currLife, 0, maxLife/5, 0, 255), 0);
+   // textMode(CORNER);
     rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
+    fill(0);
+    text((int)currLife, pos.x+20,pos.y+textAscent()*1.5);
   }
   Entity getParent(){return parent;}
 }
