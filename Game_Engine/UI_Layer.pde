@@ -54,10 +54,10 @@ class HealthBar extends UIItem
     // Draw a bar with a length proportiional to the percentage of life remaining
     // Color shift could use work though...
     fill(map(currLife, 0, maxLife, 255, 0), map(currLife, 0, maxLife/5, 0, 255), 0);
-   // textMode(CORNER);
+   textAlign(LEFT);
     rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
-    fill(0);
-    text((int)currLife, pos.x+20,pos.y+textAscent()*1.5);
+    fill(255);
+    text(parent.getType()+":"+(int)currLife, pos.x+5+s.x*(currLife/maxLife),pos.y+textAscent()+4);
   }
   Entity getParent(){return parent;}
 }
