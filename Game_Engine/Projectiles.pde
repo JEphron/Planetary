@@ -45,13 +45,14 @@ class Projectile extends Entity
   float savedTime; // when was the projectile created
   boolean exploding = false;
   float distTraveled;
+  String owner = ""; // default to none
   //PImage splosionSprt; // the explosion graphic
 
   Projectile(PVector p, int rng, int spd, int dmg, float ang, PImage graphic)
   {
     setTotalLife(1); // default to 10;
     type = "Projectile";
-    pos = p;
+    pos = p.get();
     savedTime = millis(); // init dat
     range = rng;
     damage = dmg;
@@ -59,6 +60,13 @@ class Projectile extends Entity
     angle = ang;
     if (graphic != null)
       sprt = graphic;
+  }
+
+  void setOwner(String s) {
+    owner = s;
+  }
+  String getOwner() {
+    return owner;
   }
 
   void explode()
@@ -102,6 +110,16 @@ class Bullet extends Projectile
     col = c;
     setTotalLife(1);
     // sprt = loadImage("Plasma2.png");
+  }
+
+  // Alternate constructor with owner string.
+  Bullet(PVector p, int rng, int spd, int dmg, float ang, color c, String own)
+  {
+    super(p, rng, spd, dmg, ang, null);
+    col = c;
+    setTotalLife(1);
+    // sprt = loadImage("Plasma2.png");
+    owner = own;
   }
 
   void action()
@@ -164,6 +182,20 @@ class HomingMissile extends Projectile
       angle = AngleTo(pos, target.getPosition());
     targ = target;
   }
+
+  // Alternate constructor with owner string.
+  HomingMissile(PVector p, int rng, int velocity, float tspeed, Entity target, String own)
+  {
+    super(p, rng, velocity, 1, AngleTo(p, target.getPosition()), null);
+    setTotalLife(1);
+    turnSpeed = tspeed;
+    col = color(random(255), random(255), random(255));
+    if (target!=null)
+      angle = AngleTo(pos, target.getPosition());
+    targ = target;
+    owner = own;
+  }
+
   void setAngle(float a) {
     angle = a;
   }
