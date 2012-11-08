@@ -12,11 +12,10 @@ class Ship extends Entity
   float angle = 0;      // The current angle
   float accel=1;      // Speed of acceleration
   float maxSpeed=30;   // Speed cap
-  int rof = 500;
+  int rof = 500;      // rate of fire, currently broken
   //String wep;       // Which weapon does it use.
   Entity targ;    // Ai will seek target and fire upon it, Player's target will be selectable
-  Entity parent;
-
+  Entity parent; // the game scene which bullets will be added to
   Ship(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     speed = 0;
@@ -57,19 +56,20 @@ class Ship extends Entity
     case 0:      // fire a homing missile that tracks the target
       if (targ !=null) {
         for (int i = 0; i < 5; i++) {
-          HomingMissile h = new HomingMissile(new PVector( pos.x +random(-10, 10), pos.y+random(-10, 10)), 5000, 30, 10, targ); // Incorperate setAngle into constructor
+          HomingMissile h = new HomingMissile(new PVector( pos.x +random(-10, 10), pos.y+random(-10, 10)), 5000, 30, 10, targ, type); // todo: Incorperate setAngle into constructor
           h.setAngle(angle);  
           parent.addChild(h);
         }
       }
       break;
     case 1:      // fire the standard gun
-      for (int i = 0; i < 5; i++)
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/angle+random(-5, 5), color(255, 0, 255)));
+      for (int i = 0; i < 5; i++){
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/angle+random(-5, 5), color(255, 0, 255),type));
+      }
       break;
     case 2:       // do a circular explosion thingy
-      for (int i = 0; i < 360; i+= 30) {
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55)));
+      for (int i = 0; i < 160; i+= 30) {
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55),type));
       }
       break;
     default:
@@ -84,9 +84,10 @@ class Player extends Ship
   Player(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
+    type = "Player"; 
     s = new PVector(20, 20);
-    setTotalLife(300);
-    type = "Player";
+    setTotalLife(400); // SET LIFE TOTAL HERE
+    
   }
 
   void action()
@@ -145,16 +146,18 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
   {
     parent = parent_entity;
     timeOfLastSpawn = 0; 
+    timeSinceLastSpawn = 10000; 
     pos = p; // temporary solution
   }
 
   void action()
   {
-    timeSinceLastSpawn = millis() - timeOfLastSpawn;
     updateAI();
     display();
     if (timeSinceLastSpawn > timeBetweenWaves*1000)
       spawnWave(aiPerWave, (int)random(3));
+
+    timeSinceLastSpawn = millis() - timeOfLastSpawn;
   }
 
   void display()
@@ -185,9 +188,9 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
       parent.addChild(a);            // add it to the parent.
     }
     println("Spawning a wave...");
-    aiPerWave += 2; // increase by x each wave
+    aiPerWave += 1; // increase by x each wave
     if (timeBetweenWaves>2) // don't spawn too fast...
-      timeBetweenWaves -= 1; // decrease time by 1 second
+      timeBetweenWaves -= 0; // decrease time by 1 second
     timeSinceLastSpawn = 0;
     timeOfLastSpawn = millis();
     targets.clear();
@@ -279,11 +282,11 @@ class BoidPirate extends AI
 class StandardEnemy extends AI
 {
   Timer t = new Timer(500);
-  
+
   StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
-    wep = 0;
+    wep = 1;
   }
 
   boolean b = false;
@@ -296,7 +299,7 @@ class StandardEnemy extends AI
       if (!targIsDead()) {      // Don't fire on a dead target
         if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
           fire();
-          targ.dealDamage(1); // Deal dmg to target
+         // targ.dealDamage(1); // no
           t = new Timer(rof);  // reset timer
           t.start();
         }
