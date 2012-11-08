@@ -25,7 +25,7 @@ class Game extends IAppStates
     nextAppStates = AppStates.Game;
     println("Entering main game...");
     currentScene = new MainGame(this);
-    mousePressed = true;  // This fixes a bug that was casuing the view to require a mouse click to lock on. 
+    mousePressed = true;  // This fixes a bug that was casuing the view to require a mouse click to lock on.
   }
 
   PVector scenePos = null;
@@ -107,32 +107,41 @@ class MainGame extends GameScene
   Planet planet;     
   UILayer ui = new UILayer();  
   boolean tracking = true;
-  PVector trackPoint;
+  PVector trackPoint = new PVector(0, 0);
+  ;
   float trackSpeed = 0.2;
-  
-  Player playerzor = new Player(new PVector(width/2, height/2), 8, 1, 30, loadImage("SpaceShip14.png"));
+
+  Player playerzor;
 
   MainGame(Game p)
   {
+    //----------------------------------------------------------------------------------------------------------------
+    // msc
     s = new PVector(width, height);
     sf.generateField();
     this.addChild(sf);
     parent = p;
-
+    //----------------------------------------------------------------------------------------------------------------
+    // Sun and planet
     sun  = new Sun(200, color(255, 220, 40), 250, new PVector(width/2, height/2), 1, false);
     sun.setPosition(new PVector(width/2, height/2));
-    planet = new Planet(50, color(100, 200, 170), 350, new PVector(width/2, height/2), 1, true, 1000);  // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
+    // PARAMS: Planet(int bodyRadius, color c, int orbitRadius, PVector org, float speed, boolean orbits, int life)
+    planet = new Planet(50, color(100, 200, 170), 350, new PVector(width/2, height/2), 1, true, 1000);  
     sun.addPlanet(planet);
     this.addChild(sun);
+    //----------------------------------------------------------------------------------------------------------------
+    // Player
+    playerzor = new Player(new PVector(width/2, height/2), 8, 1, 30, loadImage("SpaceShip14.png"));
+    this.addChild(playerzor);
 
+    //----------------------------------------------------------------------------------------------------------------
+    // UI
     ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
     ui.addUIItem(new HealthBar(new PVector(0, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
-
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
-
-    trackPoint = new PVector(0, 0); // move out of constructor
-
-    this.addChild(playerzor);
+    //----------------------------------------------------------------------------------------------------------------
+    // Ai
+     this.addChild(new AISpawner(this, new PVector(50,50)));
   } 
 
   PVector scenePos = null;
@@ -148,8 +157,7 @@ class MainGame extends GameScene
     stroke(0);
     rect(0, 0, width, height);
 
-    Sun su = (Sun)this.getChild(1);
-    planet = (Planet)su.getChild(0);
+    // Sun su = (Sun)this.getChild    planet = (Planet)sun.getChild(0);
     planetPos = planet.getPosition().get();
     planet.addChild(new StandardPlatform(new PVector(planet.getPosition().x, planet.getPosition().y), new PVector(200, 20)));
 
@@ -166,7 +174,7 @@ class MainGame extends GameScene
     //println(convertToLocal(playerzor.getPosition()).x);
 
     handleKeyPresses();
-   // ui.setPlayerWeapon(playerzor.getWep());
+    // ui.setPlayerWeapon(playerzor.getWep());
     ui.action();
   }
 
@@ -209,8 +217,8 @@ class MainGame extends GameScene
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
             pl.action();
-            if (pl.getChild(0).getLife()<=0){
-              println("Game should end now"); // find out which life bar was totaled. 
+            if (pl.getChild(0).getLife()<=0) {
+              println("Game should end now"); // find out which life bar was totaled.
             }
           }           
           else if ( e.getType() == "Platform" ) {
