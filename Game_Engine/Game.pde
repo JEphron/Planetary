@@ -208,6 +208,12 @@ class MainGame extends GameScene
                 planet.dealDamage(m.getDamage());
               m.explode();
             }
+            if(dist(m.getPosition().x,m.getPosition().y,playerzor.getPosition().x,playerzor.getPosition().y)<50){
+              if (!m.isExploding())
+                playerzor.dealDamage(2);
+              m.explode();
+
+            }
             if (m.isExpired()) {
               m = null;
               this.getChildren().remove(i);
