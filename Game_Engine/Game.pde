@@ -139,7 +139,7 @@ class MainGame extends GameScene
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     //----------------------------------------------------------------------------------------------------------------
     // Ai
-    this.addChild(new AISpawner(this, new PVector(50, 50)));
+    this.addChild(new AISpawner(this, new PVector(-200, 50)));
 
     mousePressed = true;
   } 
@@ -202,7 +202,7 @@ class MainGame extends GameScene
             // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
             Projectile m = (Projectile)e;
             m.action();
-            mini.displayPoint(m.getPosition(), color(255, 0, 0));
+            mini.displayPoint(m.getPosition(), color(255, 0, 0), 2);
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
             // Handle this differently please. 
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
@@ -237,6 +237,8 @@ class MainGame extends GameScene
           else if ( e.getType() == "Sun" ) {
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
+            mini.displayPoint(pl.getPosition(), color(255,255,0), 10);
+            mini.displayPoint(pl.getChild(0).getPosition(), color(100, 200, 170), 5);
             pl.action();
             if (pl.getChild(0).getLife()<=0) {
               println("Game should end now"); // find out which life bar was totaled.
@@ -244,7 +246,7 @@ class MainGame extends GameScene
           }           
           else if ( e.getType() == "Platform" ) {
             Platform t = (Platform)e;
-            mini.displayPoint(t.getPosition(), color(0, 0, 255));
+            mini.displayPoint(t.getPosition(), color(0, 0, 255), 2);
             if (t.targIsDead()) {
               ArrayList temp = this.getChildrenByType("Projectile");
               temp.addAll(this.getChildrenByType("Ai"));
@@ -256,7 +258,7 @@ class MainGame extends GameScene
           }
           else if (e.getType() == "Ai") {
             e.action();
-            mini.displayPoint(e.getPosition(), color(0, 255, 0));
+            mini.displayPoint(e.getPosition(), color(0, 255, 0), 2);
              // todo: reaquire target if target dies
             if (e.isExpired()) {
               println("Expired!");
@@ -318,8 +320,9 @@ class MainGame extends GameScene
 
     if (keyPressed) {
 
-      if (key == 's') { // 's' to reset the planet's health
-        planet.setTotalLife(1000); // should be a variable.
+      if (key == 's') { // 's' to reset health
+        planet.setTotalLife(planet.getMaxLife()); 
+        playerzor.setTotalLife(playerzor.getMaxLife());
       }      
 
       else if (key == 'g') {// 'g' to clear platforms
