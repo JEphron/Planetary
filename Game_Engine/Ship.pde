@@ -287,8 +287,9 @@ class StandardEnemy extends AI
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
     setTotalLife(520);
-    wep = (int)random(3);
+    wep = 0;//(int)random(3);
     type = "Ai";
+    s = new PVector(10,10);
   }
 
   boolean b = false;
@@ -335,13 +336,17 @@ class StandardEnemy extends AI
 
   void display()
   {
+    fill(map(currentLife, 0, maxLife, 255, 0), map(currentLife, 0, maxLife/5, 0, 255), 0);
+    noStroke();
+    rect(pos.x, pos.y-20, 20*(float)currentLife/maxLife, 2);
+    stroke(0);
     pushMatrix();
     translate(pos.x, pos.y);
     rotate(radians(angle));
     rectMode(CENTER);
     fill(100, 90, 120);
     stroke(0);
-    rect(0, 0, 10, 10);
+    rect(0, 0, s.x, s.y);
     rectMode(CORNER);
     popMatrix();
   }
