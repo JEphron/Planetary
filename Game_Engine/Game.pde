@@ -25,7 +25,6 @@ class Game extends IAppStates
     nextAppStates = AppStates.Game;
     println("Entering main game...");
     currentScene = new MainGame(this);
-    mousePressed = true;  // This fixes a bug that was casuing the view to require a mouse click to lock on.
   }
 
   PVector scenePos = null;
@@ -108,7 +107,7 @@ class MainGame extends GameScene
   UILayer ui = new UILayer();  
   boolean tracking = true;
   PVector trackPoint = new PVector(0, 0);
-  ;
+  Minimap mini = new Minimap(new PVector(5,5), new PVector(100,100), color(128));
   float trackSpeed = 0.2;
 
   Player playerzor;
@@ -136,12 +135,17 @@ class MainGame extends GameScene
 
     //----------------------------------------------------------------------------------------------------------------
     // UI
-    ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
-    ui.addUIItem(new HealthBar(new PVector(0, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
+    //ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
+    //ui.addUIItem(new HealthBar(new PVector(0, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     //----------------------------------------------------------------------------------------------------------------
     // Ai
     this.addChild(new AISpawner(this, new PVector(50, 50)));
+    
+    //----------------------------------------------------------------------------------------------------------------
+    // Minimap
+    //this.addChild(mini);
+    mousePressed = true;
   } 
 
   PVector scenePos = null;
@@ -160,9 +164,9 @@ class MainGame extends GameScene
     // Sun su = (Sun)this.getChild    planet = (Planet)sun.getChild(0);
     planetPos = planet.getPosition().get();
     planet.addChild(new StandardPlatform(new PVector(planet.getPosition().x, planet.getPosition().y), new PVector(200, 20)));
-
+    mini.action();
     updateChildren();   
-
+ 
     fill(255);
     text(frameRate, 20, 10);
 
@@ -192,6 +196,7 @@ class MainGame extends GameScene
   // Overwrite this so we can do some updatin.
   void updateChildren()
   {
+     // mini.clearMap();
     // This method is kind of ugly, but I think it's standard practice. Also it works, so that's good. 
     if (this.getChildren().size()>0) {
       for (int i = 0; i <= this.getChildren().size()-1; i++) {
@@ -201,6 +206,7 @@ class MainGame extends GameScene
             // If it's a missile, cast to missile. This could be generalized for AI. All AI should have targets.
             Projectile m = (Projectile)e;
             m.action();
+            mini.displayPoint(m.getPosition(), color(255,0,0));
             // If it's touching the planet (or platforms), destroy it, deal dmg to planet
             // Handle this differently please. 
             if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
@@ -237,7 +243,10 @@ class MainGame extends GameScene
             }
             t.action();
             t.fire();
-          } 
+          }else if(e.getType() == "Ai"){
+               e.action();
+               mini.displayPoint(e.getPosition(), color(0,255,0));
+            } 
           else {
             // Other type checks go right here
             e.action();
