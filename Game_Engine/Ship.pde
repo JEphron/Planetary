@@ -132,7 +132,7 @@ class Player extends Ship
 
 class AISpawner extends Entity // hell, everything extends this... not good oop
 {
-  int aiPerWave =1; // increase over time
+  int aiPerWave =8; // increase over time
   int timeBetweenWaves = 8; // In seconds, decrease over time
   PVector spawnPoint; // generate at a random point on a circle that surrounds the play area. 
   int aiType; // this should be random, and eventually become a mixture. 
@@ -187,7 +187,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
       parent.addChild(a);            // add it to the parent.
     }
     println("Spawning a wave...");
-    aiPerWave += 1; // increase by x each wave
+    //aiPerWave += 1; // increase by x each wave
     if (timeBetweenWaves>2) // don't spawn too fast...
       timeBetweenWaves -= 0; // decrease time by 1 second
     timeSinceLastSpawn = 0;
@@ -287,7 +287,7 @@ class StandardEnemy extends AI
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
     setTotalLife(520);
-    wep = 1;
+    wep = (int)random(3);
     type = "Ai";
   }
 
