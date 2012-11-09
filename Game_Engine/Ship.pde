@@ -321,7 +321,8 @@ class StandardEnemy extends AI
     translate(pos.x, pos.y);
     rotate(radians(angle));
     rectMode(CENTER);
-    fill(100);
+    fill(100,90,120);
+    stroke(0);
     rect(0, 0, 10, 10);
     rectMode(CORNER);
     popMatrix();
