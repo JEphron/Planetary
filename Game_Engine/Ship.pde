@@ -282,7 +282,7 @@ class BoidPirate extends AI
 class StandardEnemy extends AI
 {
   Timer t = new Timer(500);
-
+  int explody = 0;
   StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
@@ -292,26 +292,44 @@ class StandardEnemy extends AI
   }
 
   boolean b = false;
+  boolean exploding = false;
   void action()
   {
-    seekTarget();
-    display();
-    if (b) {                    // Try to optimize if spare time == have
-      if (!targIsDead()) {      // Don't fire on a dead target
-        if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
-          fire();
-          // targ.dealDamage(1); // no
-          t = new Timer(rof);  // reset timer
-          t.start();
+    if (!exploding) {
+      seekTarget();
+      display();
+      if (b) {                    // Try to optimize if spare time == have
+        if (!targIsDead()) {      // Don't fire on a dead target
+          if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
+            fire();
+            // targ.dealDamage(1); // no
+            t = new Timer(rof);  // reset timer
+            t.start();
+          }
         }
+        b = false;
       }
-      b = false;
+      if (t.isFinished()) {       // Reset if finished
+        b = true;
+      }
+      if (currentLife <=0)
+        explode();
     }
-    if (t.isFinished()) {       // Reset if finished
-      b = true;
+    else {
+      this.explode();
+      if (explody > random(20, 30))
+        expired = true;
     }
-    if (currentLife <=0)
-      expired = true;
+  }
+
+  void explode()
+  {
+    exploding = true;
+    explody += 15;
+    noStroke();
+    fill(random(200, 250), random(200, 255), 0, random(50, 250));
+    ellipse(pos.x, pos.y, explody, explody);
+    stroke(1);
   }
 
 
@@ -321,7 +339,7 @@ class StandardEnemy extends AI
     translate(pos.x, pos.y);
     rotate(radians(angle));
     rectMode(CENTER);
-    fill(100,90,120);
+    fill(100, 90, 120);
     stroke(0);
     rect(0, 0, 10, 10);
     rectMode(CORNER);
