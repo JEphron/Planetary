@@ -133,7 +133,7 @@ class Planet extends Planetary
     type = "Planet";
     setTotalLife(life);
     lifeTimer = new Timer(t); // every t ms, life will go up some.
-    sprt = loadImage("PlanetResized.png");
+    sprt = loadImage("PlanetResized.gif");
   }
   void action()
   {
