@@ -76,7 +76,7 @@ class StandardPlatform extends Platform
     for (int i = 0; i < a.size(); i++) { 
       Entity h = (Entity)a.get(i);
       float d = dist(pos.x, pos.y, h.getPosition().x, h.getPosition().y);
-      if (!h.isTargeted()) {
+      if (!h.isTargeted() || h.getType() == "Ai") {
         if (d < closestDistance) {
           closestDistance = d;
           target = h;
