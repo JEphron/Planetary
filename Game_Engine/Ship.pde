@@ -63,13 +63,13 @@ class Ship extends Entity
       }
       break;
     case 1:      // fire the standard gun
-      for (int i = 0; i < 5; i++){
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/10, /*Angle:*/angle+random(-5, 5), color(255, 0, 255),type));
+      for (int i = 0; i < 5; i++) {
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/1, /*Angle:*/angle+random(-5, 5), color(255, 0, 255), type));
       }
       break;
     case 2:       // do a circular explosion thingy
-      for (int i = 0; i < 160; i+= 30) {
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55),type));
+      for (int i = 0; i < 360; i+= 30) {
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55), type));
       }
       break;
     default:
@@ -87,7 +87,6 @@ class Player extends Ship
     type = "Player"; 
     s = new PVector(20, 20);
     setTotalLife(400); // SET LIFE TOTAL HERE
-    
   }
 
   void action()
@@ -287,6 +286,7 @@ class StandardEnemy extends AI
   StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
+    setTotalLife(520);
     wep = 1;
     type = "Ai";
   }
@@ -296,12 +296,11 @@ class StandardEnemy extends AI
   {
     seekTarget();
     display();
-
     if (b) {                    // Try to optimize if spare time == have
       if (!targIsDead()) {      // Don't fire on a dead target
         if (targetInRange()) {  // Only fire if in range, do this once per shot, not every frame
           fire();
-         // targ.dealDamage(1); // no
+          // targ.dealDamage(1); // no
           t = new Timer(rof);  // reset timer
           t.start();
         }
@@ -311,6 +310,8 @@ class StandardEnemy extends AI
     if (t.isFinished()) {       // Reset if finished
       b = true;
     }
+    if (currentLife <=0)
+      expired = true;
   }
 
 
