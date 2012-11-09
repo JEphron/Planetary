@@ -27,7 +27,7 @@ class Minimap extends Entity
     {
       PointColor p = (PointColor)lst.get(i);
       stroke(p.col);
-      strokeWeight(2);
+      strokeWeight(p.sw);
       if (pointInRect(p.pt, pos, s))
         point(p.x, p.y);
       strokeWeight(1);
@@ -36,9 +36,9 @@ class Minimap extends Entity
     lst = new ArrayList();
   }
 
-  void displayPoint(PVector p, color c)
+  void displayPoint(PVector p, color c, float sw)
   {
-    lst.add(new PointColor(new PVector(map(p.x, 0-scanRange, width+scanRange, pos.x, pos.x+s.x), map(p.y, 0-scanRange, height+scanRange, pos.y, pos.y+s.y)), c));
+    lst.add(new PointColor(new PVector(map(p.x, 0-scanRange, width+scanRange, pos.x, pos.x+s.x), map(p.y, 0-scanRange, height+scanRange, pos.y, pos.y+s.y)), c, sw));
   }
 }
 
@@ -46,14 +46,15 @@ class Minimap extends Entity
 class PointColor
 {
   public PVector pt;
-  float x, y;
+  public float x, y, sw;
   public color col;
-  PointColor(PVector p, color c)
+  PointColor(PVector p, color c, float strokeWidth)
   {
     col=c;
     pt=p;
     x=p.x;
     y=p.y;
+    sw = strokeWidth;
   }
 }
 
