@@ -8,7 +8,7 @@
 // Check if a point is in a rectangle. Currently just checks mouse, too lazy to fix this. 
 boolean pointInRect(PVector pt, PVector pos, PVector s)
 {
-  if (mouseX >= pos.x && mouseX < s.x+pos.x && mouseY >= pos.y && mouseY <= s.y+pos.y)
+  if (pt.x >= pos.x && pt.x < s.x+pos.x && pt.y >= pos.y && pt.y <= s.y+pos.y)
   {
     return true;
   }
@@ -24,6 +24,18 @@ void lineFromPointLengthAngle(float x, float y, float len, float angle)
   x2 = x + len * cos(a);
   y2 = y + len * sin(a);
   line(x, y, x2, y2);
+}
+
+// Draw a cross with lines - PVector edition
+void drawCross(PVector p, int lnLen) {
+ line(p.x-lnLen, p.y, p.x+lnLen, p.y);
+ line(p.x, p.y-lnLen, p.x, p.y+lnLen);
+}
+
+// Draw a cross with lines - x/y coords edition
+void drawCross(float x, float y, int lnLen) {
+ line(x-lnLen, y, x+lnLen, y);
+ line(x, y-lnLen, x, y+lnLen);
 }
 
 // Random timer I stole from somewhere, because programmers jack shit
