@@ -23,7 +23,7 @@ class Minimap extends Entity
     drawCross(pos.x+s.x/2, pos.y+s.y/2, 5);
     stroke(0);
     fill(255,255,0);
-    for (int i = 0; i < lst.size()-1; i++)
+    for (int i = 0; i < lst.size(); i++)
     {
       PointColor p = (PointColor)lst.get(i);
       stroke(p.col);
