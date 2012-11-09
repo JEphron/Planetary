@@ -247,6 +247,7 @@ class MainGame extends GameScene
             mini.displayPoint(t.getPosition(), color(0, 0, 255));
             if (t.targIsDead()) {
               ArrayList temp = this.getChildrenByType("Projectile");
+              temp.addAll(this.getChildrenByType("Ai"));
               if (temp != null)
                 t.aquireTarget(temp);
             }
@@ -256,6 +257,7 @@ class MainGame extends GameScene
           else if (e.getType() == "Ai") {
             e.action();
             mini.displayPoint(e.getPosition(), color(0, 255, 0));
+             // todo: reaquire target if target dies
             if (e.isExpired()) {
               println("Expired!");
               e= null;
