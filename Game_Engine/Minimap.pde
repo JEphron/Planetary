@@ -1,6 +1,7 @@
 
 class Minimap extends Entity
 {
+  private int scanRange = 500;
   private ArrayList lst = new ArrayList();
   Minimap(PVector p, PVector siz, color bg)
   {
@@ -37,7 +38,7 @@ class Minimap extends Entity
 
   void displayPoint(PVector p, color c)
   {
-    lst.add(new PointColor(new PVector(map(p.x, 0, width, pos.x, pos.x+s.x), map(p.y, 0, height, pos.y, pos.y+s.y)), c));
+    lst.add(new PointColor(new PVector(map(p.x, 0-scanRange, width+scanRange, pos.x, pos.x+s.x), map(p.y, 0-scanRange, height+scanRange, pos.y, pos.y+s.y)), c));
 //      stroke(c);
 //    strokeWeight(2);
 //    // map values to rect.
