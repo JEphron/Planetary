@@ -157,6 +157,7 @@ class Bullet extends Projectile
   void explode()
   {
     exploding = true;
+    if(explody < 30)
     explody += 15;
     noStroke();
     fill(0, random(100, 200), random(200, 255), random(100, 150));
@@ -269,6 +270,7 @@ class HomingMissile extends Projectile
   void explode()
   {
     exploding = true;
+    if(explody < 30)
     explody += 15;
     noStroke();
     fill(255, random(100)+100, 0, random(100, 200));
