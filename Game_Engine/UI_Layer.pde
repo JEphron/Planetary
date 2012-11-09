@@ -56,13 +56,15 @@ class HealthBar extends UIItem
     fill(map(currLife, 0, maxLife, 255, 0), map(currLife, 0, maxLife/5, 0, 255), 0);
     textAlign(LEFT);
     rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
-    if(currLife>0)
-    fill(255);
+    if (currLife>0)
+      fill(255);
     else
-    fill(255,0,0);
-    text(parent.getType()+": "+(int)currLife, pos.x+5+s.x*(currLife/maxLife),pos.y+textAscent()+4);
+      fill(255, 0, 0);
+    text(parent.getType()+": "+(int)currLife, pos.x+5+s.x*(currLife/maxLife), pos.y+textAscent()+4);
   }
-  Entity getParent(){return parent;}
+  Entity getParent() {
+    return parent;
+  }
 }
 
 // Add: Money display, drawer for platforms, info box, sound controls, pauseButton. UI overlay with fancy imgs or whatever
@@ -107,7 +109,7 @@ class UITray extends UIItem
     pos = po;
     s = si;
     type = "UITray";
-      // when clicked, set placement type. on click, place that type and then reset.
+    // when clicked, set placement type. on click, place that type and then reset.
     class cbo extends callbackObject
     {
       String t;
@@ -119,9 +121,13 @@ class UITray extends UIItem
         println(t);
       }
     }
-    this.addItem(new UIString("The cow is fat"));
-    this.addItem(new UIString("So is the cat"));
-    this.addItem(new UIString("This doesn't rhyme"));
+    //this.addItem(new UIString("Controls"));
+    this.addItem(new UIString("A to fire"));
+    this.addItem(new UIString("S to reset life"));
+
+    this.addItem(new UIString("D to change weps"));
+    this.addItem(new UIString("F to place turret"));
+    this.addItem(new UIString("G to clear turrets"));
     //this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
     //    this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
     //    this.addItem(new UIBox(boxSize, new cbo("Four"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
