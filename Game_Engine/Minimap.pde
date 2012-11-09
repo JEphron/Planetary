@@ -22,7 +22,7 @@ class Minimap extends Entity
     // draw center crosshairs
     drawCross(pos.x+s.x/2, pos.y+s.y/2, 5);
     stroke(0);
-
+    fill(255,255,0);
     for (int i = 0; i < lst.size()-1; i++)
     {
       PointColor p = (PointColor)lst.get(i);
@@ -39,14 +39,6 @@ class Minimap extends Entity
   void displayPoint(PVector p, color c)
   {
     lst.add(new PointColor(new PVector(map(p.x, 0-scanRange, width+scanRange, pos.x, pos.x+s.x), map(p.y, 0-scanRange, height+scanRange, pos.y, pos.y+s.y)), c));
-//      stroke(c);
-//    strokeWeight(2);
-//    // map values to rect.
-   // PVector pt =new PVector(map(p.x, 0, width, pos.x, pos.x+s.x), map(p.y, 0, height, pos.y, pos.y+s.y));
-//    if (pointInRect(pt, pos, s))
-//      point(pt.x, pt.y);
-//    strokeWeight(1);
-//    stroke(0);
   }
 }
 
