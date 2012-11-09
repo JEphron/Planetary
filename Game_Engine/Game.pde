@@ -139,7 +139,8 @@ class MainGame extends GameScene
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     //----------------------------------------------------------------------------------------------------------------
     // Ai
-    this.addChild(new AISpawner(this, new PVector(-200, 50)));
+    this.addChild(new AISpawner(this, new PVector(width/2-800, 50)));
+    this.addChild(new AISpawner(this, new PVector(width/2+800, 50)));
 
     mousePressed = true;
   } 
@@ -195,7 +196,7 @@ class MainGame extends GameScene
     // mini.clearMap();
     // This method is kind of ugly, but I think it's standard practice. Also it works, so that's good. 
     if (this.getChildren().size()>0) {
-      for (int i = 0; i <= this.getChildren().size()-1; i++) {
+      for (int i = 0; i < this.getChildren().size(); i++) {
         Entity e=(Entity)this.getChildren().get(i);
         if (e.getType() != null) {
           if ( e.getType() == "Projectile") {
@@ -326,7 +327,7 @@ class MainGame extends GameScene
       }      
 
       else if (key == 'g') {// 'g' to clear platforms
-        for (int i = 0; i <= this.getChildren().size()-1; i++) {
+        for (int i = 0; i < this.getChildren().size(); i++) {
           Entity e=(Entity)this.getChildren().get(i);
           if (e.getType() == "Platform") {
             e = null;
