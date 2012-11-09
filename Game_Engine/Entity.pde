@@ -160,6 +160,8 @@ class Entity
     currentLife = l;
     if (currentLife < 0)
       currentLife = 0;
+      if(currentLife > maxLife)
+      currentLife = maxLife;
   }
   int getMaxLife() {
     return maxLife;
