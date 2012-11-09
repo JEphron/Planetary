@@ -203,6 +203,7 @@ class AI extends Ship
   AI(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
+    type = "Ai";
   }
 
   boolean hasNoTarget()
@@ -287,6 +288,7 @@ class StandardEnemy extends AI
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
     wep = 1;
+    type = "Ai";
   }
 
   boolean b = false;
