@@ -107,7 +107,7 @@ class MainGame extends GameScene
   UILayer ui = new UILayer();  
   boolean tracking = true;
   PVector trackPoint = new PVector(0, 0);
-  Minimap mini = new Minimap(new PVector(5,5), new PVector(100,100), color(128));
+  Minimap mini = new Minimap(new PVector(5,5), new PVector(150,150), color(128));
   float trackSpeed = 0.2;
 
   Player playerzor;
@@ -135,16 +135,13 @@ class MainGame extends GameScene
 
     //----------------------------------------------------------------------------------------------------------------
     // UI
-    //ui.addUIItem(new HealthBar(new PVector(0, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
-    //ui.addUIItem(new HealthBar(new PVector(0, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
+    ui.addUIItem(new HealthBar(new PVector(mini.getPosition().x+mini.getSize().x+5, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
+    ui.addUIItem(new HealthBar(new PVector(mini.getPosition().x+mini.getSize().x+5, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     //----------------------------------------------------------------------------------------------------------------
     // Ai
     this.addChild(new AISpawner(this, new PVector(50, 50)));
     
-    //----------------------------------------------------------------------------------------------------------------
-    // Minimap
-    //this.addChild(mini);
     mousePressed = true;
   } 
 
@@ -164,11 +161,11 @@ class MainGame extends GameScene
     // Sun su = (Sun)this.getChild    planet = (Planet)sun.getChild(0);
     planetPos = planet.getPosition().get();
     planet.addChild(new StandardPlatform(new PVector(planet.getPosition().x, planet.getPosition().y), new PVector(200, 20)));
-    mini.action();
     updateChildren();   
- 
+     mini.action();
+
     fill(255);
-    text(frameRate, 20, 10);
+    text(frameRate, 5, mini.getPosition().y+mini.getSize().y+textAscent()+5);
 
     if (tracking) {
       PVector focusPoint = new PVector(playerzor.getPosition().x-width/2 +s.x/2, playerzor.getPosition().y-height/2 +s.y/2);   // ToDo: move this into it's own method  
@@ -236,6 +233,7 @@ class MainGame extends GameScene
           }           
           else if ( e.getType() == "Platform" ) {
             Platform t = (Platform)e;
+            mini.displayPoint(t.getPosition(), color(0,0,255));
             if (t.targIsDead()) {
               ArrayList temp = this.getChildrenByType("Projectile");
               if (temp != null)

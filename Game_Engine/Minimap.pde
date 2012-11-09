@@ -1,7 +1,7 @@
 
 class Minimap extends Entity
 {
-  ArrayList lst = new ArrayList();
+  private ArrayList lst = new ArrayList();
   Minimap(PVector p, PVector siz, color bg)
   {
     pos = p;
@@ -19,20 +19,48 @@ class Minimap extends Entity
     rect(pos.x, pos.y, s.x, s.y);
     stroke(255);
     // draw center crosshairs
-    drawCross(pos.x+s.x/2,pos.y+s.y/2,5);
+    drawCross(pos.x+s.x/2, pos.y+s.y/2, 5);
     stroke(0);
+
+    for (int i = 0; i < lst.size()-1; i++)
+    {
+      PointColor p = (PointColor)lst.get(i);
+      stroke(p.col);
+      strokeWeight(2);
+      if (pointInRect(p.pt, pos, s))
+        point(p.x, p.y);
+      strokeWeight(1);
+      stroke(0);
+    }
+    lst = new ArrayList();
   }
 
   void displayPoint(PVector p, color c)
   {
-    stroke(c);
-    strokeWeight(2);
-    // map values to rect.
-    PVector pt =new PVector(map(p.x,0,width,pos.x,pos.x+s.x), map(p.y,0,height,pos.y,pos.y+s.y));
-    if(pointInRect(pt,pos,s))
-    point(pt.x,pt.y);
-    strokeWeight(1);
-    stroke(0);
+    lst.add(new PointColor(new PVector(map(p.x, 0, width, pos.x, pos.x+s.x), map(p.y, 0, height, pos.y, pos.y+s.y)), c));
+//      stroke(c);
+//    strokeWeight(2);
+//    // map values to rect.
+   // PVector pt =new PVector(map(p.x, 0, width, pos.x, pos.x+s.x), map(p.y, 0, height, pos.y, pos.y+s.y));
+//    if (pointInRect(pt, pos, s))
+//      point(pt.x, pt.y);
+//    strokeWeight(1);
+//    stroke(0);
+  }
+}
+
+// why doesn't processing have structs?
+class PointColor
+{
+  public PVector pt;
+  float x, y;
+  public color col;
+  PointColor(PVector p, color c)
+  {
+    col=c;
+    pt=p;
+    x=p.x;
+    y=p.y;
   }
 }
 
