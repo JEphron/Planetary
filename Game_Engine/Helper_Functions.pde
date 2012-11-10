@@ -111,14 +111,6 @@ float beringAsMagnitudeCubic2d(PVector missile_position, PVector missile_heading
   }
 } 
 
-/// <summary> 
-/// returns the angle from -1 to 1  
-/// this method is a cubic based approximation it will devite about 6% at times 
-/// however all the normalization and square roots are removed 
-/// </summary> 
-/// <param name="north">north specifying the direction that is to be angle 0</param> 
-/// <param name="position">the x y vector components relative to 0,0 and the north of they quadrant system</param> 
-/// <returns>an approximate angle based on the north and postion</returns> 
 float unitAngleToTarget(PVector forward, PVector position) 
 { 
   float forward_theta = forward.x * position.x + forward.y * position.y; // dot = 1 or -1 when north and postion align 
@@ -145,20 +137,6 @@ float unitAngleToTarget(PVector forward, PVector position)
   }
 } 
 
-/// <summary> 
-/// Satisfys the rule that the absolutes of the components will sum to 1.0  
-/// cubic vector operation simply equalize x y z by thier absolute sum  
-/// the returned vector is the ratio of the magnitudes in relation to the sum of the whole   
-/// unit length vectors can be directly normalized to a cubic 
-/// and cubic vector can be directly normalized to a unit length vector 
-///  
-/// note  
-/// the dot of a regular normal is the acos however the dot of two cubics is a ratio of the angles 
-/// as a % of 90 degrees which can be applied directly to PI or as a magnitude 
-/// will motill 2010-2012 
-/// </summary> 
-/// <param name="v"></param> 
-/// <returns>returns a cubic unitlengthvector</returns> 
 PVector cubicNormalize(PVector v) 
 { 
   float n = v.x; 
