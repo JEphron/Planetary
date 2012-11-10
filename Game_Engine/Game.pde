@@ -106,9 +106,13 @@ class MainGame extends GameScene
   UILayer ui = new UILayer();  
   boolean tracking = true;
   PVector trackPoint = new PVector(0, 0);
-  Minimap mini = new Minimap(new PVector(5, 5), new PVector(150, 150), color(128));
+  Minimap mini = new Minimap(new PVector(5, 5), new PVector(150, 150), color(128)); // this should be part of the UI
   float trackSpeed = 0.2;
-
+  String[] weapons = {    
+    "Missiles", 
+    "Plasma Gun", 
+    "Circle Thing"
+  };
   Player playerzor;
 
   MainGame(Game p)
@@ -139,11 +143,13 @@ class MainGame extends GameScene
     //----------------------------------------------------------------------------------------------------------------
     // Ai
     this.addChild(new AISpawner(this, new PVector(width/2-800, 50)));
-    this.addChild(new AISpawner(this, new PVector(width/2+800, 50)));
+    //this.addChild(new AISpawner(this, new PVector(width/2+800, 50)));
 
     mousePressed = true;
   } 
-
+  UILayer getUI() {
+    return ui;
+  }
   PVector scenePos = null;
   boolean derp = true;
   Timer t;
@@ -237,7 +243,7 @@ class MainGame extends GameScene
           else if ( e.getType() == "Sun" ) {
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
-            mini.displayPoint(pl.getPosition(), color(255,255,0), 25);
+            mini.displayPoint(pl.getPosition(), color(255, 255, 0), 25);
             mini.displayPoint(pl.getChild(0).getPosition(), color(100, 200, 170), 5);
             pl.action();
             if (pl.getChild(0).getLife()<=0) {
@@ -259,12 +265,13 @@ class MainGame extends GameScene
           else if (e.getType() == "Ai") {
             e.action();
             mini.displayPoint(e.getPosition(), color(0, 255, 0), 2);
-             // todo: reaquire target if target dies
+            // todo: reaquire target if target dies
             if (e.isExpired()) {
               e= null;
               this.getChildren().remove(i);
             }
-          }else if (e.getType() == "SpawnPoint") {
+          }
+          else if (e.getType() == "SpawnPoint") {
             mini.displayPoint(e.getPosition(), color(128), 5);
             e.action();
           }
@@ -308,6 +315,7 @@ class MainGame extends GameScene
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       //this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
       playerzor.cycleWeps();
+      ui.notify("Weapon = " +weapons[playerzor.getWep()]);
       d = false;
       //key = 0;
     }   
@@ -316,7 +324,6 @@ class MainGame extends GameScene
 
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       this.addChild(new StandardPlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20)));
-
       //key = 0;
     }       
 
