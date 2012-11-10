@@ -46,6 +46,8 @@ class Projectile extends Entity
   boolean exploding = false;
   float distTraveled;
   String owner = ""; // default to none
+  boolean needsNewTarget = false;
+  Entity targ;
   //PImage splosionSprt; // the explosion graphic
 
   Projectile(PVector p, int rng, int spd, int dmg, float ang, PImage graphic)
@@ -69,17 +71,20 @@ class Projectile extends Entity
     return owner;
   }
 
-  void explode()
-  {
+  void explode() {
   }
 
-  void action()
-  {
+  boolean needsRetarget() {
+    return needsNewTarget;
+  }
+
+  void setTarget(Entity t) {
+    targ = t;
+  }
+  void action() {
     if (currentLife <= 0)
       explode();
-
     distTraveled += vel;
-
     if (distTraveled > range)
       expired = true; // explode();// if you want.
   }
@@ -90,12 +95,10 @@ class Projectile extends Entity
   int getRange() {
     return range;
   }
-  float getTotalDistanceTraveled()
-  {
+  float getTotalDistanceTraveled() {
     return distTraveled;
   }
-  boolean isExploding()
-  {
+  boolean isExploding() {
     return exploding;
   }
 }
@@ -157,8 +160,8 @@ class Bullet extends Projectile
   void explode()
   {
     exploding = true;
-    if(explody < 30)
-    explody += 15;
+    if (explody < 30)
+      explody += 15;
     noStroke();
     fill(0, random(100, 200), random(200, 255), random(100, 150));
     ellipse(pos.x, pos.y, explody, explody);
@@ -171,7 +174,6 @@ class HomingMissile extends Projectile
   //PVector pos;
   float turnSpeed; 
   int explody = 0;
-  Entity targ;
   // jTri t;
   HomingMissile(PVector p, int rng, int velocity, float tspeed, Entity target)
   {
@@ -187,7 +189,8 @@ class HomingMissile extends Projectile
   // Alternate constructor with owner string.
   HomingMissile(PVector p, int rng, int velocity, float tspeed, Entity target, String own)
   {
-    super(p, rng, velocity, 1, AngleTo(p, target.getPosition()), null);
+    super(p, rng, velocity, 1, 0, null);
+    
     setTotalLife(1);
     turnSpeed = tspeed;
     col = color(random(255), random(255), random(255));
@@ -202,7 +205,7 @@ class HomingMissile extends Projectile
   }
   void action()
   {
-    if (targ != null) { // don't try and track a nonexistant target
+    if (targ != null && !targ.isExpired()) { // don't try and track a nonexistant target
       super.action();
       PVector targetPosition = targ.getPosition();
       // So now this works...
@@ -239,8 +242,12 @@ class HomingMissile extends Projectile
       //  targ.dealDamage(10);
       // }
     }
-    else { // If the target is gone, explode. 
-      this.explode();
+    else { // if target is gone, try to retarget
+      needsNewTarget = true;
+      pos.x += vel * cos(radians(angle)) ; // just fly straight
+      pos.y += vel * sin(radians(angle)) ;      
+
+      display();
     }
   }
 
@@ -270,8 +277,8 @@ class HomingMissile extends Projectile
   void explode()
   {
     exploding = true;
-    if(explody < 30)
-    explody += 15;
+    if (explody < 30)
+      explody += 15;
     noStroke();
     fill(255, random(100)+100, 0, random(100, 200));
     ellipse(pos.x, pos.y, explody, explody);

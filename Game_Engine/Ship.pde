@@ -13,6 +13,7 @@ class Ship extends Entity
   float accel=1;      // Speed of acceleration
   float maxSpeed=30;   // Speed cap
   int rof = 500;      // rate of fire, currently broken
+  int range = 100;      // set when switching weapons, how far can the bullet go
   //String wep;       // Which weapon does it use.
   Entity targ;    // Ai will seek target and fire upon it, Player's target will be selectable
   Entity parent; // the game scene which bullets will be added to
@@ -40,12 +41,26 @@ class Ship extends Entity
   //  {
   //    wep = w;
   //  }
+  boolean hasNoTarget()
+  {
+    return (targ == null);
+  }
+  void aquireTarget(ArrayList a) {
+  }
+  boolean targIsDead() {
+    if (targ != null)
+      return targ.isExpired();
+    else return true;
+  } 
+
   void cycleWeps()
   {
     int numWeps = 3;
     wep = ((wep+1) < numWeps) ? wep+1 : 0;
   }
-  int getWep(){return wep;}
+  int getWep() {
+    return wep;
+  }
   void setTarget(Entity t)
   {
     targ = t;
@@ -54,22 +69,25 @@ class Ship extends Entity
   {
     switch (wep) {
     case 0:      // fire a homing missile that tracks the target
-      if (targ !=null) {
+      range = 2000;
+     // if (targ !=null) {
         for (int i = 0; i < 5; i++) {
-          HomingMissile h = new HomingMissile(new PVector( pos.x +random(-10, 10), pos.y+random(-10, 10)), 5000, 30, 10, targ, type); // todo: Incorperate setAngle into constructor
+          HomingMissile h = new HomingMissile(new PVector( pos.x +random(-10, 10), pos.y+random(-10, 10)), range, 30, 30, targ, type); // todo: Incorperate setAngle into constructor
           h.setAngle(angle);  
           parent.addChild(h);
         }
-      }
+      //}
       break;
     case 1:      // fire the standard gun
+      range = 1000;
       for (int i = 0; i < 5; i++) {
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/20, /*Damage:*/1, /*Angle:*/angle+random(-5, 5), color(255, 0, 255), type));
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/range, /*Speed:*/20, /*Damage:*/1, /*Angle:*/angle+random(-5, 5), color(255, 0, 255), type));
       }
       break;
     case 2:       // do a circular explosion thingy
+      range = 1000;
       for (int i = 0; i < 360; i+= 30) {
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55), type));
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/range, /*Speed:*/2, /*Damage:*/1, /*Angle:*/angle+i, color(100, 255, 55), type));
       }
       break;
     default:
@@ -88,15 +106,16 @@ class Player extends Ship
     s = new PVector(20, 20);
     setTotalLife(400); // SET LIFE TOTAL HERE
   }
+
   int t = 500; // time between life boosts in ms
   int l = 10; // how much does the life go up each tick
-  Timer lifeTimer = new Timer(500);;
+  Timer lifeTimer = new Timer(500);
 
   void action()
   {
     pos.x += cos(radians(angle))*speed;
     pos.y += sin(radians(angle))*speed;
-    
+
     if (lifeTimer.isFinished()) {
       if (this.getLife() < this.getMaxLife()-1)
         this.setLife(this.getLife()+l);
@@ -138,12 +157,20 @@ class Player extends Ship
         speed = 0;
     }
   }
+
+  void aquireTarget(ArrayList a) {
+    if (a.size()>0) {
+      targ = (Entity)a.get((int)random(0, a.size()));
+    }else{
+      targ = null; 
+    }
+  }
 }
 
 class AISpawner extends Entity // hell, everything extends this... not good oop
 {
-  int aiPerWave =8; // increase over time
-  int timeBetweenWaves = 8; // In seconds, decrease over time
+  int aiPerWave = 10; // increase over time
+  int timeBetweenWaves = 3; // In seconds, decrease over time
   PVector spawnPoint; // generate at a random point on a circle that surrounds the play area. 
   int aiType; // this should be random, and eventually become a mixture. 
   float timeOfLastSpawn; // keep track of when to spawn
@@ -155,7 +182,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
   {
     parent = parent_entity;
     timeOfLastSpawn = 0; 
-    timeSinceLastSpawn = 0; 
+    timeSinceLastSpawn =10000; 
     pos = p; // temporary solution
     type = "SpawnPoint";
   }
@@ -188,7 +215,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
 
   void spawnWave(int num, int type)
   {
-    parent.getUI().notify("Warning: wave incoming!");
+    parent.getUI().notify("Wave incoming!!");
     targets.addAll(parent.getChildrenByType("Platform")); // get all the stuff from the parent
     targets.add(((Entity)parent.getChildrenByType("Sun").get(0)).getChild(0)); // this is hacky
     targets.addAll(parent.getChildrenByType("Player"));
@@ -215,17 +242,6 @@ class AI extends Ship
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
     type = "Ai";
   }
-
-  boolean hasNoTarget()
-  {
-    return (targ == null);
-  }
-
-  boolean targIsDead() {
-    if (targ != null)
-      return targ.isExpired();
-    else return true;
-  } 
 
   boolean targetInRange()
   {

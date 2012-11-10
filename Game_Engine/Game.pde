@@ -143,7 +143,7 @@ class MainGame extends GameScene
     //----------------------------------------------------------------------------------------------------------------
     // Ai
     this.addChild(new AISpawner(this, new PVector(width/2-800, 50)));
-    //this.addChild(new AISpawner(this, new PVector(width/2+800, 50)));
+    this.addChild(new AISpawner(this, new PVector(width/2+800, 50)));
 
     mousePressed = true;
   } 
@@ -210,22 +210,31 @@ class MainGame extends GameScene
             Projectile m = (Projectile)e;
             m.action();
             mini.displayPoint(m.getPosition(), color(255, 0, 0), 2);
-            // If it's touching the planet (or platforms), destroy it, deal dmg to planet
-            // Handle this differently please. 
-            if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
-              if (!m.isExploding())
-                planet.dealDamage(m.getDamage());
-              m.explode();
-            }
             if (m.getOwner() != "Player") {
+              // If it's touching the planet (or platforms), destroy it, deal dmg to planet
+              // Handle this differently please. 
+              if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
+                if (!m.isExploding())
+                  planet.dealDamage(m.getDamage());
+                m.explode();
+              }
               if (dist(m.getPosition().x, m.getPosition().y, playerzor.getPosition().x, playerzor.getPosition().y)<50) {
                 if (!m.isExploding())
                   playerzor.dealDamage(m.getDamage());
                 m.explode();
               }
             }
-            else {
+            else { // if belongs to player
               ArrayList ailist = this.getChildrenByType("Ai");
+
+              if (m.needsRetarget()) // only applies to missiles
+              {
+                if (ailist.size() >0) // if the target is dead then aquire a new target
+                  m.setTarget((Entity)ailist.get(ailist.size()-1));
+                else
+                  m.setTarget(null);
+              }
+
               for (int t = 0; t < ailist.size(); t++)
               {
                 Ship s = (Ship)ailist.get(t);
@@ -248,7 +257,7 @@ class MainGame extends GameScene
             mini.displayPoint(pl.getChild(0).getPosition(), color(100, 200, 170), 5);
             pl.action();
             if (pl.getChild(0).getLife()<=0) {
-              println("Game should end now"); // find out which life bar was totaled.
+              ui.notify("Your planet is dead."); //todo: find out which life bar was totaled.
             }
           }           
           else if ( e.getType() == "Platform" ) {
@@ -268,13 +277,22 @@ class MainGame extends GameScene
             mini.displayPoint(e.getPosition(), color(0, 255, 0), 2);
             // todo: reaquire target if target dies
             if (e.isExpired()) {
-              e= null;
+              e = null;
               this.getChildren().remove(i);
             }
           }
           else if (e.getType() == "SpawnPoint") {
             mini.displayPoint(e.getPosition(), color(128), 5);
             e.action();
+          } 
+          else if (e.getType() == "Player") {
+            Player p = (Player)e;
+            p.action();
+            if (p.targIsDead()) {
+              ArrayList temp = this.getChildrenByType("Ai");
+              if (temp != null)
+                p.aquireTarget(temp);
+            }
           }
           else {
             // Other type checks go right here
@@ -307,7 +325,6 @@ class MainGame extends GameScene
       //      for (int i = 0; i < 360; i+= 10) {
       //        this.addChild(new Bullet(/*Position:*/playerzor.getPosition(), /*Range:*/1000, /*Speed:*/2, /*Damage:*/1, /*Angle:*/playerzor.getAngle()+i));
       //      }
-      playerzor.setTarget(planet);
       playerzor.fire();
     }
 
