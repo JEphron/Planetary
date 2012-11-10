@@ -44,8 +44,8 @@ class Ship extends Entity
   {
     int numWeps = 3;
     wep = ((wep+1) < numWeps) ? wep+1 : 0;
-    println(wep);
   }
+  int getWep(){return wep;}
   void setTarget(Entity t)
   {
     targ = t;
@@ -102,9 +102,7 @@ class Player extends Ship
         this.setLife(this.getLife()+l);
       lifeTimer = new Timer(500);
       lifeTimer.start();
-   
     }
-
     checkKeys();
     display();
   }
@@ -151,13 +149,13 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
   float timeOfLastSpawn; // keep track of when to spawn
   float timeSinceLastSpawn;
   ArrayList targets = new ArrayList();
-  Entity parent;
+  MainGame parent;
 
-  AISpawner(Entity parent_entity, PVector p)
+  AISpawner(MainGame parent_entity, PVector p)
   {
     parent = parent_entity;
     timeOfLastSpawn = 0; 
-    timeSinceLastSpawn = 10000; 
+    timeSinceLastSpawn = 0; 
     pos = p; // temporary solution
     type = "SpawnPoint";
   }
@@ -190,6 +188,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
 
   void spawnWave(int num, int type)
   {
+    parent.getUI().notify("Warning: wave incoming!");
     targets.addAll(parent.getChildrenByType("Platform")); // get all the stuff from the parent
     targets.add(((Entity)parent.getChildrenByType("Sun").get(0)).getChild(0)); // this is hacky
     targets.addAll(parent.getChildrenByType("Player"));
@@ -199,7 +198,6 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
       a.aquireTarget(targets);      // give targets to the ai
       parent.addChild(a);            // add it to the parent.
     }
-    println("Spawning a wave...");
     //aiPerWave += 1; // increase by x each wave
     if (timeBetweenWaves>2) // don't spawn too fast...
       timeBetweenWaves -= 0; // decrease time by 1 second
