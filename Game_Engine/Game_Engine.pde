@@ -11,8 +11,6 @@
  **************/
 
 Engine eng;
-float mX;
-float mY;
 void setup()
 {
   //size(720, 400);
@@ -31,51 +29,6 @@ void draw()
   eng.handle();
 }
 
-// get mousePressed positions,
-// set Pos to currentMousePos - mousePressedPos relative to original position
-void mousePressed()
-{
-  mX = mouseX;
-  mY = mouseY;
-}
-
-// handle key presses
-void keyPressed()
-{
-  if (keyCode == LEFT)
-    Left = true;
-  if (keyCode == RIGHT)
-    Right = true;
-  if (keyCode == UP)
-    Up = true;
-  if (keyCode == DOWN)
-    Down = true;
-  if (key == 'a')
-    Fire = true;
-  if (key == 'd')
-    d = true;
-  if (key == 'f')
-    f = true;
-}
-
-// handle key releases
-void keyReleased()
-{
-  if (keyCode == LEFT)
-    Left = false;
-  if (keyCode == RIGHT)
-    Right = false;
-  if (keyCode == UP)
-    Up = false;
-  if (keyCode == DOWN)
-    Down = false;
-  if (key == 'a')
-    Fire = false;
-  if (key == 'd')
-    d = false;
-  if (key == 'f')
-    f = false;
-}
 // CONVENTIONS: • Comments at the top of files should summerize the contents of the file
 //              • Class names should be capitalized, methods should be camelCase
 
