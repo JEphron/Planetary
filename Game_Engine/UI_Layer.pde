@@ -73,14 +73,15 @@ class HealthBar extends UIItem
 class UILayer 
 { 
   Minimap mini;
-
   ArrayList items;
-  int notifications = 0;
+  Notifier nfier;
+
   UILayer()
   {
     //It's static
     //pos = new PVector(0, 0);
     items = new ArrayList();
+    nfier  = new Notifier();
   }
 
   void addUIItem(UIItem t)
@@ -90,33 +91,61 @@ class UILayer
 
   void action()
   {
-    // Draw some instructions:
+    // Draw the addable items (healthbar, string, etc)
     for (int i = items.size()-1; i >= 0; i--) {
       UIItem e = (UIItem)items.get(i);
       e.action();
-      if (e.getType() == "UIString")
-      {
-        // animate fade in, fade out.
-        UIString u = (UIString)e;
-        u.doFade();
-        if(u.isExpired()){
-          e = null;
-         items.remove(i); 
-         notifications--;
-        }
-      }
     }
+
+    nfier.action();
   }
 
   void notify(String s)
   {
-        notifications++;
-
-    items.add(new UIString(s, new PVector(width-textWidth(s), (notifications*20)), 800));
+    nfier.addMsg(new UIString(s, new PVector(0,0), 800));
   }
-  
+
   void setPlayerWep(int w)
   {
+  }
+}
+
+class Notifier extends UIItem
+{
+  ArrayList msgs;
+  Notifier()
+  {
+    msgs = new ArrayList();
+  }
+
+  void addMsg(UIString str)
+  {
+    msgs.add(str);
+    layoutMsgs();
+  }
+
+  void action() {
+    this.display();
+  }
+  void display() {
+    for (int i = 0; i < msgs.size(); i++) {
+      UIString u = (UIString)msgs.get(i);
+      u.action();
+      u.doFade(); // animate fade in/out
+      if (u.isExpired()) {
+        u = null;
+        msgs.remove(i); 
+        layoutMsgs();
+      }
+    }
+  }
+  
+  void layoutMsgs()
+  {
+    for (int i = 0; i < msgs.size(); i++) {
+      UIString u = (UIString)msgs.get(i);
+      u.setPosition(new PVector(width-textWidth(u.getText()), (i*20)));
+    }
   }
 }
 
@@ -231,6 +260,7 @@ class UIString extends UIItem
     pos = new PVector (0, 0);
     type = "UIString";
   }
+  
   UIString(String s, PVector po)
   {
     txt=s;
@@ -246,13 +276,13 @@ class UIString extends UIItem
     fadeTime = fTime; // how long does it stay onscreen before fading out
     type = "UIString";
   }
-
+  String getText(){return txt;}
   void action()
   {
     fill(255, 255, 255, alphaCol);
     this.display();
   }
-  
+
   void doFade()
   {
     if (alphaCol < 255 && !doneFadingIn) {
@@ -260,7 +290,7 @@ class UIString extends UIItem
     }
     else {
       doneFadingIn = true;
-      if(t == null){
+      if (t == null) {
         t= new Timer(fadeTime);
         t.start();
         println("starting Timer");
@@ -268,8 +298,8 @@ class UIString extends UIItem
       if (t.isFinished()) {
         println(alphaCol);
         alphaCol-=25;
-        if(alphaCol<0)
-        expired = true;
+        if (alphaCol<0)
+          expired = true;
       }
     }
   }
