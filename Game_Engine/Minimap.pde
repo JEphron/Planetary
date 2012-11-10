@@ -1,5 +1,4 @@
-
-class Minimap extends Entity
+class Minimap extends UIItem
 {
   private int scanRange = 500;
   private ArrayList lst = new ArrayList();
@@ -57,4 +56,3 @@ class PointColor
     sw = strokeWidth;
   }
 }
-
