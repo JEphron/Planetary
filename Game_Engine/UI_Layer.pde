@@ -72,7 +72,10 @@ class HealthBar extends UIItem
 // Techincally not really an entity, decided not to inherit
 class UILayer 
 { 
+  Minimap mini;
+
   ArrayList items;
+  int notifications = 0;
   UILayer()
   {
     //It's static
@@ -91,9 +94,27 @@ class UILayer
     for (int i = items.size()-1; i >= 0; i--) {
       UIItem e = (UIItem)items.get(i);
       e.action();
+      if (e.getType() == "UIString")
+      {
+        // animate fade in, fade out.
+        UIString u = (UIString)e;
+        u.doFade();
+        if(u.isExpired()){
+          e = null;
+         items.remove(i); 
+         notifications--;
+        }
+      }
     }
   }
 
+  void notify(String s)
+  {
+        notifications++;
+
+    items.add(new UIString(s, new PVector(width-textWidth(s), (notifications*20)), 800));
+  }
+  
   void setPlayerWep(int w)
   {
   }
@@ -124,11 +145,11 @@ class UITray extends UIItem
     //this.addItem(new UIString("Controls"));
     this.addItem(new UIString("A to fire"));
     this.addItem(new UIString("S to reset life"));
-
     this.addItem(new UIString("D to change weps"));
     this.addItem(new UIString("F to place turret"));
     this.addItem(new UIString("G to clear turrets"));
-    //this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
+
+    //     this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
     //    this.addItem(new UIBox(boxSize, new cbo("Three"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
     //    this.addItem(new UIBox(boxSize, new cbo("Four"), new StandardPlatform(new PVector(100, 100), new PVector(20, 20))));
   }
@@ -200,17 +221,58 @@ class UITray extends UIItem
 class UIString extends UIItem
 {
   String txt;
+  int alphaCol = 255;
+  int fadeTime = 0;
+  boolean doneFadingIn = false;
+  Timer t;
   UIString(String s)
   {
     txt=s;
     pos = new PVector (0, 0);
+    type = "UIString";
   }
-  void action()
+  UIString(String s, PVector po)
   {
-    fill(255);
-    this.display();
+    txt=s;
+    pos = po;
+    type = "UIString";
   }
 
+  UIString(String s, PVector po, int fTime)
+  {
+    txt=s;
+    pos = po;
+    alphaCol = 0;
+    fadeTime = fTime; // how long does it stay onscreen before fading out
+    type = "UIString";
+  }
+
+  void action()
+  {
+    fill(255, 255, 255, alphaCol);
+    this.display();
+  }
+  
+  void doFade()
+  {
+    if (alphaCol < 255 && !doneFadingIn) {
+      alphaCol +=25;
+    }
+    else {
+      doneFadingIn = true;
+      if(t == null){
+        t= new Timer(fadeTime);
+        t.start();
+        println("starting Timer");
+      }
+      if (t.isFinished()) {
+        println(alphaCol);
+        alphaCol-=25;
+        if(alphaCol<0)
+        expired = true;
+      }
+    }
+  }
   void display()
   {
     textAlign(CENTER);
