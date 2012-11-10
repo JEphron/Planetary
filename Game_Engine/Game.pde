@@ -109,7 +109,7 @@ class MainGame extends GameScene
   Minimap mini = new Minimap(new PVector(5, 5), new PVector(150, 150), color(128)); // this should be part of the UI
   float trackSpeed = 0.2;
   String[] weapons = {    
-    "Missiles", 
+    "Missiles  ", 
     "Plasma Gun", 
     "Circle Thing"
   };
@@ -170,6 +170,7 @@ class MainGame extends GameScene
     mini.action();
 
     fill(255);
+    textAlign(LEFT);
     text(frameRate, 5, mini.getPosition().y+mini.getSize().y+textAscent()+5);
 
     if (tracking) {
@@ -315,7 +316,7 @@ class MainGame extends GameScene
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
       //this.addChild(new MissilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this));
       playerzor.cycleWeps();
-      ui.notify("Weapon = " +weapons[playerzor.getWep()]);
+      ui.notify("Weapon: " +weapons[playerzor.getWep()]);
       d = false;
       //key = 0;
     }   
@@ -332,6 +333,7 @@ class MainGame extends GameScene
       if (key == 's') { // 's' to reset health
         planet.setTotalLife(planet.getMaxLife()); 
         playerzor.setTotalLife(playerzor.getMaxLife());
+        ui.notify("Health restored to full");
       }      
 
       else if (key == 'g') {// 'g' to clear platforms
