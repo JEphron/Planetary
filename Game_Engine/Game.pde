@@ -31,7 +31,6 @@ class Game extends IAppStates
   void action()
   {
     //println(frameRate);
-
     currentScene.action();
     // Call this to signal that the game should end\
     //setNextState(AppStates.Exit);
@@ -238,7 +237,7 @@ class MainGame extends GameScene
           else if ( e.getType() == "Sun" ) {
             // I guess I don't really need to do anything here
             Planetary pl = (Planetary)e;
-            mini.displayPoint(pl.getPosition(), color(255,255,0), 10);
+            mini.displayPoint(pl.getPosition(), color(255,255,0), 25);
             mini.displayPoint(pl.getChild(0).getPosition(), color(100, 200, 170), 5);
             pl.action();
             if (pl.getChild(0).getLife()<=0) {
@@ -262,11 +261,13 @@ class MainGame extends GameScene
             mini.displayPoint(e.getPosition(), color(0, 255, 0), 2);
              // todo: reaquire target if target dies
             if (e.isExpired()) {
-              println("Expired!");
               e= null;
               this.getChildren().remove(i);
             }
-          } 
+          }else if (e.getType() == "SpawnPoint") {
+            mini.displayPoint(e.getPosition(), color(128), 5);
+            e.action();
+          }
           else {
             // Other type checks go right here
             e.action();

@@ -88,11 +88,23 @@ class Player extends Ship
     s = new PVector(20, 20);
     setTotalLife(400); // SET LIFE TOTAL HERE
   }
+  int t = 500; // time between life boosts in ms
+  int l = 10; // how much does the life go up each tick
+  Timer lifeTimer = new Timer(500);;
 
   void action()
   {
     pos.x += cos(radians(angle))*speed;
     pos.y += sin(radians(angle))*speed;
+    
+    if (lifeTimer.isFinished()) {
+      if (this.getLife() < this.getMaxLife()-1)
+        this.setLife(this.getLife()+l);
+      lifeTimer = new Timer(500);
+      lifeTimer.start();
+   
+    }
+
     checkKeys();
     display();
   }
@@ -147,6 +159,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
     timeOfLastSpawn = 0; 
     timeSinceLastSpawn = 10000; 
     pos = p; // temporary solution
+    type = "SpawnPoint";
   }
 
   void action()
@@ -182,7 +195,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
     targets.addAll(parent.getChildrenByType("Player"));
     for (int i = 0; i < aiPerWave; i++)
     {
-      AI a = new StandardEnemy(new PVector(pos.x + random(-5, 5), pos.y + random(-5, 5)), 10, 1, 20, null, parent);   // create a new ai
+      AI a = new StandardEnemy(new PVector(pos.x + random(-10, 10), pos.y + random(-10, 10)), 10, 1, 20, null, parent);   // create a new ai
       a.aquireTarget(targets);      // give targets to the ai
       parent.addChild(a);            // add it to the parent.
     }
@@ -289,7 +302,7 @@ class StandardEnemy extends AI
     setTotalLife(520);
     wep = 0;//(int)random(3);
     type = "Ai";
-    s = new PVector(10,10);
+    s = new PVector(10, 10);
   }
 
   boolean b = false;
