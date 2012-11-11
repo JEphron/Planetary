@@ -293,7 +293,6 @@ class UIString extends UIItem
       if (t == null) {
         t= new Timer(fadeTime);
         t.start();
-        println("starting Timer");
       }
       if (t.isFinished()) {
         println(alphaCol);
