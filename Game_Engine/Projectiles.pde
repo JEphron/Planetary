@@ -136,18 +136,24 @@ class Bullet extends Projectile
   void display()
   {
     if (!exploding) {
-      stroke(0);
+      stroke(col);
       fill(col);
-      ellipse(pos.x, pos.y, 10, 10);
-      //    pushMatrix();
-      //    translate(pos.x, pos.y);
-      //    rotate(radians(angle));
-      //    imageMode(CENTER);
-      //        tint(random(255),255,120);
-      //
-      //    image(sprt, 0, 0);
-      //    tint(255);
-      //    popMatrix();
+      strokeWeight(5);
+      lineFromPointLengthAngle(pos.x,pos.y,10,angle);
+      stroke(0);
+      strokeWeight(1);
+    //  ellipse(pos.x, pos.y, 10, 10);
+//         pushMatrix();
+//          translate(pos.x, pos.y);
+//          rotate(radians(angle));
+//          rect(0,0,10,3);
+//      //    imageMode(CENTER);
+//      //        tint(random(255),255,120);
+//      //
+//      //    image(sprt, 0, 0);
+//      //    tint(255);
+//          popMatrix();
+//          stroke(0);
     }
     else {
       // It's exploding, make an explosion;
