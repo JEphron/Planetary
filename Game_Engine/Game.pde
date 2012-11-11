@@ -153,7 +153,7 @@ class MainGame extends GameScene
   PVector scenePos = null;
   boolean derp = true;
   Timer t;
-  PVector planetPos;
+  PVector planetPos;  
   // GAME LOGIC:
   void action()
   {
@@ -341,7 +341,9 @@ class MainGame extends GameScene
     if (f) { // 'f' to place a platform/turret thingy
 
       //this.addChild(new StandardPlatform(new PVector(mouseX, mouseY), new PVector(20, 20)));
-      this.addChild(new StandardPlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20)));
+      //this.addChild(new StandardPlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20)));
+      this.addChild(new MobilePlatform(new PVector(playerzor.getPosition().x, playerzor.getPosition().y), new PVector(20, 20), this, playerzor, 25));
+
       //key = 0;
     }       
 
