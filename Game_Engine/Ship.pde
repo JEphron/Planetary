@@ -80,9 +80,9 @@ class Ship extends Entity
       break;
     case 1:      // fire the standard gun
       range = 1000;
-      for (int i = 0; i < 5; i++) {
-        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/range, /*Speed:*/20, /*Damage:*/1, /*Angle:*/angle+random(-5, 5), color(255, 0, 255), type));
-      }
+     // for (int i = 0; i < 5; i++) {
+        parent.addChild(new Bullet(/*Position:*/pos, /*Range:*/range, /*Speed:*/20, /*Damage:*/50, /*Angle:*/angle+random(-5, 5), color(255, 0, 255), type));
+     // }
       break;
     case 2:       // do a circular explosion thingy
       range = 1000;
@@ -104,6 +104,7 @@ class Player extends Ship
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
     type = "Player"; 
     s = new PVector(20, 20);
+    wep =1;
     setTotalLife(400); // SET LIFE TOTAL HERE
   }
 
@@ -169,8 +170,8 @@ class Player extends Ship
 
 class AISpawner extends Entity // hell, everything extends this... not good oop
 {
-  int aiPerWave = 10; // increase over time
-  int timeBetweenWaves = 3; // In seconds, decrease over time
+  int aiPerWave = 2; // increase over time
+  int timeBetweenWaves = 2; // In seconds, decrease over time
   PVector spawnPoint; // generate at a random point on a circle that surrounds the play area. 
   int aiType; // this should be random, and eventually become a mixture. 
   float timeOfLastSpawn; // keep track of when to spawn
@@ -221,7 +222,7 @@ class AISpawner extends Entity // hell, everything extends this... not good oop
     targets.addAll(parent.getChildrenByType("Player"));
     for (int i = 0; i < aiPerWave; i++)
     {
-      AI a = new StandardEnemy(new PVector(pos.x + random(-10, 10), pos.y + random(-10, 10)), 10, 1, 20, null, parent);   // create a new ai
+      AI a = new StandardEnemy(new PVector(pos.x + random(-25, 25), pos.y + random(-25, 25)), 10, 1, 20, null, parent);   // create a new ai
       a.aquireTarget(targets);      // give targets to the ai
       parent.addChild(a);            // add it to the parent.
     }
@@ -313,8 +314,8 @@ class StandardEnemy extends AI
   StandardEnemy(PVector p, float turnSpd, float accelSpd, float maxSpd, PImage sprite, Entity pa)
   {
     super(p, turnSpd, accelSpd, maxSpd, sprite, pa);
-    setTotalLife(520);
-    wep = 0;//(int)random(3);
+    setTotalLife(150);
+    wep = 1;//(int)random(3);
     type = "Ai";
     s = new PVector(10, 10);
   }
