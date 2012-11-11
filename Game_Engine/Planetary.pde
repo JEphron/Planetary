@@ -108,6 +108,7 @@ class Sun extends Planetary
     translate(pos.x, pos.y);
     scale(1, 1);
     imageMode(CENTER);
+
     image(sprt, 0, 0);
     popMatrix();
     

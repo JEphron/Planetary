@@ -22,7 +22,7 @@ class Game extends IAppStates
   GameScene currentScene;
   Game()
   {
-    nextAppStates = AppStates.Game;
+    nextAppStates = 2; // 2 == game
     println("Entering main game...");
     currentScene = new MainGame(this);
   }
@@ -165,7 +165,7 @@ class MainGame extends GameScene
 
     // Sun su = (Sun)this.getChild    planet = (Planet)sun.getChild(0);
     planetPos = planet.getPosition().get();
-    planet.addChild(new StandardPlatform(new PVector(planet.getPosition().x, planet.getPosition().y), new PVector(200, 20)));
+    planet.addChild(new StandardPlatform(new PVector(planet.getPosition().x, planet.getPosition().y), new PVector(200, 20))); // wut?
     updateChildren();   
     mini.action();
 

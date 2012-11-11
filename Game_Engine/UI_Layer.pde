@@ -102,7 +102,7 @@ class UILayer
 
   void notify(String s)
   {
-    nfier.addMsg(new UIString(s, new PVector(0,0), 800));
+    nfier.addMsg(new UIString(s, new PVector(0, 0), 800));
   }
 
   void setPlayerWep(int w)
@@ -139,7 +139,7 @@ class Notifier extends UIItem
       }
     }
   }
-  
+
   void layoutMsgs()
   {
     for (int i = 0; i < msgs.size(); i++) {
@@ -260,7 +260,7 @@ class UIString extends UIItem
     pos = new PVector (0, 0);
     type = "UIString";
   }
-  
+
   UIString(String s, PVector po)
   {
     txt=s;
@@ -276,7 +276,9 @@ class UIString extends UIItem
     fadeTime = fTime; // how long does it stay onscreen before fading out
     type = "UIString";
   }
-  String getText(){return txt;}
+  String getText() {
+    return txt;
+  }
   void action()
   {
     fill(255, 255, 255, alphaCol);
