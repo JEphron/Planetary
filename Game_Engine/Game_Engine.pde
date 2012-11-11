@@ -19,7 +19,7 @@ void setup()
 
   // frameRate(5);
   //size(360, 480);// 480/360 = 1.3333...
-  eng = new Engine(AppStates.LoadCore, AppStates.Exit);
+  eng = new Engine(0, 4);
 }
 
 void draw()

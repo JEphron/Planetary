@@ -10,18 +10,18 @@ abstract class MenuScene
   String title;
   PVector buttonSize; // Change this to adjust button size
   color bgCol = color(30); 
-  mmScenes nextScene;
-  directions transDir = directions.Down;
+  String nextScene;
+  String transDir = "Down";
 
   MenuScene() {
     buttons = new ArrayList();
     pos = new PVector(0, 0);
   }
 
-  void setNextScene(mmScenes m) {
+  void setNextScene(String m) {
     nextScene = m;
   }
-  mmScenes getNextScene() {
+  String getNextScene() {
     return nextScene;
   }
 
@@ -48,7 +48,7 @@ abstract class MenuScene
     }
   }
 
-  void addButton(String t, mmScenes scene, PVector bSize, MenuScene parent) {
+  void addButton(String t, String scene, PVector bSize, MenuScene parent) {
     MenuButton m = new MenuButton(t, scene, bSize, parent);
     buttons.add(m);
   }
@@ -76,7 +76,6 @@ abstract class MenuScene
   void drawBackground() {
     fill(bgCol);
     rect(pos.x, pos.y, width, height);
-
   }
   boolean doFadeOut(int speed)
   {
@@ -96,30 +95,30 @@ abstract class MenuScene
   boolean doSlideOut(int speed) {
     PVector tvec = new PVector(0, 0);
 
-    switch(transDir) {
-    case Up:
+    if (transDir == "Up") {
       tvec.y = -speed;
       if (pos.y+height < 0)
         return true;
-      break;
-    case Down:
+    }
+    else if (transDir == "Down") {
       tvec.y = speed;
       if (pos.y > height)
         return true;
-      break;
-    case Left:
+    }
+    else if (transDir == "Left") {
       tvec.x = -speed;
       if (pos.x + width < 0)
         return true;
-      break;
-    case Right:
+    }
+    else if (transDir == "Right") {
       tvec.x = speed;
       if (pos.x > width)
         return true;
-      break;
-    default:
+    }
+    else {
       return false;
     }
+
 
     for (int i = buttons.size()-1; i >= 0; i--) {
       MenuButton b = (MenuButton)buttons.get(i);
@@ -138,56 +137,55 @@ abstract class MenuScene
       for (int i = buttons.size()-1; i >= 0; i--) {
         MenuButton b = (MenuButton)buttons.get(i);
 
-        if (transDir == directions.Left)
+        if (transDir == "Left")
           b.setPosition(new PVector(b.getPosition().x + width, b.getPosition().y));
-        else if (transDir == directions.Down)
+        else if (transDir == "Down")
           b.setPosition(new PVector(b.getPosition().x, b.getPosition().y-height));
       }
       //pos.x += tvec.x;
-      if (transDir == directions.Left)
+      if (transDir == "Left")
         pos.x += width;
-      else if (transDir == directions.Down)
+      else if (transDir == "Down")
         pos.y -= height;
 
       derp = true;
     }
 
-    switch(transDir) {
-    case Up:
+    if (transDir == "Up") {
       tvec.y = -speed;
       if (pos.y+height < 0)
         return true;
-      break;
-    case Down:
+    }
+    else if (transDir == "Down") {
       tvec.y = speed;
-      if (pos.y > 0) {
+      if (pos.y > 0) 
         pos.y = 0;
         return true;
-      }
-      break;
-    case Left:
+    }
+    else if (transDir == "Left") {
       tvec.x = -speed;
-      if (pos.x < 0) {
+      if (pos.x < 0) 
         pos.x = 10;
         return true;
-      }
-      break;
-    case Right:
-      tvec.x = speed;
+    }
+    else if (transDir == "Right") {
+            tvec.x = speed;
       if (pos.x > width)
         return true;
-      break;
-    default:
+
+    }
+    else {
       return false;
     }
 
     for (int i = buttons.size()-1; i >= 0; i--) {
       MenuButton b = (MenuButton)buttons.get(i);
-      if (transDir == directions.Left){
+      if (transDir == "Left") {
         if (b.getPosition().x + 90 > width/2)
           b.setPosition(new PVector(b.getPosition().x + tvec.x, b.getPosition().y + tvec.y));
-      }else{
-     b.setPosition(new PVector(b.getPosition().x + tvec.x, b.getPosition().y + tvec.y));
+      }
+      else {
+        b.setPosition(new PVector(b.getPosition().x + tvec.x, b.getPosition().y + tvec.y));
       }
     }
     pos.x += tvec.x;
@@ -207,15 +205,15 @@ class mm_Main extends MenuScene
   mm_Main()
   {
     title = "Main Menu";
-    transDir = directions.Left;
-    nextScene = mmScenes.Main;
+    transDir = "Left";
+    nextScene = "Main";
     buttonSize = new PVector(200, 50);
     bgCol = color(100, 50, 50);
     // Add menu items in the constructor, reverse order
-    this.addButton("Quit", mmScenes.Exit, buttonSize, this);
-    this.addButton("Help", mmScenes.Help, buttonSize, this);
-    this.addButton("Options", mmScenes.Options, buttonSize, this);
-    this.addButton("Play", mmScenes.Play, buttonSize, this);
+    this.addButton("Quit", "Exit", buttonSize, this);
+    this.addButton("Help", "Help", buttonSize, this);
+    this.addButton("Options", "Options", buttonSize, this);
+    this.addButton("Play", "Play", buttonSize, this);
     // Then call layoutButtons();
     this.layoutButtons();
   }
@@ -234,16 +232,15 @@ class mm_Help extends MenuScene
   mm_Help()
   {
     title = "";
-    nextScene = mmScenes.Help;
-        transDir = directions.Up;
+    nextScene = "Help";
+    transDir = "Up";
 
-    bgCol = color(32,128,64);
+    bgCol = color(32, 128, 64);
     buttonSize = new PVector(200, 50);
-    this.addButton("Return", mmScenes.Main, buttonSize, this);
-    this.addButton("derp", mmScenes.Derp, buttonSize, this);
- 
+    this.addButton("Return", "Main", buttonSize, this);
+    this.addButton("derp", "Derp", buttonSize, this);
+
     this.layoutButtons();
-    
   }
 }
 
@@ -252,14 +249,14 @@ class mm_Derp extends MenuScene
   mm_Derp()
   {
     title = "Derp";
-    nextScene = mmScenes.Derp;
-        
-    transDir = directions.Right;
-    bgCol = color (128,64,32);
+    nextScene = "Derp";
+
+    transDir = "Right";
+    bgCol = color (128, 64, 32);
     buttonSize = new PVector(200, 50);
-    this.addButton("Return", mmScenes.Main, buttonSize, this);
-    this.addButton("Blurrrgh", mmScenes.Help, buttonSize, this);
-    this.addButton("Meep", mmScenes.Help, buttonSize, this);
+    this.addButton("Return", "Main", buttonSize, this);
+    this.addButton("Blurrrgh", "Help", buttonSize, this);
+    this.addButton("Meep", "Help", buttonSize, this);
     this.layoutButtons();
   }
 }
@@ -274,31 +271,14 @@ class mm_Opts extends MenuScene
   mm_Opts()
   {
     title = "Options";
-    nextScene = mmScenes.Options;
+    nextScene = "Options";
+
+    transDir = "Right";
+    bgCol = color (128, 64, 32);
     buttonSize = new PVector(200, 50);
-    // Add menu items in the constructor, reverse order
-
-    ///////////////////////////////////
-    // Example of how to use the callback system.
-    // 
-    // Create a new class that extends callbackObject
-    // write your code in the callbackMethod() method
-    // create an object of that class
-    // create a CBButton and pass it the object
-    // **CODE**
-    class TestCB extends callbackObject {
-      void callbackMethod() {
-        println("Callback recieved!");
-        // set some system variables or something        
-      }
-    }
-    TestCB c = new TestCB();
-    this.addCBButton("Callback test 1", buttonSize, c);
-    // **END**
-    ///////////////////////////////////
-
-    this.addButton("Return", mmScenes.Main, buttonSize, this);
-    // Then call layoutButtons();
+    this.addButton("Return", "Main", buttonSize, this);
+    this.addButton("Blurrrgh", "Help", buttonSize, this);
+    this.addButton("Meep", "Help", buttonSize, this);
     this.layoutButtons();
   }
   void action()

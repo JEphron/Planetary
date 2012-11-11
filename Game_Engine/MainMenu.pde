@@ -12,7 +12,7 @@
 class Menu extends IAppStates
 {
   // enum value
-  mmScenes nextScene;
+  String nextScene;
 
   // currently displaying scene
   MenuScene currentScene;
@@ -24,10 +24,10 @@ class Menu extends IAppStates
   Menu()
   {
     println("Entering main menu...");
-    nextAppStates = AppStates.Menu;
+    nextAppStates = 1;
     // Create the Main scene
-    currentScene = createNewScene(mmScenes.Main);
-    nextScene= currentScene.getNextScene();
+    currentScene = createNewScene("Main");
+    nextScene = currentScene.getNextScene();
   }
   void action()
   {
@@ -61,28 +61,47 @@ class Menu extends IAppStates
     //setNextState(AppStates.Game);
   }
 
-  MenuScene createNewScene(mmScenes scene)
+  MenuScene createNewScene(String scene)
   {
     // Switch returns scene based on enum
-    switch(scene) {
-    case Play:
-      setNextState(AppStates.Game);
+    if ( scene == "Play") {
+      setNextState(2);
       return null;
-    case Main:
-      return new mm_Main();
-    case Options:
-      return new mm_Opts();
-    case Derp:
-      return new mm_Derp();
-    case Help:
-      return new mm_Help();
-    case Exit:
-      setNextState(AppStates.Exit);
-      return null;
-    default:
-      break;
     }
-    return null;
+    else if (scene == "Main") {
+      return new mm_Main();
+    }
+    else if (scene == "Options") {
+      return new mm_Opts();
+    }
+    else if (scene == "Derp") {
+      return new mm_Derp();
+    }else if(scene == "Help"){
+            return new mm_Help();
+    }else if(scene == "Exit"){
+            setNextState(4);
+      return null;
+
+    }else return null;
+
+//    switch(scene) {
+//    case Play:
+//      setNextState(2);
+//      return null;
+//    case Main:
+//      return new mm_Main();
+//    case Options:
+//      return new mm_Opts();
+//    case Derp:
+//      return new mm_Derp();
+//    case Help:
+//      return new mm_Help();
+//    case Exit:
+//      setNextState(4);
+//      return null;
+//    default:
+//      break;
+//    }
   }
 }
 
@@ -94,7 +113,7 @@ class Menu extends IAppStates
  * be picked up by the mainMenu state and then created.
  * OVERLOAD: Takes callback object, calls callbackMethod() onClick;
  */
- // Note: could extend entity for maximum oop
+// Note: could extend entity for maximum oop
 class MenuButton
 {
   // TODO: background/rollover/click images.
@@ -103,11 +122,11 @@ class MenuButton
   String label; // the text label of the button
   boolean isCallbackButton = false; // does the button execute a callback?
   color c, oc; // color and original color
-  mmScenes targetScene; 
+  String targetScene; 
   callbackObject callback; // object which gets called if this = callbackButton
   MenuScene parentScene;
 
-  MenuButton(String t, mmScenes sc, PVector size, MenuScene parent) {
+  MenuButton(String t, String sc, PVector size, MenuScene parent) {
     s=size;
     label = t;
     targetScene = sc;
@@ -137,7 +156,7 @@ class MenuButton
     textAlign(CENTER);
     text(label, pos.x + s.x/2, pos.y + s.y/2);
   }
-  
+
   void setPosition(PVector p) {
     pos=p;
   }
@@ -158,11 +177,11 @@ class MenuButton
   {
     c = col;
   }
-  
+
   color getColor() {
     return c;
   }
-  
+
   void action()
   {
     if (isCallbackButton)
@@ -181,7 +200,8 @@ class MenuButton
         this.setColor(color(red(this.getColor())+120, green(this.getColor()), blue(this.getColor())));
         this.action();
       }
-    } else {
+    } 
+    else {
       if (!mousePressed)
         this.setColor(oc);
     }

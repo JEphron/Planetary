@@ -13,12 +13,12 @@
 // Create with starting state and ending state: equiv to Handler
 class Engine
 {
-  AppStates nextState;
-  AppStates exitState;
+  int nextState;
+  int exitState;
   IAppStates appState;
 
   // Construct with a starting state and an ending state
-  Engine(AppStates startState, AppStates endState) 
+  Engine(int startState, int endState) 
   {
     exitState = endState;
     nextState = startState;
@@ -57,23 +57,26 @@ class Engine
   }
 
   // Creates the new state.
-  IAppStates createAppStates(AppStates state)
+  IAppStates createAppStates(int state)
   {
     switch(state) {
-    case LoadCore:
+    case 0:
       return new LoadCore();
 
-    case Menu:
+    case 1:
       return new Menu();
 
-    case Game:
+    case 2:
       return new Game();
 
-    case Exit:
+    case 3:
       println("Done with app, exiting");
       exit();
       break;
-
+    case 4: 
+      exit();
+      println("Program terminated.");
+      break;
     default:
       println("ERROR: Problem creating new app state, does it have a corrosponding switch case?");
       break;
@@ -85,16 +88,16 @@ class Engine
 abstract class IAppStates
 {
   // Holds the next app state
-  AppStates nextAppStates;
+  int nextAppStates;
   IAppStates()
   {
   }
   // Set the next state
-  void setNextState(AppStates next) { 
+  void setNextState(int next) { 
     nextAppStates = next;
   }
 
-  AppStates getNextState() {
+  int getNextState() {
     return nextAppStates;
   }
 

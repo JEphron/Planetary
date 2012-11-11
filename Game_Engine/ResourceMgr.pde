@@ -20,12 +20,9 @@ class ResourceManager
   void loadResources()
   {
     // try and load the resources
-    for (Resource rs : Resource.values()) {
-      loadImg(rs);
-    }
   }
 
-  PImage loadImg(Resource r)
+  PImage loadImg()
   {
     return null;// fix this
   }
