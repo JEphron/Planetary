@@ -25,14 +25,16 @@ class HealthBar extends UIItem
 {
   Entity parent;
   float maxLife, currLife;
-  HealthBar(PVector po, PVector si, Entity p)
+  Integer w,h;
+  HealthBar(PVector po, Integer w, Integer h, Entity p)
   {
     // Pass the healthBar a parent object, healthbar will get the lifeTotal and currentLife and display them. 
     parent = p;
     maxLife = parent.getMaxLife();
     pos = po;
-    s = si;
     currLife = 1000;
+    this.w=w;
+    this.h=h;
   }
 
   void action()
@@ -55,12 +57,12 @@ class HealthBar extends UIItem
     // Color shift could use work though...
     fill(map(currLife, 0, maxLife, 255, 0), map(currLife, 0, maxLife/5, 0, 255), 0);
     textAlign(LEFT);
-    rect(pos.x, pos.y, s.x*(currLife/maxLife), s.y);
+    rect(pos.x, pos.y, w*(currLife/maxLife), h);
     if (currLife>0)
       fill(255);
     else
       fill(255, 0, 0);
-    text(parent.getType()+": "+(int)currLife, pos.x+5+s.x*(currLife/maxLife), pos.y+textAscent()+4);
+    text(parent.getType()+": "+(int)currLife, pos.x+5+w*(currLife/maxLife), pos.y+textAscent()+4);
   }
   Entity getParent() {
     return parent;
@@ -137,6 +139,10 @@ class Notifier extends UIItem
         msgs.remove(i); 
         layoutMsgs();
       }
+    }
+    
+    if(msgs.size()>20){ // limit number of msgs to 20
+      msgs.remove(0);
     }
   }
 
