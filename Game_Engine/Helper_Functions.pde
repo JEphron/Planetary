@@ -73,6 +73,29 @@ float dist(PVector p1, PVector p2)
   return dist(p1.x,p1.y,p2.x,p2.y);
 }
 
+// Scary fast distance calculator, dx and dy are (pos1.x-pos2.x,pos1.y-pos2.y)
+int fastDist( float dx, float dy )
+{
+   int min, max;
+
+   if ( dx < 0 ) dx = -dx;
+   if ( dy < 0 ) dy = -dy;
+
+   if ( dx < dy )
+   {
+      min = (int)dx;
+      max = (int)dy;
+   } else {
+      min = (int)dy;
+      max = (int)dx;
+   }
+
+   // coefficients equivalent to ( 123/128 * max ) and ( 51/128 * min )
+   return ((( max << 8 ) + ( max << 3 ) - ( max << 4 ) - ( max << 1 ) +
+           ( min << 7 ) - ( min << 5 ) + ( min << 3 ) - ( min << 1 )) >> 8 );
+} 
+
+
 float AngleTo(PVector f, PVector p)
 {
   float xp = f.x - p.x;

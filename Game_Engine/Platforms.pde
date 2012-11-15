@@ -75,7 +75,7 @@ class StandardPlatform extends Platform
     Entity temp;
     for (int i = 0; i < a.size(); i++) { 
       Entity h = (Entity)a.get(i);
-      float d = dist(pos.x, pos.y, h.getPosition().x, h.getPosition().y);
+      float d = fastDist(pos.x -  h.getPosition().x, pos.y -  h.getPosition().y);
       if (!h.isTargeted() || h.getType() == "Ai") {
         if (d < closestDistance) {
           closestDistance = d;
@@ -98,7 +98,7 @@ class StandardPlatform extends Platform
 
   boolean targetInRange()
   {
-    if ( dist(pos.x, pos.y, target.getPosition().x, target.getPosition().y) < range)
+    if ( fastDist(pos.x - target.getPosition().x, pos.y - target.getPosition().y) < range)
       return true;
     else return false;
   }
@@ -173,7 +173,7 @@ class MissilePlatform extends Platform
 
   boolean targetInRange()
   {
-    if ( dist(pos.x, pos.y, target.getPosition().x, target.getPosition().y) < range)
+    if ( fastDist(pos.x - target.getPosition().x, pos.y - target.getPosition().y) < range)
       return true;
     else return false;
   }
@@ -183,7 +183,7 @@ class MissilePlatform extends Platform
     Entity temp;
     for (int i = 0; i < a.size(); i++) { 
       Entity h = (Entity)a.get(i);
-      float d = dist(pos.x, pos.y, h.getPosition().x, h.getPosition().y);
+      float d = fastDist(pos.x -  h.getPosition().x, pos.y -  h.getPosition().y);
       if (d < closestDistance) {
         closestDistance = d;
         target = h;
@@ -297,7 +297,7 @@ class MobilePlatform extends Platform
     Entity temp;
     for (int i = 0; i < a.size(); i++) { 
       Entity h = (Entity)a.get(i);
-      float d = dist(pos.x, pos.y, h.getPosition().x, h.getPosition().y);
+      float d = fastDist(pos.x -  h.getPosition().x, pos.y -  h.getPosition().y);
       if (!h.isTargeted() || h.getType() == "Ai") {
         if (d < closestDistance) {
           closestDistance = d;
@@ -320,7 +320,7 @@ class MobilePlatform extends Platform
 
   boolean targetInRange()
   {
-    if ( dist(pos.x, pos.y, target.getPosition().x, target.getPosition().y) < range)
+    if ( fastDist(pos.x - target.getPosition().x, pos.y - target.getPosition().y) < range)
       return true;
     else return false;
   }

@@ -246,7 +246,8 @@ class AI extends Ship
 
   boolean targetInRange()
   {
-    if ( dist(pos.x, pos.y, targ.getPosition().x, targ.getPosition().y) < /*wep.getrange()*/500)
+        
+    if (fastDist(pos.x - targ.getPosition().x, pos.y - targ.getPosition().y) < /*wep.getrange()*/500)
       return true;
     else return false;
   }

@@ -202,7 +202,8 @@ class MainGame extends GameScene
     // these should only be updated if they've changed
     ArrayList projectiles = this.getChildrenByType("Projectile");
     ArrayList ailist = this.getChildrenByType("Ai");
-    
+      int blah = millis();
+
     // mini.clearMap();
     // This method is kind of ugly, but I think it's standard practice. Also it works, so that's good. 
     if (this.getChildren().size()>0) {
@@ -217,12 +218,12 @@ class MainGame extends GameScene
             if (m.getOwner() != "Player") {
               // If it's touching the planet (or platforms), destroy it, deal dmg to planet
               // Handle this differently please. 
-              if (dist(m.getPosition().x, m.getPosition().y, planetPos.x, planetPos.y)<30) {
+              if (fastDist(m.getPosition().x - planetPos.x, m.getPosition().y- planetPos.y)<30) {
                 if (!m.isExploding())
                   planet.dealDamage(m.getDamage());
                 m.explode();
               }
-              if (dist(m.getPosition().x, m.getPosition().y, playerzor.getPosition().x, playerzor.getPosition().y)<50) {
+              if (fastDist(m.getPosition().x - playerzor.getPosition().x, m.getPosition().y - playerzor.getPosition().y)<50) {
                 if (!m.isExploding())
                   playerzor.dealDamage(m.getDamage());
                 m.explode();
@@ -239,11 +240,11 @@ class MainGame extends GameScene
                   m.setTarget(null);
               }
 
-              for (int t = 0; t < ailist.size(); t++)
+              for (int t = 0; t < ailist.size(); t++) // collide player's bullets with ai
               {
                 Ship s = (Ship)ailist.get(t);
 
-                if (dist(m.getPosition(), s.getPosition())<30) {
+                if (fastDist(m.getPosition().x - s.getPosition().x, m.getPosition().y - s.getPosition().y)<30) {
                   m.explode();
                   s.dealDamage(5);
                 }
@@ -308,6 +309,8 @@ class MainGame extends GameScene
         }
       }
     }
+      println( millis() - blah);
+
   }
 
   void handleKeyPresses()
