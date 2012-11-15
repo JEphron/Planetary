@@ -137,8 +137,8 @@ class MainGame extends GameScene
     this.addChild(playerzor);
     //----------------------------------------------------------------------------------------------------------------
     // UI
-    ui.addUIItem(new HealthBar(new PVector(mini.getPosition().x+mini.getSize().x+5, 10), new PVector(width/2, 20), planet)); // Width and height should be relative
-    ui.addUIItem(new HealthBar(new PVector(mini.getPosition().x+mini.getSize().x+5, 40), new PVector(width/3, 20), playerzor)); // Width and height should be relative
+    ui.addUIItem(new HealthBar(new PVector(mini.getPosition().x+mini.getSize().x+5, 10), width/2, 20, planet)); // Width and height should be relative
+    ui.addUIItem(new HealthBar(new PVector(mini.getPosition().x+mini.getSize().x+5, 40), width/3, 20, playerzor)); // Width and height should be relative
     ui.addUIItem(new UITray(new PVector(0, height-100), new PVector(width, 100)));
     //----------------------------------------------------------------------------------------------------------------
     // Ai
@@ -199,6 +199,10 @@ class MainGame extends GameScene
   // Overwrite this so we can do some updatin.
   void updateChildren()
   {
+    // these should only be updated if they've changed
+    ArrayList projectiles = this.getChildrenByType("Projectile");
+    ArrayList ailist = this.getChildrenByType("Ai");
+    
     // mini.clearMap();
     // This method is kind of ugly, but I think it's standard practice. Also it works, so that's good. 
     if (this.getChildren().size()>0) {
@@ -225,7 +229,7 @@ class MainGame extends GameScene
               }
             }
             else { // if belongs to player
-              ArrayList ailist = this.getChildrenByType("Ai");
+              //getchArrayList ailist = this.getChildrenByType("Ai");
 
               if (m.needsRetarget()) // only applies to missiles
               {
@@ -264,10 +268,9 @@ class MainGame extends GameScene
             Platform t = (Platform)e;
             mini.displayPoint(t.getPosition(), color(0, 0, 255), 2);
             if (t.targIsDead()) {
-              ArrayList temp = this.getChildrenByType("Projectile");
-              temp.addAll(this.getChildrenByType("Ai"));
-              if (temp != null)
-                t.aquireTarget(temp);
+              projectiles.addAll(ailist);
+              if (projectiles != null)
+                t.aquireTarget(projectiles);
             }
             t.action();
             t.fire();
@@ -289,9 +292,8 @@ class MainGame extends GameScene
             Player p = (Player)e;
             p.action();
             if (p.targIsDead()) {
-              ArrayList temp = this.getChildrenByType("Ai");
-              if (temp != null)
-                p.aquireTarget(temp);
+              if (ailist != null)
+                p.aquireTarget(ailist);
             }
           }
           else {
